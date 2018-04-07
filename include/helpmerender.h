@@ -4,8 +4,8 @@
 #include <iostream>
 
 #define TO_C_ARRAY(__TRIANGLE__) {__TRIANGLE__.v1.x,__TRIANGLE__.v1.y,__TRIANGLE__.v1.z,\
-                                __TRIANGLE__.v2.x,__TRIANGLE__.v2.y,__TRIANGLE__.v2.z,\
-                                __TRIANGLE__.v3.x,__TRIANGLE__.v3.y,__TRIANGLE__.v3.z}
+                                  __TRIANGLE__.v2.x,__TRIANGLE__.v2.y,__TRIANGLE__.v2.z,\
+                                  __TRIANGLE__.v3.x,__TRIANGLE__.v3.y,__TRIANGLE__.v3.z}
 
 
 struct xyz{

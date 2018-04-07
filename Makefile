@@ -1,4 +1,4 @@
-TARGET_EXEC ?= openmaddness
+TARGET_EXEC ?= madd
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./src ./include
 
@@ -22,6 +22,7 @@ CXXFLAGS ?= -std=c++11
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
+	cp $(BUILD_DIR)/$(TARGET_EXEC)* ./
 
 # c source
 $(BUILD_DIR)/%.c.o: %.c
