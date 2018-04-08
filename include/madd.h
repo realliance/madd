@@ -4,9 +4,11 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <string>
+#include <vector>
 
 #include "shader.h"
 #include "shader_sources.h"
+#include "vertexarray.h"
 
 
 class Madd{
