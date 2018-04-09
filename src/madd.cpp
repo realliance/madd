@@ -1,87 +1,85 @@
 #include "madd.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}  
-
-Madd::Madd(int width, int height, const char* title){
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    window = glfwCreateWindow(width, height, title, NULL, NULL);
-    glfwMakeContextCurrent(window);
-
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    glViewport(0, 0, width, height);
-
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+  glViewport(0, 0, width, height);
 }
 
-Madd::~Madd(){
-    glfwTerminate();
+Madd::Madd(int width, int height, const char *title) {
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+  window = glfwCreateWindow(width, height, title, NULL, NULL);
+  glfwMakeContextCurrent(window);
+
+  gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  glViewport(0, 0, width, height);
+
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 }
 
-void Madd::Start(){
-    
+Madd::~Madd() { glfwTerminate(); }
 
-    Shader *vertexShader = new Shader(shaders::defaultVectorShader,GL_VERTEX_SHADER);
-    Shader *fragmentShader = new Shader(shaders::defaultFragmentShader,GL_FRAGMENT_SHADER);
+void Madd::Start() {
 
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
+  Shader *vertexShader =
+      new Shader(shaders::defaultVectorShader, GL_VERTEX_SHADER);
+  Shader *fragmentShader =
+      new Shader(shaders::defaultFragmentShader, GL_FRAGMENT_SHADER);
 
-    glAttachShader(shaderProgram, vertexShader->GetID());
-    glAttachShader(shaderProgram, fragmentShader->GetID());
-    glLinkProgram(shaderProgram);
+  unsigned int shaderProgram;
+  shaderProgram = glCreateProgram();
 
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
-    }
+  glAttachShader(shaderProgram, vertexShader->GetID());
+  glAttachShader(shaderProgram, fragmentShader->GetID());
+  glLinkProgram(shaderProgram);
 
-    delete vertexShader;
-    delete fragmentShader;
-    vertexShader = nullptr;
-    fragmentShader = nullptr;
+  int success;
+  char infoLog[512];
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if (!success) {
+    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
+  }
 
-    std::vector<float> vertices = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
-    };
-    std::vector<unsigned int> indices = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };
+  delete vertexShader;
+  delete fragmentShader;
+  vertexShader = nullptr;
+  fragmentShader = nullptr;
 
-    VertexArray *rect = new VertexArray(vertices, indices);
+  std::vector<float> vertices = {
+      0.5f,  0.5f,  0.0f, // top right
+      0.5f,  -0.5f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, // bottom left
+      -0.5f, 0.5f,  0.0f  // top left
+  };
+  std::vector<unsigned int> indices = {
+      // note that we start from 0!
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
 
-    while(!glfwWindowShouldClose(window)){
-        ProcessInput();
+  VertexArray *rect = new VertexArray(vertices, indices);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+  while (!glfwWindowShouldClose(window)) {
+    ProcessInput();
 
-        glUseProgram(shaderProgram);
-        rect->Bind();
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        VertexArray::UnBind();
+    glUseProgram(shaderProgram);
+    rect->Bind();
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();    
-    }
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    VertexArray::UnBind();
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
 }
 
-void Madd::ProcessInput()
-{
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+void Madd::ProcessInput() {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
 }

@@ -1,7 +1,8 @@
 #ifndef MADD_H
 #define MADD_H
 
-#include <glad/glad.h> 
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
@@ -10,16 +11,16 @@
 #include "shader_sources.h"
 #include "vertexarray.h"
 
+class Madd {
+public:
+  Madd(int width, int height, const char *title);
+  ~Madd();
+  void Start();
 
-class Madd{
-    public:
-        Madd(int width, int height, const char* title);
-        ~Madd();
-        void Start();
-    private:
-        GLFWwindow* window = nullptr;
+private:
+  GLFWwindow *window = nullptr;
 
-        void ProcessInput();
+  void ProcessInput();
 };
 
-#endif //MADD_H
+#endif // MADD_H
