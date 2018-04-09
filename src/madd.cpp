@@ -25,6 +25,7 @@ Madd::~Madd(){
 }
 
 void Madd::Start(){
+    
 
     Shader *vertexShader = new Shader(shaders::defaultVectorShader,GL_VERTEX_SHADER);
     Shader *fragmentShader = new Shader(shaders::defaultFragmentShader,GL_FRAGMENT_SHADER);
