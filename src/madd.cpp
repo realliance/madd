@@ -23,30 +23,7 @@ Madd::~Madd() { glfwTerminate(); }
 
 void Madd::Start() {
 
-  Shader *vertexShader =
-      new Shader("default.vs");
-  Shader *fragmentShader =
-      new Shader("default.fs");
-
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-
-  glAttachShader(shaderProgram, vertexShader->GetID());
-  glAttachShader(shaderProgram, fragmentShader->GetID());
-  glLinkProgram(shaderProgram);
-
-  int success;
-  char infoLog[512];
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
-  }
-
-  delete vertexShader;
-  delete fragmentShader;
-  vertexShader = nullptr;
-  fragmentShader = nullptr;
+  ReloadShader();
 
   std::vector<float> vertices = {
       0.5f,  0.5f,  0.0f, // top right
@@ -68,7 +45,7 @@ void Madd::Start() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    glUseProgram(program->GetID());
     rect->Bind();
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -82,4 +59,19 @@ void Madd::Start() {
 void Madd::ProcessInput() {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
+  else if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    ReloadShader();
+}
+
+//This function is temporary for shader testing.
+void Madd::ReloadShader(){
+    Shader *vertexShader = new Shader("default.vs");
+    Shader *fragmentShader = new Shader("default.fs");
+    ShaderProgram *_program = new ShaderProgram(vertexShader, fragmentShader);
+
+    delete vertexShader;
+    delete fragmentShader;
+    if(program)
+      delete program;
+    program = _program;
 }

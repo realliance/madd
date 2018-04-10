@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "shader.h"
+#include "shaderprogram.h"
 #include "shader_sources.h"
 #include "vertexarray.h"
 
@@ -21,6 +22,10 @@ private:
   GLFWwindow *window = nullptr;
 
   void ProcessInput();
+  
+  #pragma message "Delete these functions later " __FILE__
+  void ReloadShader();
+  ShaderProgram* program;
 };
 
 #endif // MADD_H
