@@ -3,8 +3,7 @@
 
 #include <glad/glad.h>
 //#include <GLFW/glfw3.h>
-#include <fstream>
-#include <iostream>
+#include <string>
 
 #define COMPILATION_FAILED 10;
 

@@ -1,5 +1,6 @@
 #include "shaderprogram.h"
 
+#include <iostream>
 ShaderProgram::ShaderProgram(Shader* vs, Shader* fs){
 
   id = glCreateProgram();
