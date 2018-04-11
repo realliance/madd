@@ -1,5 +1,11 @@
 #include "madd.h"
 
+#include <vector>
+#include <iostream>
+
+#include "shader.h"
+#include "vertexarray.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
@@ -23,7 +29,10 @@ Madd::~Madd() { glfwTerminate(); }
 
 void Madd::Start() {
 
-  ReloadShader();
+  if(!ReloadShader()){
+    std::cout<<"Shader Loading Failed"<<std::endl;
+    return;
+  }
 
   std::vector<float> vertices = {
       0.5f,  0.5f,  0.0f, // top right
@@ -39,6 +48,7 @@ void Madd::Start() {
 
   VertexArray *rect = new VertexArray(vertices, indices);
 
+  int shaderTimeLocation = glGetUniformLocation(program->GetID(), "time");
   while (!glfwWindowShouldClose(window)) {
     ProcessInput();
 
@@ -46,6 +56,8 @@ void Madd::Start() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program->GetID());
+    glUniform1f(shaderTimeLocation, glfwGetTime());
+
     rect->Bind();
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -59,19 +71,26 @@ void Madd::Start() {
 void Madd::ProcessInput() {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
-  else if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+  else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     ReloadShader();
 }
 
-//This function is temporary for shader testing.
-void Madd::ReloadShader(){
-    Shader *vertexShader = new Shader("default.vs");
-    Shader *fragmentShader = new Shader("default.fs");
-    ShaderProgram *_program = new ShaderProgram(vertexShader, fragmentShader);
+// This function is temporary for shader testing.
+bool Madd::ReloadShader() {
+    Shader *vertexShader;
+    Shader *fragmentShader;
+    ShaderProgram *_program;
+  try {
+    vertexShader = new Shader("default.vs");
+    fragmentShader = new Shader("default.fs");
+    _program = new ShaderProgram(vertexShader, fragmentShader);
+  } catch (int e) {
+    return false;
+  }
 
-    delete vertexShader;
-    delete fragmentShader;
-    if(program)
-      delete program;
-    program = _program;
+  delete vertexShader;
+  delete fragmentShader;
+  if (program)
+    delete program;
+  program = _program;
 }

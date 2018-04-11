@@ -1,4 +1,7 @@
 #include "shader.h"
+
+#include <fstream>
+
 #define VERTEX_SHADER 'v'
 #define FRAGMENT_SHADER 'f'
 

@@ -2,15 +2,9 @@
 #define MADD_H
 
 #include <glad/glad.h>
-
 #include <GLFW/glfw3.h>
-#include <string>
-#include <vector>
 
-#include "shader.h"
 #include "shaderprogram.h"
-#include "shader_sources.h"
-#include "vertexarray.h"
 
 class Madd {
 public:
@@ -24,7 +18,7 @@ private:
   void ProcessInput();
   
   #pragma message "Delete these functions later " __FILE__
-  void ReloadShader();
+  bool ReloadShader();
   ShaderProgram* program;
 };
 

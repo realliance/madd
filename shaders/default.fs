@@ -1,9 +1,9 @@
 #version 330 core
+#define M_PI 3.1415926535897932384626433832795
 out vec4 FragColor;
-  
-in vec4 vertexColor; // the input variable from the vertex shader (same name and same type)  
 
-void main()
-{
-    FragColor = vertexColor;
-} 
+uniform float time;
+
+void main() {
+  FragColor = vec4(sin(time) + 0.5f, 0.5f, 0.5f, 1.0f);
+}
