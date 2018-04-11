@@ -33,5 +33,6 @@
 madd
 
 # Directories
+.directory
 /.vscode
 /build
