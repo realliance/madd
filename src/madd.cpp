@@ -1,13 +1,24 @@
 #include "madd.h"
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include "shader.h"
 #include "vertexarray.h"
 
+void Clear(GLFWwindow *window) {
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  glfwSwapBuffers(window);
+
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
+  Clear(window);
 }
 
 Madd::Madd(int width, int height, const char *title) {
@@ -29,8 +40,8 @@ Madd::~Madd() { glfwTerminate(); }
 
 void Madd::Start() {
 
-  if(!ReloadShader()){
-    std::cout<<"Shader Loading Failed"<<std::endl;
+  if (!ReloadShader()) {
+    std::cout << "Shader Loading Failed" << std::endl;
     return;
   }
 
@@ -49,11 +60,13 @@ void Madd::Start() {
   VertexArray *rect = new VertexArray(vertices, indices);
 
   int shaderTimeLocation = glGetUniformLocation(program->GetID(), "time");
+
+  Clear(window);
   while (!glfwWindowShouldClose(window)) {
     ProcessInput();
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    // glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program->GetID());
     glUniform1f(shaderTimeLocation, glfwGetTime());
@@ -77,9 +90,10 @@ void Madd::ProcessInput() {
 
 // This function is temporary for shader testing.
 bool Madd::ReloadShader() {
-    Shader *vertexShader;
-    Shader *fragmentShader;
-    ShaderProgram *_program;
+  Clear(window);
+  Shader *vertexShader;
+  Shader *fragmentShader;
+  ShaderProgram *_program;
   try {
     vertexShader = new Shader("default.vs");
     fragmentShader = new Shader("default.fs");
@@ -93,4 +107,5 @@ bool Madd::ReloadShader() {
   if (program)
     delete program;
   program = _program;
+  return true;
 }
