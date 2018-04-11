@@ -21,7 +21,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   Clear(window);
 }
 
-Madd::Madd(int width, int height, const char *title) {
+Madd::Madd(int width, int height, const char *title):program(nullptr) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
