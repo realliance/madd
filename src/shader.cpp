@@ -1,5 +1,5 @@
 #include "shader.h"
-
+#include <iostream>
 #include <fstream>
 
 #define VERTEX_SHADER 'v'
@@ -9,8 +9,9 @@ Shader::Shader(std::string shaderSourceCode, unsigned int shaderType)
     : source(shaderSourceCode.c_str()), shaderType(shaderType), program(0) {
   Init();
 }
-#include <iostream>
+
 Shader::Shader(std::string shaderFileName) {
+  std::cout<<shaderFileName<<std::endl;
   char type = shaderFileName.at(shaderFileName.find(".") + 1);
 
   if (type == VERTEX_SHADER)
