@@ -2,9 +2,6 @@
 #include <iostream>
 
 int main() {
-  const char *title = "test";
-  Madd *gameContext = new Madd(800, 600, title);
-  gameContext->Start();
-
+  Game* gameContext = new Game();
   return 0;
 }

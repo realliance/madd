@@ -1,5 +1,5 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include "madd.h"
+#include "game.h"
 
 #endif
