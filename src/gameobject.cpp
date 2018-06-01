@@ -34,6 +34,7 @@ bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned i
     }
     vertices = _vertices;
     indices = _indices;
+    int indicesSize = indices.size();
     VAO = new VertexArray(vertices, indices);
     rendered=true;
 
@@ -48,7 +49,7 @@ bool GameObject::Render(){
         glUniform1f(shaderTimeLocation, glfwGetTime());
         VAO->Bind();
 
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
         VertexArray::UnBind();
         return true;
     }else{

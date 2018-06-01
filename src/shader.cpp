@@ -11,7 +11,6 @@ Shader::Shader(std::string shaderSourceCode, unsigned int shaderType)
 }
 
 Shader::Shader(std::string shaderFileName) {
-  std::cout<<shaderFileName<<std::endl;
   char type = shaderFileName.at(shaderFileName.find(".") + 1);
 
   if (type == VERTEX_SHADER)
