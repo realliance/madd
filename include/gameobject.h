@@ -15,6 +15,7 @@ class GameObject{
     private:
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
+        int indicesSize;
         std::string vsPath;
         std::string fsPath;
         VertexArray* VAO;
