@@ -28,6 +28,13 @@ Game::Game(){
     GameObject* rect = new GameObject();
     rect->RenderInit(vertices,indices,"default.vs","default.fs");
     Engine->addObject(rect);
+}
+
+Game::~Game(){
+    delete Engine;
+}
+
+void Game::Run(){
     while(Engine->stayOpen()){
         Engine->Tick();
     }

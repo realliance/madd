@@ -6,6 +6,7 @@ class Game{
     public:
         Game();
         ~Game();
+        void Run();
     private:
         Madd* Engine;
 };
