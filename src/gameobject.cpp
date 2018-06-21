@@ -18,7 +18,7 @@ bool GameObject::ReloadShader() {
         }
         if (shader) 
             delete shader;
-        shader = shader;
+        shader = _shader;
             return true;
     }else
         return false;
@@ -34,11 +34,12 @@ bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned i
     }
     vertices = _vertices;
     indices = _indices;
-    int indicesSize = indices.size();
+    indicesSize = indices.size();
     VAO = new VertexArray(vertices, indices);
     rendered=true;
 
     shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
+    return true;
 }
 
 #include <glad/glad.h>
