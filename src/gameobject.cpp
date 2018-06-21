@@ -1,4 +1,8 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "gameobject.h"
+
 
 GameObject::GameObject():rendered(false){
 
@@ -42,8 +46,6 @@ bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned i
     return true;
 }
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 bool GameObject::Render(){
     if(rendered){
         glUseProgram(shader->GetID());
