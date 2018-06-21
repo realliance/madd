@@ -17,9 +17,9 @@ public:
 private:
   void Init();
   unsigned int id;
-  unsigned int program;
-  unsigned int shaderType;
   const char *source;
+  unsigned int shaderType;
+  unsigned int program;
 };
 
 #endif // SHADER_H
