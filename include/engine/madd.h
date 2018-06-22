@@ -15,6 +15,7 @@ public:
   void Tick();
   void addObject(GameObject* obj);
   bool stayOpen(){return !close;}
+  float time;
 private:
   GLFWwindow *window = nullptr;
   std::vector<GameObject*> objs;
