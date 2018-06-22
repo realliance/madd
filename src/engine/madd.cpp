@@ -41,6 +41,8 @@ void Madd::Tick(){
     
 
     for(GameObject* obj : objs){
+        time = glfwGetTime();
+        obj->Update();
         obj->Render();
     }
 

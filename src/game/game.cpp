@@ -25,7 +25,7 @@ Game::Game(){
         7, 3, 2, 2, 6, 7, //sixth face
     };
 
-    GameObject* rect = new GameObject();
+    GameObject* rect = new GameObject(Engine);
     rect->RenderInit(vertices,indices,"default.vs","default.fs");
     Engine->addObject(rect);
 }
