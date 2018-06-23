@@ -1,7 +1,8 @@
+set(DIR ${CMAKE_CURRENT_LIST_DIR})
 target_sources(madd
     PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}/game.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/cube.cpp"
+        "${DIR}/game.cpp"
+        "${DIR}/main.cpp"
+        "${DIR}/cube.cpp"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include/game")
