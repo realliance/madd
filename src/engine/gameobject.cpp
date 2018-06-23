@@ -57,6 +57,7 @@ bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned i
 
 bool GameObject::Render(){
     if(rendered){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(shader->GetID());
         VAO->Bind();
 
@@ -71,6 +72,6 @@ bool GameObject::Render(){
 bool GameObject::Update(){
     glUniform1f(shaderTimeLocation, context->time);
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-    trans = glm::rotate(trans, ((int)context->time%360)/100.f, glm::vec3(1.0, 0.0, 1.0));
+    trans = glm::rotate(trans, glm::clamp(context->time, -1.f, 1.f)/100.f, glm::vec3(1.0, -1.0, 1.0));
     return true;
 }

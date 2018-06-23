@@ -22,6 +22,8 @@ Madd::Madd(int width, int height, const char *title):program(nullptr),close(fals
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
   glViewport(0, 0, width, height);
 
+  glEnable(GL_DEPTH_TEST);
+
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 }
 
