@@ -24,6 +24,7 @@ bool RenderedObject::RenderInit(std::vector<float> vertices,
     }
     VAO = new VertexArray(vertices, indices);
     textureObj = new Texture(texture);
+    trans = glm::mat4(1.0f);
     shader->Enable();
     shader->AddInt("texture1",0);
     
