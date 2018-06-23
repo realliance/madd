@@ -43,7 +43,6 @@ void Madd::Tick(){
     
 
     for(GameObject* obj : objs){
-        time = glfwGetTime();
         obj->Update();
         obj->Render();
     }
@@ -65,8 +64,7 @@ void Madd::ProcessInput() {
 // This function is temporary for shader testing.
 bool Madd::ReloadShader() {
   for(GameObject* obj : objs){
-        if(!obj->ReloadShader()){
-          std::cout<<"fuck"<<std::endl;
+        if(!obj->ReloadShaders()){
           return false;
         }
   }
