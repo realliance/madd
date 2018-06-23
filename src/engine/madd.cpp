@@ -62,14 +62,11 @@ void Madd::ProcessInput() {
 
 // This function is temporary for shader testing.
 bool Madd::ReloadShader() {
-  ShaderProgram *_program;
-  try {
-    _program = new ShaderProgram("default.vs", "default.fs");
-  } catch (int e) {
-    return false;
+  for(GameObject* obj : objs){
+        if(!obj->ReloadShader()){
+          std::cout<<"fuck"<<std::endl;
+          return false;
+        }
   }
-  if (program)
-    delete program;
-  program = _program;
   return true;
 }

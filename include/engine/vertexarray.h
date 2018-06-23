@@ -6,7 +6,7 @@
 
 class VertexArray {
 public:
-  VertexArray(std::vector<float> vertices, std::vector<unsigned int> indices);
+  VertexArray(std::vector<float> vertices, std::vector<unsigned int> indices, bool rgbcolor);
   ~VertexArray();
   void Bind();
   static void UnBind();

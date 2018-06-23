@@ -12,7 +12,7 @@ class GameObject{
         GameObject(Madd* context);
         ~GameObject();
         bool ReloadShader();
-        bool RenderInit(std::vector<float> _vertices, std::vector<unsigned int> _indices, std::string vertexShader, std::string fragmentShader);
+        bool RenderInit(std::vector<float> _vertices, std::vector<unsigned int> _indices, std::string vertexShader, std::string fragmentShader, bool rgbcolor);
         bool Render();
         bool Update();
         

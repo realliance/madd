@@ -1,7 +1,9 @@
 #include "vertexarray.h"
 VertexArray::VertexArray(std::vector<float> vertices,
-                         std::vector<unsigned int> indices) {
-
+                         std::vector<unsigned int> indices,
+                         bool rgbcolor) {
+  int stride = 3;
+  
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
@@ -15,9 +17,17 @@ VertexArray::VertexArray(std::vector<float> vertices,
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
                indices.data(), GL_STATIC_DRAW);
+  
+  if(rgbcolor)
+    stride = 6;
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+
+  if(rgbcolor){
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    glEnableVertexAttribArray(1);
+  }
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
