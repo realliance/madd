@@ -1,7 +1,3 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "renderedobject.h"
 #include "madd.h"
 
@@ -14,8 +10,8 @@ RenderedObject::~RenderedObject(){
     delete textureObj;
 }
 
-bool RenderedObject::RenderInit(std::vector<float> _vertices,
-                                std::vector<unsigned int> _indices,
+bool RenderedObject::RenderInit(std::vector<float> vertices,
+                                std::vector<unsigned int> indices,
                                 std::string vertexShader,
                                 std::string fragmentShader,
                                 std::string texture){
@@ -26,17 +22,14 @@ bool RenderedObject::RenderInit(std::vector<float> _vertices,
     } catch (int e) {
         return false;
     }
-    vertices = _vertices;
-    indices = _indices;
-    indicesSize = indices.size();
     VAO = new VertexArray(vertices, indices);
     textureObj = new Texture(texture);
-    glUseProgram(shader->GetID());
-    glUniform1i(glGetUniformLocation(shader->GetID(), "texture1"), 0);
+    shader->Enable();
+    shader->AddInt("texture1",0);
     
-    shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
-    transformLoc = glGetUniformLocation(shader->GetID(), "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    shaderTimeLocation = shader->GetUniformLocation("time");
+    transformLoc = shader->GetUniformLocation("transform");
+    shader->SetMartix4fUniform(transformLoc, &trans);
     return true;
 }
 
@@ -52,23 +45,19 @@ bool RenderedObject::ReloadShader() {
     shader = _shader;
     
     //Update Locations for new shader
-    shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
-    transformLoc = glGetUniformLocation(shader->GetID(), "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    shaderTimeLocation = shader->GetUniformLocation("time");
+    transformLoc = shader->GetUniformLocation("transform");
+    ShaderProgram::SetMartix4fUniform(transformLoc, &trans);
     return true;
 }
 
 bool RenderedObject::Render(){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUniform1f(shaderTimeLocation, parent->GetContext()->GetTime());
+    ShaderProgram::SetFloatUniform(shaderTimeLocation, parent->GetContext()->GetTime());
+    shader->Enable();
+    Texture::SetActiveTexture(0);
+    textureObj->Enable();
 
-    glUseProgram(shader->GetID());
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureObj->GetID());
-    VAO->Bind();
-
-    glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
-    VertexArray::UnBind();
+    VAO->Draw();
     return true;
 }
 
@@ -77,5 +66,5 @@ glm::mat4 RenderedObject::GetTransformation(){
 }
 void RenderedObject::SetTransformation(glm::mat4 newMatrix){
     trans = newMatrix;
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    ShaderProgram::SetMartix4fUniform(transformLoc, &trans);
 }

@@ -1,6 +1,6 @@
 #include "vertexarray.h"
 VertexArray::VertexArray(std::vector<float> vertices,
-                         std::vector<unsigned int> indices) {    
+                         std::vector<unsigned int> indices) {   
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -26,6 +26,7 @@ VertexArray::VertexArray(std::vector<float> vertices,
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    indicesSize = indices.size();
 }
 VertexArray::~VertexArray() {
     glDeleteVertexArrays(1, &VAO);
@@ -33,6 +34,9 @@ VertexArray::~VertexArray() {
     glDeleteBuffers(1, &EBO);
 }
 
-void VertexArray::Bind() { glBindVertexArray(VAO); }
-
-void VertexArray::UnBind() { glBindVertexArray(0); }
+void VertexArray::Draw(){
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBindVertexArray(VAO); 
+    glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

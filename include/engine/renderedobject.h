@@ -13,8 +13,8 @@ class RenderedObject{
     public:
         RenderedObject(GameObject* parent);
         ~RenderedObject();
-        bool RenderInit(std::vector<float> _vertices,
-                        std::vector<unsigned int> _indices,
+        bool RenderInit(std::vector<float> vertices,
+                        std::vector<unsigned int> indices,
                         std::string vertexShader,
                         std::string fragmentShader,
                         std::string texture);
@@ -22,11 +22,7 @@ class RenderedObject{
         bool Render();
         glm::mat4 GetTransformation();
         void SetTransformation(glm::mat4 newMatrix);
-    private:
-        std::vector<float> vertices;
-        std::vector<unsigned int> indices;
-        int indicesSize;
-        
+    private:        
         std::string vsPath;
         std::string fsPath;
         VertexArray* VAO;
