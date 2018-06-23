@@ -18,19 +18,24 @@ bool GameObject::ReloadShader() {
     if(rendered){
         ShaderProgram* _shader;
         try {
-        _shader = new ShaderProgram(vsPath, fsPath);
+            _shader = new ShaderProgram(vsPath, fsPath);
         } catch (int e) {
             return false;
         }
         if (shader) 
             delete shader;
         shader = _shader;
-            return true;
     }else
         return false;
+    
+    //Update Locations for new shader
+    shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
+    transformLoc = glGetUniformLocation(shader->GetID(), "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    return true;
 }
 
-bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned int> _indices, std::string vertexShader, std::string fragmentShader){
+bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned int> _indices, std::string vertexShader, std::string fragmentShader, bool rgbcolor=false){
     vsPath = vertexShader;
     fsPath = fragmentShader;
     try {
@@ -41,12 +46,10 @@ bool GameObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned i
     vertices = _vertices;
     indices = _indices;
     indicesSize = indices.size();
-    VAO = new VertexArray(vertices, indices);
+    VAO = new VertexArray(vertices, indices, rgbcolor);
     rendered=true;
     
     shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
-    
-
     transformLoc = glGetUniformLocation(shader->GetID(), "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
     return true;
