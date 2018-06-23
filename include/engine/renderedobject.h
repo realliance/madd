@@ -7,6 +7,7 @@
 #include "vertexarray.h"
 #include "shaderprogram.h"
 #include "gameobject.h"
+#include "texture.h"
 
 class RenderedObject{
     public:
@@ -16,7 +17,7 @@ class RenderedObject{
                         std::vector<unsigned int> _indices,
                         std::string vertexShader,
                         std::string fragmentShader,
-                        bool rgbcolor);
+                        std::string texture);
         bool ReloadShader();
         bool Render();
         glm::mat4 GetTransformation();
@@ -29,6 +30,7 @@ class RenderedObject{
         std::string vsPath;
         std::string fsPath;
         VertexArray* VAO;
+        Texture* textureObj;
         ShaderProgram* shader;
         GameObject* parent;
 
