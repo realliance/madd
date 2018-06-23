@@ -11,9 +11,14 @@ RenderedObject::RenderedObject(GameObject* parent):parent(parent){
 RenderedObject::~RenderedObject(){
     delete VAO;
     delete shader;
+    delete textureObj;
 }
 
-bool RenderedObject::RenderInit(std::vector<float> _vertices, std::vector<unsigned int> _indices, std::string vertexShader, std::string fragmentShader, bool rgbcolor=false){
+bool RenderedObject::RenderInit(std::vector<float> _vertices,
+                                std::vector<unsigned int> _indices,
+                                std::string vertexShader,
+                                std::string fragmentShader,
+                                std::string texture){
     vsPath = vertexShader;
     fsPath = fragmentShader;
     try {
@@ -24,7 +29,10 @@ bool RenderedObject::RenderInit(std::vector<float> _vertices, std::vector<unsign
     vertices = _vertices;
     indices = _indices;
     indicesSize = indices.size();
-    VAO = new VertexArray(vertices, indices, rgbcolor);
+    VAO = new VertexArray(vertices, indices);
+    textureObj = new Texture(texture);
+    glUseProgram(shader->GetID());
+    glUniform1i(glGetUniformLocation(shader->GetID(), "texture1"), 0);
     
     shaderTimeLocation = glGetUniformLocation(shader->GetID(), "time");
     transformLoc = glGetUniformLocation(shader->GetID(), "transform");
@@ -53,7 +61,10 @@ bool RenderedObject::ReloadShader() {
 bool RenderedObject::Render(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUniform1f(shaderTimeLocation, parent->GetContext()->GetTime());
+
     glUseProgram(shader->GetID());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureObj->GetID());
     VAO->Bind();
 
     glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);

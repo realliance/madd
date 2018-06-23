@@ -6,15 +6,16 @@
 
 class VertexArray {
 public:
-  VertexArray(std::vector<float> vertices, std::vector<unsigned int> indices, bool rgbcolor);
-  ~VertexArray();
-  void Bind();
-  static void UnBind();
+    VertexArray(std::vector<float> vertices,
+                std::vector<unsigned int> indices);
+    ~VertexArray();
+    void Bind();
+    static void UnBind();
 
 private:
-  unsigned int VAO;
-  unsigned int VBO;
-  unsigned int EBO;
+    unsigned int VAO;
+    unsigned int VBO;
+    unsigned int EBO;
 };
 
 #endif // VERTEXARRAY_H
