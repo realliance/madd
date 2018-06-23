@@ -11,11 +11,11 @@
 class Madd {
 public:
   Madd(int width, int height, const char *title);
-  ~Madd();
+  virtual ~Madd();
   void Tick();
   void addObject(GameObject* obj);
   bool stayOpen(){return !close;}
-  float time;
+  virtual float GetTime(){return glfwGetTime();}
 private:
   GLFWwindow *window = nullptr;
   std::vector<GameObject*> objs;
