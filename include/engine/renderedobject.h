@@ -4,11 +4,11 @@
 #include <vector>
 #include <string.h>
 #include <glm/glm.hpp>
+
 #include "vertexarray.h"
 #include "shaderprogram.h"
 #include "gameobject.h"
 #include "texture.h"
-
 class RenderedObject{
     public:
         RenderedObject(GameObject* parent);

@@ -2,7 +2,6 @@
 #define SHADERPROGRAM_H
 #include <iostream>
 #include <glm/glm.hpp>
-#include "shader.h"
 #define LINKING_FAILED 20
 
 class ShaderProgram {

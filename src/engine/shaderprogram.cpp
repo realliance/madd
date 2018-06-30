@@ -1,6 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
-
+#include <glad/glad.h>
 #include "shaderprogram.h"
+#include "shader.h"
 
 ShaderProgram::ShaderProgram(std::string vsPath, std::string fsPath){
     Shader *vs;

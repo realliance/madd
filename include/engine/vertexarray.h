@@ -1,7 +1,5 @@
 #ifndef VERTEXARRAY_H
 #define VERTEXARRAY_H
-
-#include <glad/glad.h>
 #include <vector>
 
 class VertexArray {

@@ -1,6 +1,7 @@
 #include "shader.h"
 #include <iostream>
 #include <fstream>
+#include <glad/glad.h>
 
 #define VERTEX_SHADER 'v'
 #define FRAGMENT_SHADER 'f'

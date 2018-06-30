@@ -2,28 +2,31 @@
 #define MADD_H
 
 #include <vector>
-#include "gameobject.h"
-#include "renderer.h"
-#include "camera.h"
 
+class GameObject;
+class Renderer;
+class Camera;
+class EventHandler;
 class Madd {
 public:
     Madd(int width, int height, const char *title);
-    virtual ~Madd();
+    ~Madd();
     void Tick();
-    void addObject(GameObject* obj);
-    bool stayOpen(){return !close;}
+    void AddObject(GameObject* obj);
+    bool StayOpen(){return !close;}
+    void Close(){close = true;}
     Camera* GetMainCamera();
-    virtual float GetTime(){return glfwGetTime();}
+    float GetTime();
     int GetWidth();
     int GetHeight();
+    void* GetWindow();
     void SetHeightWidth(int _height, int _width);
 private:
     Renderer* render;
     std::vector<GameObject*> objs;
     Camera* mainCamera;
-    void ProcessInput();
-    bool ReloadShader();
+    EventHandler* event;
+    void ReloadShader();
     bool close;
     int width;
     int height;
