@@ -3,6 +3,30 @@
 
 #ifndef _glfw3_h_
 
+/*! @name Key and button actions
+ *  @{ */
+/*! @brief The key or mouse button was released.
+ *
+ *  The key or mouse button was released.
+ *
+ *  @ingroup input
+ */
+#define GLFW_RELEASE                0
+/*! @brief The key or mouse button was pressed.
+ *
+ *  The key or mouse button was pressed.
+ *
+ *  @ingroup input
+ */
+#define GLFW_PRESS                  1
+/*! @brief The key was held down until it repeated.
+ *
+ *  The key was held down until it repeated.
+ *
+ *  @ingroup input
+ */
+#define GLFW_REPEAT                 2
+
 /* The unknown key */
 #define GLFW_KEY_UNKNOWN            -1
 
@@ -203,6 +227,30 @@
 
 #endif //_glfw3_h_
 
+/*! @name Key and button actions
+ *  @{ */
+/*! @brief The key or mouse button was released.
+ *
+ *  The key or mouse button was released.
+ *
+ *  @ingroup input
+ */
+#define KEY_RELEASE            GLFW_RELEASE                //0
+/*! @brief The key or mouse button was pressed.
+ *
+ *  The key or mouse button was pressed.
+ *
+ *  @ingroup input
+ */
+#define KEY_PRESS              GLFW_PRESS                  //1
+/*! @brief The key was held down until it repeated.
+ *
+ *  The key was held down until it repeated.
+ *
+ *  @ingroup input
+ */
+#define KEY_REPEAT             GLFW_REPEAT                 //2
+
 /* The unknown key */
 #define KEY_UNKNOWN            GLFW_KEY_UNKNOWN            //-1
 
@@ -343,16 +391,16 @@
 
 /*! @brief If this bit is set one or more Shift keys were held down.
  */
-#define MOD_SHIFT           GLFW_MOD_SHIFT           //0x0001
+#define KEY_MOD_SHIFT           GLFW_MOD_SHIFT           //0x0001
 /*! @brief If this bit is set one or more Control keys were held down.
  */
-#define MOD_CONTROL         GLFW_MOD_CONTROL         //0x0002
+#define KEY_MOD_CONTROL         GLFW_MOD_CONTROL         //0x0002
 /*! @brief If this bit is set one or more Alt keys were held down.
  */
-#define MOD_ALT             GLFW_MOD_ALT             //0x0004
+#define KEY_MOD_ALT             GLFW_MOD_ALT             //0x0004
 /*! @brief If this bit is set one or more Super keys were held down.
  */
-#define MOD_SUPER           GLFW_MOD_SUPER           //0x0008
+#define KEY_MOD_SUPER           GLFW_MOD_SUPER           //0x0008
 
 /*! @} */
 
