@@ -34,7 +34,7 @@ bool Cube::Render(){
 }
 
 bool Cube::ReloadShaders(){
-    return cubeMesh->ReloadShader();
+    return cubeMesh->LoadShader();
 }
 
 bool Cube::Update(){

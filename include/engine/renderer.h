@@ -10,8 +10,10 @@ class Renderer{
         GLFWwindow* GetWindow(){return window;}
         void Start();
         void Finish();
+        int GetHeight();
+        int GetWidth();
     private:
-        GLFWwindow *window = nullptr;
+        GLFWwindow *window;
 };
 
 #endif //RENDERER_H

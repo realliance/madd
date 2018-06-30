@@ -4,7 +4,7 @@
 
 Game::Game(){
     const char *title = "test";
-    Engine = new Madd(800, 800, title);
+    Engine = new Madd(800, 600, title);
     GameObject* cube = new Cube(Engine);
     Engine->addObject(cube);
 }

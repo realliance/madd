@@ -3,8 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-Madd::Madd(int width, int height, const char *title):close(false) {
+Madd::Madd(int width, int height, const char *title):close(false),width(width),height(height) {
     render = new Renderer(width, height, title);
+    mainCamera = new Camera(this);
 }
 
 Madd::~Madd() { 
@@ -20,7 +21,7 @@ void Madd::addObject(GameObject* obj){
 void Madd::Tick(){
     ProcessInput();
     render->Start();
-
+    mainCamera->Update();
     for(GameObject* obj : objs){
         obj->Update();
         obj->Render();
@@ -46,4 +47,17 @@ bool Madd::ReloadShader() {
           }
     }
     return true;
+}
+
+
+Camera* Madd::GetMainCamera(){
+    return mainCamera;
+}
+
+int Madd::GetWidth(){
+    return render->GetWidth();
+}
+
+int Madd::GetHeight(){
+    return render->GetHeight();
 }
