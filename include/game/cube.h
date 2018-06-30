@@ -11,6 +11,7 @@ class Cube : public GameObject{
         bool Render();
         bool Update();
         bool ReloadShaders();
+        void ProcessInput(int key, int action);
     private:
         RenderedObject* cubeMesh;
         Madd* context;
