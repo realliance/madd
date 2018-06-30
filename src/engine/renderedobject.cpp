@@ -1,7 +1,8 @@
 #include "renderedobject.h"
 #include "madd.h"
+#include "camera.h"
 
-RenderedObject::RenderedObject(GameObject* parent):parent(parent){
+RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr){
 }
 
 RenderedObject::~RenderedObject(){
@@ -17,24 +18,18 @@ bool RenderedObject::RenderInit(std::vector<float> vertices,
                                 std::string texture){
     vsPath = vertexShader;
     fsPath = fragmentShader;
-    try {
-        shader = new ShaderProgram(vsPath, fsPath);
-    } catch (int e) {
-        return false;
-    }
+    model = glm::mat4(1.0f);
     VAO = new VertexArray(vertices, indices);
     textureObj = new Texture(texture);
-    trans = glm::mat4(1.0f);
+
+    if(!LoadShader())
+        return false;
     shader->Enable();
     shader->AddInt("texture1",0);
-    
-    shaderTimeLocation = shader->GetUniformLocation("time");
-    transformLoc = shader->GetUniformLocation("transform");
-    shader->SetMartix4fUniform(transformLoc, &trans);
     return true;
 }
 
-bool RenderedObject::ReloadShader() {
+bool RenderedObject::LoadShader() {
     ShaderProgram* _shader;
     try {
         _shader = new ShaderProgram(vsPath, fsPath);
@@ -47,12 +42,17 @@ bool RenderedObject::ReloadShader() {
     
     //Update Locations for new shader
     shaderTimeLocation = shader->GetUniformLocation("time");
-    transformLoc = shader->GetUniformLocation("transform");
-    ShaderProgram::SetMartix4fUniform(transformLoc, &trans);
+    modelLoc = shader->GetUniformLocation("model");
+    viewLoc = shader->GetUniformLocation("view");
+    projectionLoc = shader->GetUniformLocation("projection");
+    ShaderProgram::SetMartix4fUniform(modelLoc, &model);
     return true;
 }
 
 bool RenderedObject::Render(){
+    Camera* camera = parent->GetContext()->GetMainCamera();
+    ShaderProgram::SetMartix4fUniform(viewLoc, camera->GetView());
+    ShaderProgram::SetMartix4fUniform(projectionLoc, camera->GetProjection());
     ShaderProgram::SetFloatUniform(shaderTimeLocation, parent->GetContext()->GetTime());
     shader->Enable();
     Texture::SetActiveTexture(0);
@@ -63,9 +63,9 @@ bool RenderedObject::Render(){
 }
 
 glm::mat4 RenderedObject::GetTransformation(){
-    return trans;
+    return model;
 }
 void RenderedObject::SetTransformation(glm::mat4 newMatrix){
-    trans = newMatrix;
-    ShaderProgram::SetMartix4fUniform(transformLoc, &trans);
+    model = newMatrix;
+    ShaderProgram::SetMartix4fUniform(modelLoc, &model);
 }

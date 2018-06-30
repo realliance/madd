@@ -18,7 +18,7 @@ class RenderedObject{
                         std::string vertexShader,
                         std::string fragmentShader,
                         std::string texture);
-        bool ReloadShader();
+        bool LoadShader();
         bool Render();
         glm::mat4 GetTransformation();
         void SetTransformation(glm::mat4 newMatrix);
@@ -27,12 +27,14 @@ class RenderedObject{
         std::string fsPath;
         VertexArray* VAO;
         Texture* textureObj;
-        ShaderProgram* shader;
         GameObject* parent;
+        ShaderProgram* shader;
 
         unsigned int shaderTimeLocation;
-        unsigned int transformLoc;
-        glm::mat4 trans;
+        unsigned int modelLoc;
+        unsigned int viewLoc;
+        unsigned int projectionLoc;
+        glm::mat4 model;
 };
 
 #endif //RENDEREDOBJECT_H

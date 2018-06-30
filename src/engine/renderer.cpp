@@ -1,10 +1,23 @@
 #include "renderer.h"
+#include <iostream>
+//see renderer.cpp::GetHeight(),GetWidth() for more details
+int globalWidth;
+int globalHeight;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
+    //This is a bad workaround probably should fix eventually.
+    globalWidth = width;
+    globalHeight = height;
 }
 
-Renderer::Renderer(int width, int height, const char *title){
+void ErrorCallback(int, const char* err_str)
+{
+    std::cout << "GLFW Error: " << err_str << std::endl;
+}
+
+Renderer::Renderer(int width, int height, const char *title):window(nullptr){
+    glfwSetErrorCallback(ErrorCallback);
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -19,6 +32,9 @@ Renderer::Renderer(int width, int height, const char *title){
     glEnable(GL_DEPTH_TEST);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    //delete me I dare you
+    globalHeight=height;globalWidth=width;
 }
 
 Renderer::~Renderer(){
@@ -32,4 +48,20 @@ void Renderer::Start(){
 
 void Renderer::Finish(){
     glfwSwapBuffers(window);
+}
+
+int Renderer::GetHeight(){
+    //I don't know why this doesn't work
+    //int height;
+    //glfwGetFramebufferSize(window, NULL, &height);
+    //return height;
+    return globalHeight;
+}
+
+int Renderer::GetWidth(){
+    //I don't know why this doesn't work
+    //int width;
+    //glfwGetFramebufferSize(window, &width, NULL);
+    //return width;
+    return globalWidth;
 }
