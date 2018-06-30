@@ -3,19 +3,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "keycodes.h"
 #include "gameobject.h"
 #include "renderer.h"
 #include "camera.h"
 #include "eventhandler.h"
-
 Madd::Madd(int width, int height, const char *title):close(false),width(width),height(height) {
     render = new Renderer(width, height, title);
     mainCamera = new Camera(this);
     event = new EventHandler(this);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
-    keyCB callback = std::bind(&ProcessInput, this, std::placeholders::_1, std::placeholders::_2);
-    event->RegisterMultipleKeyCB(callback,keys);
+    event->RegisterMultipleKeyCB(BIND(ProcessInput),keys);
 }
 
 Madd::~Madd() { 
@@ -57,6 +54,9 @@ void Madd::ProcessInput(int key, int action){
 
 Camera* Madd::GetMainCamera(){
     return mainCamera;
+}
+EventHandler* Madd::GetEventHandler(){
+    return event;
 }
 int Madd::GetWidth(){
     return render->GetWidth();
