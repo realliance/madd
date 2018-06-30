@@ -11,5 +11,6 @@ target_sources(madd
         "${DIR}/renderedobject.h"
         "${DIR}/eventhandler.h"
         "${DIR}/keycodes.h"
+        "${DIR}/errors.h"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include/engine")

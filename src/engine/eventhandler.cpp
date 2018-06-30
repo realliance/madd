@@ -6,12 +6,11 @@ struct keyCallback {
     keyCB cb;
     int mods;
 };
-#include <iostream>
-#define EVENTHANDLER_ALREADY_EXISTS 70;
+
+#include "errors.h"
 //Please rewrite if you know a better way
 EventHandler* eventPointer=NULL;
 void EventHandler::KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
-    std::cout<<key<<std::endl;
     for(auto const i : keyboardCallbacks[key]) {
         if(i.mods == mods || i.mods == 0) {
             i.cb(key, action);
@@ -22,7 +21,6 @@ void EventHandler::KeyCallBack(GLFWwindow *window, int key, int scancode, int ac
 void GlfwKeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
     eventPointer->KeyCallBack(window, key, scancode, action, mods);
 }
-
 
 EventHandler::EventHandler(Madd* context):context(context){
     if(eventPointer)
