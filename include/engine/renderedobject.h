@@ -2,13 +2,13 @@
 #define RENDEREDOBJECT_H
 
 #include <vector>
-#include <string.h>
+#include <string>
 #include <glm/glm.hpp>
 
-#include "vertexarray.h"
-#include "shaderprogram.h"
-#include "gameobject.h"
-#include "texture.h"
+class VertexArray;
+class ShaderProgram;
+class GameObject;
+class Texture;
 class RenderedObject{
     public:
         RenderedObject(GameObject* parent);

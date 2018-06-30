@@ -1,6 +1,10 @@
 #include "renderedobject.h"
 #include "madd.h"
 #include "camera.h"
+#include "vertexarray.h"
+#include "shaderprogram.h"
+#include "gameobject.h"
+#include "texture.h"
 
 RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr){
 }
