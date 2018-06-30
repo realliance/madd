@@ -14,7 +14,6 @@ class RenderedObject{
         RenderedObject(GameObject* parent);
         ~RenderedObject();
         bool RenderInit(std::vector<float> vertices,
-                        std::vector<unsigned int> indices,
                         std::string vertexShader,
                         std::string fragmentShader,
                         std::string texture);
