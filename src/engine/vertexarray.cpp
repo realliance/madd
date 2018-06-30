@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "vertexarray.h"
 VertexArray::VertexArray(std::vector<float> vertices,
                          std::vector<unsigned int> indices) {   

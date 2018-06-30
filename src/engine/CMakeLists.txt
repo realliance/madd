@@ -9,6 +9,7 @@ target_sources(madd
         "${DIR}/vertexarray.cpp"
         "${DIR}/renderedobject.cpp"
         "${DIR}/renderer.cpp"
+        "${DIR}/eventhandler.cpp"
 )
 
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include/engine")

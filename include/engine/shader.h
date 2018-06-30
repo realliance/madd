@@ -1,10 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <glad/glad.h>
-//#include <GLFW/glfw3.h>
 #include <string>
-
 #define COMPILATION_FAILED 10;
 
 class Shader {

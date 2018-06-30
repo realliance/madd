@@ -9,5 +9,7 @@ target_sources(madd
         "${DIR}/texture.h"
         "${DIR}/vertexarray.h"
         "${DIR}/renderedobject.h"
+        "${DIR}/eventhandler.h"
+        "${DIR}/keycodes.h"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include/engine")

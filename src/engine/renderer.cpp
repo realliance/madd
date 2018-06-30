@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include <iostream>
+#include <GLFW/glfw3.h>
 //see renderer.cpp::GetHeight(),GetWidth() for more details
 int globalWidth;
 int globalHeight;

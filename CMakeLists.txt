@@ -40,7 +40,7 @@ add_subdirectory(src)
 add_subdirectory(include)
 
 if (MSVC)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT madd)
+	set_target_properties(madd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 	target_link_libraries(madd ${GLFW_LIBRARIES})
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror -pedantic -g")
