@@ -6,27 +6,52 @@
 #include "eventhandler.h"
 Cube::Cube(Madd* context):context(context){
     std::vector<float> vertices = {
-         0.5f,  0.5f,  0.5f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,	1.0f, 0.6f, 0.0f,	1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,	1.0f, 0.8f, 0.0f,	0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,	0.8f, 1.0f, 0.0f,	1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,	0.3f, 0.1f, 1.0f,	1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,	0.8f, 0.0f, 0.8f,	0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,	0.0f, 1.0f, 0.0f,	0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,	0.0f, 0.5f, 0.8f,	0.0f, 1.0f
-    };
-    std::vector<unsigned int> indices = {
-        0, 1, 3, 3, 2, 0, //first face
-        4, 5, 7, 7, 6, 4, //second face
-        5, 1, 0, 0, 4, 5, //third face
-        6, 2, 0, 0, 4, 6, //fourth face
-        7, 3, 1, 1, 5, 7, //fifth face
-        7, 3, 2, 2, 6, 7, //sixth face
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     cubeMesh = new RenderedObject(this);
-    cubeMesh->RenderInit(vertices,indices,"default.vs","default.fs","container.jpg");
+    cubeMesh->RenderInit(vertices,"default.vs","default.fs","container.jpg");
     std::vector <unsigned int> keys = {KEY_W,KEY_A,KEY_S,KEY_D,KEY_LEFT_CONTROL,KEY_LEFT_SHIFT,KEY_F}; 
-    context->GetEventHandler()->RegisterMultipleKeyCB(BIND(ProcessInput),keys);
+    context->GetEventHandler()->RegisterMultipleKeyCB(BIND(Cube::ProcessInput),keys);
 }
 
 Cube::~Cube(){

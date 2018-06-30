@@ -16,14 +16,13 @@ RenderedObject::~RenderedObject(){
 }
 
 bool RenderedObject::RenderInit(std::vector<float> vertices,
-                                std::vector<unsigned int> indices,
                                 std::string vertexShader,
                                 std::string fragmentShader,
                                 std::string texture){
     vsPath = vertexShader;
     fsPath = fragmentShader;
     model = glm::mat4(1.0f);
-    VAO = new VertexArray(vertices, indices);
+    VAO = new VertexArray(vertices);
     textureObj = new Texture(texture);
 
     if(!LoadShader())

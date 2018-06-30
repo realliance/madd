@@ -4,15 +4,13 @@
 
 class VertexArray {
 public:
-    VertexArray(std::vector<float> vertices,
-                std::vector<unsigned int> indices);
+    VertexArray(std::vector<float> vertices);
     ~VertexArray();
     void Draw();
 private:
     unsigned int VAO;
     unsigned int VBO;
-    unsigned int EBO;
-    int indicesSize;
+    int verticesSize;
 };
 
 #endif // VERTEXARRAY_H
