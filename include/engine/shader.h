@@ -2,7 +2,7 @@
 #define SHADER_H
 
 #include <string>
-#define COMPILATION_FAILED 10;
+#include <errors.h>
 
 class Shader {
 public:
