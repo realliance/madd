@@ -21,6 +21,7 @@ public:
     int GetHeight();
     void* GetWindow();
     void SetHeightWidth(int _height, int _width);
+    void ProcessInput(int key, int action);
 private:
     Renderer* render;
     std::vector<GameObject*> objs;
