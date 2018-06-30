@@ -9,10 +9,13 @@ class Camera{
         glm::mat4* GetView();
         glm::mat4* GetProjection();
         void Update();
+        void SetPosition(float x, float y, float z);
+        void MovePosition(float x, float y, float z);
     private:
         glm::mat4 view;
         glm::mat4 projection;
         Madd* parent;
+        double x,y,z;
 };
 
 #endif //CAMERA_H
