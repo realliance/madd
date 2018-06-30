@@ -1,7 +1,6 @@
 #include "eventhandler.h"
 #include "madd.h"
 #include <GLFW/glfw3.h>
-#include "keycodes.h"
 
 struct keyCallback {
     keyCB cb;
@@ -50,4 +49,12 @@ void EventHandler::RegisterKeyCB(keyCB keyCBfunc, unsigned int keyCode, unsigned
     callback.cb = keyCBfunc;
     callback.mods = keyMods;
     keyboardCallbacks[keyCode].push_back(callback);
+}
+
+unsigned int EventHandler::GetKey(unsigned int key){
+    return glfwGetKey((GLFWwindow*)context->GetWindow(), key);
+}
+
+void EventHandler::GetMousePos(double* xpos, double* ypos){
+    glfwGetCursorPos((GLFWwindow*)context->GetWindow(), xpos, ypos);
 }
