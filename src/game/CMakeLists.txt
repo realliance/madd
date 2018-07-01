@@ -4,5 +4,6 @@ target_sources(madd
         "${DIR}/game.cpp"
         "${DIR}/main.cpp"
         "${DIR}/cube.cpp"
+        "${DIR}/gamecamera.cpp"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include/game")
