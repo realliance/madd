@@ -7,7 +7,11 @@
 #include "renderer.h"
 #include "camera.h"
 #include "eventhandler.h"
-Madd::Madd(int width, int height, const char *title):close(false),width(width),height(height) {
+Madd::Madd(int width, int height, const char *title):close(false),
+                                                     width(width),
+                                                     height(height),
+                                                     timeScale(1.0f),
+                                                     lastFrame(Clock::now()) {
     render = new Renderer(width, height, title);
     mainCamera = new Camera(this);
     event = new EventHandler(this);
@@ -37,6 +41,7 @@ void Madd::Tick(){
         obj->Render();
     }
     render->Finish();
+    UpdateDeltaTime();
 }
 
 void Madd::ReloadShader() {
@@ -50,6 +55,11 @@ void Madd::ProcessInput(int key, int action){
         Close();
     if (key == KEY_SPACE && action == KEY_PRESS)
         ReloadShader();
+}
+
+void Madd::UpdateDeltaTime(){
+    dTime = Clock::now() - lastFrame;
+    lastFrame = Clock::now();
 }
 
 Camera* Madd::GetMainCamera(){
@@ -69,4 +79,7 @@ void* Madd::GetWindow(){
 }
 float Madd::GetTime(){
     return glfwGetTime();
+}
+double Madd::GetDeltaTime(){
+    return dTime.count() * timeScale;
 }

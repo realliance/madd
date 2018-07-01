@@ -2,6 +2,12 @@
 #define MADD_H
 
 #include <vector>
+#include <chrono>
+/** Type Definition for chrono clock shorthand */
+typedef std::chrono::high_resolution_clock Clock;
+/** Type Definition for chrono time_point shorthand */
+typedef Clock::time_point Time;
+
 
 class GameObject;
 class Renderer;
@@ -18,6 +24,7 @@ public:
     Camera* GetMainCamera();
     EventHandler* GetEventHandler();
     float GetTime();
+    double GetDeltaTime();
     int GetWidth();
     int GetHeight();
     void* GetWindow();
@@ -28,9 +35,13 @@ private:
     Camera* mainCamera;
     EventHandler* event;
     void ReloadShader();
+    void UpdateDeltaTime();
+    std::chrono::duration<double> dTime;
     bool close;
     int width;
     int height;
+    float timeScale;
+    Time lastFrame;
 };
 
 #endif // MADD_H

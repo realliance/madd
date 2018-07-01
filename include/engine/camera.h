@@ -14,7 +14,7 @@ class Camera{
     private:
         glm::mat4 view;
         glm::mat4 projection;
-        Madd* parent;
+        Madd* context;
         double x,y,z;
 };
 
