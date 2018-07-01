@@ -37,7 +37,7 @@ void FreeCam::ProcessInput(int key, int action){
             y -=speed;
         else if(key==KEY_LEFT_CONTROL)
             y +=speed;
-        else if(key==KEY_F)
+        else if(key==KEY_F && action == KEY_PRESS)
             Camera::SetPosition(glm::vec3(0.0f,0.0f,-3.0f));
         position = glm::vec3(x,y,z);
     }
