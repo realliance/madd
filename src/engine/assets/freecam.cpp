@@ -3,6 +3,7 @@
 #include "eventhandler.h"
 #include "madd.h"
 FreeCam::FreeCam(Madd* context){
+    position = glm::vec3(0.0f, 0.0f, 0.0f);
     std::vector <unsigned int> keys = {KEY_W,KEY_A,KEY_S,KEY_D,KEY_LEFT_CONTROL,KEY_LEFT_SHIFT,KEY_F};
     context->GetEventHandler()->RegisterMultipleKeyCB(BIND(FreeCam::ProcessInput),keys);
     Camera::Init(context);
