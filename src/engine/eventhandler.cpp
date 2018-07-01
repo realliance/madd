@@ -6,10 +6,11 @@ struct keyCallback {
     keyCB cb;
     int mods;
 };
-
+#include<iostream>
 #include "errors.h"
 //Please rewrite if you know a better way
 EventHandler* eventPointer=NULL;
+
 void EventHandler::KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
     for(auto const i : keyboardCallbacks[key]) {
         if(i.mods == mods || i.mods == 0) {
@@ -22,11 +23,21 @@ void GlfwKeyCallBack(GLFWwindow *window, int key, int scancode, int action, int 
     eventPointer->KeyCallBack(window, key, scancode, action, mods);
 }
 
+void EventHandler::CursorPosCallback(GLFWwindow *window, double xpos, double ypos){
+    for(auto const i : cursorCallbacks)
+        i(xpos,ypos);
+}
+
+void GlfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos){
+    eventPointer->CursorPosCallback(window, xpos, ypos);
+}
+
 EventHandler::EventHandler(Madd* context):context(context){
     if(eventPointer)
         throw EVENTHANDLER_ALREADY_EXISTS;
     eventPointer = this;
-    glfwSetKeyCallback((GLFWwindow*)context->GetWindow(),GlfwKeyCallBack);
+    glfwSetKeyCallback(context->GetWindow(),GlfwKeyCallBack);
+    glfwSetCursorPosCallback(context->GetWindow(),GlfwCursorPosCallback);
 }
 
 EventHandler::~EventHandler(){
@@ -35,7 +46,7 @@ EventHandler::~EventHandler(){
 
 void EventHandler::Update(){
     glfwPollEvents();
-    if(glfwWindowShouldClose((GLFWwindow*)context->GetWindow()))
+    if(glfwWindowShouldClose(context->GetWindow()))
         context->Close();
 }
 
@@ -51,10 +62,22 @@ void EventHandler::RegisterKeyCB(keyCB keyCBfunc, unsigned int keyCode, unsigned
     keyboardCallbacks[keyCode].push_back(callback);
 }
 
-unsigned int EventHandler::GetKey(unsigned int key){
-    return glfwGetKey((GLFWwindow*)context->GetWindow(), key);
+void EventHandler::RegisterCursorPosCB(cursorPosCB cursorPosfunc){
+    cursorCallbacks.push_back(cursorPosfunc);
 }
 
-void EventHandler::GetMousePos(double* xpos, double* ypos){
-    glfwGetCursorPos((GLFWwindow*)context->GetWindow(), xpos, ypos);
+unsigned int EventHandler::GetKey(unsigned int key){
+    return glfwGetKey(context->GetWindow(), key);
+}
+
+void EventHandler::GetCursorPos(double* xpos, double* ypos){
+    glfwGetCursorPos(context->GetWindow(), xpos, ypos);
+}
+
+void EventHandler::LockCursor(){
+    glfwSetInputMode(context->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void EventHandler::UnLockCursor(){
+    glfwSetInputMode(context->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);   
 }

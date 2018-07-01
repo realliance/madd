@@ -65,6 +65,6 @@ void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
 EventHandler* Madd::GetEventHandler(){return event;}
 int Madd::GetWidth(){return render->GetWidth();}
 int Madd::GetHeight(){return render->GetHeight();}
-void* Madd::GetWindow(){return render->GetWindow();}
+GLFWwindow* Madd::GetWindow(){return render->GetWindow();}
 float Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}

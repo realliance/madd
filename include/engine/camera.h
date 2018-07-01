@@ -13,13 +13,14 @@ class Camera{
         virtual void Update();
         virtual void SetPosition(glm::vec3 pos);
         virtual void MovePosition(glm::vec3 movementVector);
+    protected:
+        Madd* context;
     private:
         glm::vec3 cameraPosition;
         glm::vec3 targetPosition;
         glm::vec3 upVector;
         glm::mat4 view;
         glm::mat4 projection;
-        Madd* context;
 };
 
 #endif //CAMERA_H
