@@ -12,7 +12,7 @@ Camera::~Camera(){
 void Camera::Init(Madd* _context){
     context = _context;
     projection = glm::mat4(1.0f);
-    view = glm::translate(view, position);
+    view = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(45.0f), (float)context->GetWidth() / context->GetHeight(), 0.1f, 100.0f);
 }
 
