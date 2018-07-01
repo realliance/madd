@@ -1,13 +1,19 @@
 #include "camera.h"
 #include "madd.h"
 #include <glm/gtc/matrix_transform.hpp>
-Camera::Camera(Madd* context):view(glm::mat4(1.0f)),projection(glm::mat4(1.0f)),context(context),x(0.0f),y(0.0f),z(0.0f){
-    view = glm::translate(view, glm::vec3(x, y, z));
-    projection = glm::perspective(glm::radians(45.0f), (float)context->GetWidth() / context->GetHeight(), 0.1f, 100.0f);
+Camera::Camera(Madd* context){
+    Init(context);
 }
 
 Camera::~Camera(){
 
+}
+
+void Camera::Init(Madd* _context){
+    context = _context;
+    projection = glm::mat4(1.0f);
+    view = glm::translate(view, position);
+    projection = glm::perspective(glm::radians(45.0f), (float)context->GetWidth() / context->GetHeight(), 0.1f, 100.0f);
 }
 
 glm::mat4* Camera::GetView(){
@@ -19,15 +25,15 @@ glm::mat4* Camera::GetProjection(){
 }
 
 void Camera::Update(){
-    view = glm::translate(view, glm::vec3(x*context->GetDeltaTime(), y*context->GetDeltaTime(), z*context->GetDeltaTime()));
+    view = glm::translate(view, position*context->GetDeltaTime());
     projection = glm::perspective(glm::radians(45.0f), (float)context->GetWidth() / context->GetHeight(), 0.1f, 100.0f);
 }
 
-void Camera::MovePosition(float _x, float _y, float _z){
-    x=_x;y=_y;z=_z;
+void Camera::MovePosition(glm::vec3 movementVector){
+    position = movementVector;
 }
 
-void Camera::SetPosition(float _x, float _y, float _z){
+void Camera::SetPosition(glm::vec3 pos){
     view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(_x, _y, _z));
+    view = glm::translate(view, pos);
 }

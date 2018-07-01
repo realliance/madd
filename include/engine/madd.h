@@ -21,10 +21,11 @@ public:
     void AddObject(GameObject* obj);
     bool StayOpen(){return !close;}
     void Close(){close = true;}
+    void SetMainCamera(Camera* cameraObj);
     Camera* GetMainCamera();
     EventHandler* GetEventHandler();
     float GetTime();
-    double GetDeltaTime();
+    float GetDeltaTime();
     int GetWidth();
     int GetHeight();
     void* GetWindow();
@@ -36,7 +37,7 @@ private:
     EventHandler* event;
     void ReloadShader();
     void UpdateDeltaTime();
-    std::chrono::duration<double> dTime;
+    std::chrono::duration<float> dTime;
     bool close;
     int width;
     int height;
