@@ -13,6 +13,7 @@ class GameObject;
 class Renderer;
 class Camera;
 class EventHandler;
+struct GLFWwindow;
 class Madd {
 public:
     Madd(int width, int height, const char *title);
@@ -28,7 +29,7 @@ public:
     float GetDeltaTime();
     int GetWidth();
     int GetHeight();
-    void* GetWindow();
+    GLFWwindow* GetWindow();
     void ProcessInput(int key, int action);
 private:
     Renderer* render;
