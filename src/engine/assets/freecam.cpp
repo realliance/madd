@@ -27,19 +27,19 @@ void FreeCam::ProcessInput(int key, int action){
         if(action == KEY_RELEASE)
             speed = -speed;
         if(key==KEY_W)
-            z += speed;
-        else if(key==KEY_A)
-            x += speed;
-        else if(key==KEY_S)
             z -= speed;
-        else if(key==KEY_D)
+        else if(key==KEY_A)
             x -= speed;
+        else if(key==KEY_S)
+            z += speed;
+        else if(key==KEY_D)
+            x += speed;
         else if(key==KEY_LEFT_SHIFT)
-            y -=speed;
-        else if(key==KEY_LEFT_CONTROL)
             y +=speed;
+        else if(key==KEY_LEFT_CONTROL)
+            y -=speed;
         else if(key==KEY_F && action == KEY_PRESS)
-            Camera::SetPosition(glm::vec3(0.0f,0.0f,-3.0f));
+            Camera::SetPosition(glm::vec3(0.0f,0.0f,3.0f));
         position = glm::vec3(x,y,z);
     }
 }
