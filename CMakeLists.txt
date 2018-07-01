@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.1)
 set(CMAKE_CXX_STANDARD 11)
+project(madd)
 if(NOT MSVC)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${madd_SOURCE_DIR})
 endif()
-project(madd)
 
 find_package(PkgConfig)
 
