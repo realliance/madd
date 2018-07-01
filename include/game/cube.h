@@ -15,6 +15,7 @@ class Cube : public GameObject{
     private:
         RenderedObject* cubeMesh;
         Madd* context;
+        float x,y,z;
 };
 
 #endif //CUBE_H

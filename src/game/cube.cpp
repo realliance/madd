@@ -73,29 +73,54 @@ bool Cube::Update(){
 }
 
 void Cube::ProcessInput(int key, int action){
-    if(action == KEY_PRESS || action == KEY_REPEAT){
+    float speed = 1.0f;
+    
+        
+    if(action == KEY_PRESS){
         switch(key){
             case KEY_A:
-                context->GetMainCamera()->MovePosition(0.01f,0.0f,0.0f);
+                x+=speed;
                 break;
             case KEY_W:
-                context->GetMainCamera()->MovePosition(0.0f,0.0f,0.01f);
+                z+=speed;
                 break;
             case KEY_D:
-                context->GetMainCamera()->MovePosition(-0.01f,0.0f,0.0f);
+                x-=speed;
                 break;
             case KEY_S:
-                context->GetMainCamera()->MovePosition(0.0f,0.0f,-0.01f);
+                z-=speed;
                 break;
             case KEY_LEFT_SHIFT:
-                context->GetMainCamera()->MovePosition(0.0f,0.01f,0.0f);
+                y-=speed;
                 break;
             case KEY_LEFT_CONTROL:
-                context->GetMainCamera()->MovePosition(0.0f,-0.01f,0.0f);
+                y+=speed;
                 break;
             case KEY_F:
                 context->GetMainCamera()->SetPosition(0.0f,0.0f,-3.0f);
                 break;
         }
+    }else if(action == KEY_RELEASE){
+        switch(key){
+            case KEY_A:
+                x=0;
+                break;
+            case KEY_W:
+                z=0;
+                break;
+            case KEY_D:
+                x=0;
+                break;
+            case KEY_S:
+                z=0;
+                break;
+            case KEY_LEFT_SHIFT:
+                y=0;
+                break;
+            case KEY_LEFT_CONTROL:
+                y=0;
+                break;
+        }
     }
+    context->GetMainCamera()->MovePosition(x,y,z);
 }
