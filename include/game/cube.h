@@ -2,7 +2,8 @@
 #define CUBE_H
 #include "gameobject.h"
 #include "renderedobject.h"
-
+#include <vector>
+#include <glm/glm.hpp>
 class Madd;
 class Cube : public GameObject{
     public:
@@ -14,6 +15,7 @@ class Cube : public GameObject{
         bool ReloadShaders();
     private:
         RenderedObject* cubeMesh;
+        std::vector<glm::vec3> cubePositions;
         Madd* context;
 };
 

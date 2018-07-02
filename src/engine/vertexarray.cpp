@@ -26,7 +26,6 @@ VertexArray::~VertexArray() {
 }
 
 void VertexArray::Draw(){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(VAO); 
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
