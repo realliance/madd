@@ -10,15 +10,17 @@ class Camera{
         virtual void Init(Madd* context);
         glm::mat4* GetView();
         glm::mat4* GetProjection();
-        virtual void Update();
-        virtual void SetPosition(glm::vec3 pos);
-        virtual void MovePosition(glm::vec3 movementVector);
+        void UpdateProjection();
+        virtual void Update()=0;
+        void LookAt(glm::vec3 pos);
+        void SetPosition(glm::vec3 pos);
+        void SetPitchAndYaw(float pitch, float yaw);
+        void MovePosition(glm::vec3 movementVector);
     protected:
         Madd* context;
-    private:
-        glm::vec3 cameraPosition;
-        glm::vec3 targetPosition;
-        glm::vec3 upVector;
+        glm::vec3 cameraPos;
+        glm::vec3 cameraFront;
+        glm::vec3 cameraUp;
         glm::mat4 view;
         glm::mat4 projection;
 };

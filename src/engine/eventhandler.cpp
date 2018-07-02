@@ -66,12 +66,16 @@ void EventHandler::RegisterCursorPosCB(cursorPosCB cursorPosfunc){
     cursorCallbacks.push_back(cursorPosfunc);
 }
 
-unsigned int EventHandler::GetKey(unsigned int key){
-    return glfwGetKey(context->GetWindow(), key);
+bool EventHandler::GetKeyDown(unsigned int key){
+    if(glfwGetKey(context->GetWindow(), key) == KEY_PRESS)
+        return true;
+    return false;
 }
 
-void EventHandler::GetCursorPos(double* xpos, double* ypos){
-    glfwGetCursorPos(context->GetWindow(), xpos, ypos);
+glm::vec2 EventHandler::GetCursorPos(){
+    double xpos,ypos;
+    glfwGetCursorPos(context->GetWindow(), &xpos, &ypos);
+    return glm::vec2(xpos,ypos);
 }
 
 void EventHandler::LockCursor(){

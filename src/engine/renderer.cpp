@@ -1,15 +1,21 @@
 #include "renderer.h"
+#include "madd.h"
+#include "camera.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
 //see renderer.cpp::GetHeight(),GetWidth() for more details
 int globalWidth;
 int globalHeight;
 
+#include "errors.h"
+//Please rewrite if you know a better way
+Renderer* rendererPointer=NULL;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
     //This is a bad workaround probably should fix eventually.
     globalWidth = width;
     globalHeight = height;
+    rendererPointer->context->GetMainCamera()->UpdateProjection();
 }
 
 void ErrorCallback(int, const char* err_str)
@@ -17,7 +23,7 @@ void ErrorCallback(int, const char* err_str)
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
 
-Renderer::Renderer(int width, int height, const char *title):window(nullptr){
+Renderer::Renderer(Madd* context, int width, int height, const char *title):context(context),window(nullptr){
     glfwSetErrorCallback(ErrorCallback);
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -36,6 +42,7 @@ Renderer::Renderer(int width, int height, const char *title):window(nullptr){
 
     //delete me I dare you
     globalHeight=height;globalWidth=width;
+    rendererPointer = this;
 }
 
 Renderer::~Renderer(){

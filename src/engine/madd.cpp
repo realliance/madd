@@ -13,7 +13,7 @@ Madd::Madd(int width, int height, const char *title):mainCamera(NULL),
                                                      height(height),
                                                      timeScale(1.0f),
                                                      lastFrame(Clock::now()){
-    render = new Renderer(width, height, title);
+    render = new Renderer(this, width, height, title);
     event = new EventHandler(this);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
     event->RegisterMultipleKeyCB(BIND(Madd::ProcessInput),keys);
