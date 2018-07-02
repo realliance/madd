@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include <unordered_map>
+#include <glm/glm.hpp>
 #include "keycodes.h"
 struct keyCallback;
 struct GLFWwindow;
@@ -20,8 +21,8 @@ class EventHandler{
         void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
         void CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
         void RegisterCursorPosCB(cursorPosCB cursorPosfunc);
-        unsigned int GetKey(unsigned int key);
-        void GetCursorPos(double* xpos, double* ypos);
+        bool GetKeyDown(unsigned int key);
+        glm::vec2 GetCursorPos();
         void LockCursor();
         void UnLockCursor();
     private:

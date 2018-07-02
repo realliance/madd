@@ -3,51 +3,74 @@
 #include "eventhandler.h"
 #include "madd.h"
 FreeCam::FreeCam(Madd* context){
-    mouseLocked = false;
-    position = glm::vec3(0.0f, 0.0f, 0.0f);
-    std::vector <unsigned int> keys = {KEY_W,KEY_A,KEY_S,KEY_D,KEY_LEFT_CONTROL,KEY_LEFT_SHIFT,KEY_F,KEY_TAB};
-    context->GetEventHandler()->RegisterMultipleKeyCB(BIND(FreeCam::ProcessInput),keys);
-    Camera::Init(context);
+    Init(context);
 }
 
 FreeCam::~FreeCam(){
 
 }
 
-void FreeCam::Update(){
-    Camera::MovePosition(position);
-    Camera::Update();
+void FreeCam::Init(Madd* context){
+    Camera::Init(context);
+    firstCursor = true;
+    mouseLocked = false;
+    ToggleMouseLock();
+    context->GetEventHandler()->RegisterKeyCB(BIND(FreeCam::ToggleMouseLock),KEY_TAB);
+    context->GetEventHandler()->RegisterCursorPosCB(BIND(FreeCam::ProcessCursorPos));
+    pitch = 0.0f;
+    yaw = -90.0f;
 }
-#include <iostream>
-void FreeCam::ProcessInput(int key, int action){
-    if(action != KEY_REPEAT){
-        int x=position.x;
-        int y=position.y;
-        int z=position.z;
-        float speed = 1.0f;
-        if(action == KEY_RELEASE)
-            speed = -speed;
-        if(key==KEY_W)
-            z -= speed;
-        else if(key==KEY_A)
-            x -= speed;
-        else if(key==KEY_S)
-            z += speed;
-        else if(key==KEY_D)
-            x += speed;
-        else if(key==KEY_LEFT_SHIFT)
-            y +=speed;
-        else if(key==KEY_LEFT_CONTROL)
-            y -=speed;
-        else if(key==KEY_F && action == KEY_PRESS)
-            Camera::SetPosition(glm::vec3(0.0f,0.0f,3.0f));
-        else if(key==KEY_TAB && action == KEY_PRESS){
-            if(mouseLocked)
-                context->GetEventHandler()->UnLockCursor();
-            else
-                context->GetEventHandler()->LockCursor();
-            mouseLocked = !mouseLocked;
-        }
-        position = glm::vec3(x,y,z);
+
+void FreeCam::Update(){
+    ProcessInput();
+}
+
+void FreeCam::ProcessCursorPos(double xpos, double ypos){
+    if(firstCursor){
+        lastCursor = glm::vec2(xpos,ypos);
+        firstCursor = false;
+    }
+    glm::vec2 offset = lastCursor - glm::vec2(xpos,ypos);
+    lastCursor = glm::vec2(xpos,ypos);
+    offset *= lookSpeed;
+    yaw -= offset.x;
+    pitch += offset.y;
+    if(pitch > 89.0f)
+        pitch = 89.0f;
+    if(pitch < -89.0f)
+        pitch = - 89.0f;
+    SetPitchAndYaw(pitch,yaw);
+}
+
+void FreeCam::ProcessInput(){
+    EventHandler* e = context->GetEventHandler();
+    float speed = movementSpeed;
+    glm::vec3 tempVec = glm::vec3(0.0f);
+    if(e->GetKeyDown(KEY_W))
+        tempVec += cameraFront;
+    if(e->GetKeyDown(KEY_S))
+        tempVec -= cameraFront;
+    if(e->GetKeyDown(KEY_A))
+        tempVec -= glm::cross(cameraFront, cameraUp);
+    if(e->GetKeyDown(KEY_D))
+        tempVec += glm::cross(cameraFront, cameraUp);
+    if(e->GetKeyDown(KEY_LEFT_SHIFT))
+        tempVec += cameraUp;
+    if(e->GetKeyDown(KEY_LEFT_CONTROL))
+        tempVec -= cameraUp;
+    if(tempVec != glm::vec3(0.0f)){
+        tempVec = glm::normalize(tempVec) * speed;
+        Camera::MovePosition(tempVec*context->GetDeltaTime());
+    }
+}
+
+void FreeCam::ToggleMouseLock(int key, int action){
+    if(action == KEY_PRESS){
+        firstCursor = true;
+        if(mouseLocked)
+            context->GetEventHandler()->UnLockCursor();
+        else
+            context->GetEventHandler()->LockCursor();
+        mouseLocked = !mouseLocked;
     }
 }
