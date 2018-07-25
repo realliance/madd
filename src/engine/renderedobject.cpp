@@ -34,11 +34,7 @@ bool RenderedObject::RenderInit(std::vector<float> vertices,
 
 bool RenderedObject::LoadShader() {
     ShaderProgram* _shader;
-    try {
-        _shader = new ShaderProgram(vsPath, fsPath);
-    } catch (int e) {
-        return false;
-    }
+    _shader = new ShaderProgram(vsPath, fsPath);
     if (shader) 
         delete shader;
     shader = _shader;

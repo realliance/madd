@@ -6,12 +6,9 @@
 ShaderProgram::ShaderProgram(std::string vsPath, std::string fsPath){
     Shader *vs;
     Shader *fs;
-    try {
-        vs = new Shader(vsPath);
-        fs = new Shader(fsPath);
-    } catch (int e){
-        throw COMPILATION_FAILED;
-    }
+    
+    vs = new Shader(vsPath);
+    fs = new Shader(fsPath);
 
     id = glCreateProgram();
     glAttachShader(id, vs->Link(id));

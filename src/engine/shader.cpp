@@ -25,6 +25,8 @@ Shader::Shader(std::string shaderFileName) {
     file.open("shaders/" + shaderFileName);
     std::string shaderSourceCode((std::istreambuf_iterator<char>(file)),
                                 std::istreambuf_iterator<char>());
+    if(shaderFileName.empty())
+        throw SHADER_FILE_NOT_FOUND;
     source = shaderSourceCode.c_str();
     Init();
 }
