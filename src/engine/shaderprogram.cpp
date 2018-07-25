@@ -4,11 +4,8 @@
 #include "shader.h"
 
 ShaderProgram::ShaderProgram(std::string vsPath, std::string fsPath){
-    Shader *vs;
-    Shader *fs;
-    
-    vs = new Shader(vsPath);
-    fs = new Shader(fsPath);
+    Shader* vs = new Shader(vsPath);
+    Shader* fs = new Shader(fsPath);
 
     id = glCreateProgram();
     glAttachShader(id, vs->Link(id));
