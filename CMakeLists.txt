@@ -38,10 +38,10 @@ set(GLFW_BUILD_EXAMPLES FALSE PARENT_SCOPE )
 set(GLFW_BUILD_TESTS FALSE PARENT_SCOPE )
 set(GLFW_BUILD_DOCS FALSE PARENT_SCOPE )
 
-add_subdirectory(libraries)
 add_library(madd "")
 add_subdirectory(${madd_SOURCE_DIR}/src)
 add_subdirectory(${madd_SOURCE_DIR}/include)
+add_subdirectory(${madd_SOURCE_DIR}/libraries)
 
 if (MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT madd)
@@ -52,5 +52,4 @@ else()
 	target_link_libraries(madd glfw ${CMAKE_DL_LIBS})
 endif()
 
-target_include_directories(madd PUBLIC ${GLFW_INCLUDEDIR})
-target_include_directories(madd PUBLIC ${GLM_INCLUDEDIR})
+target_include_directories(madd PUBLIC ${LIBRARY_INCLUDES})
