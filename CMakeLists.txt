@@ -35,9 +35,9 @@ elseif(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/config.cmake)
 endif()
 
 link_directories(${GLFW_LIBDIR})
-add_executable(madd "")
-add_subdirectory(src)
-add_subdirectory(include)
+add_library(madd "")
+add_subdirectory(${madd_SOURCE_DIR}/src)
+add_subdirectory(${madd_SOURCE_DIR}/include)
 
 if (MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT madd)
