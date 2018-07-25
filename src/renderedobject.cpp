@@ -6,33 +6,35 @@
 #include "gameobject.h"
 #include "texture.h"
 
-RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr){
+RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr),shouldRender(false){
 }
 
 RenderedObject::~RenderedObject(){
     delete VAO;
     delete shader;
-    delete textureObj;
+	for(auto texture : textures)
+		delete texture;
 }
 
-bool RenderedObject::RenderInit(std::vector<float> vertices,
+int RenderedObject::RenderInit(std::vector<float> vertices,
                                 std::string vertexShader,
                                 std::string fragmentShader,
                                 std::string texture){
+	shouldRender = true;
     vsPath = vertexShader;
     fsPath = fragmentShader;
     model = glm::mat4(1.0f);
     VAO = new VertexArray(vertices);
-    textureObj = new Texture(texture);
-
-    if(!LoadShader())
-        return false;
+	Texture* temp = new Texture(texture);
+	textures.push_back(temp);
+	textureObj = textures[0];
+	LoadShader();
     shader->Enable();
     shader->AddInt("texture1",0);
-    return true;
+	return temp->GetID();
 }
 
-bool RenderedObject::LoadShader() {
+void RenderedObject::LoadShader() {
     ShaderProgram* _shader;
     _shader = new ShaderProgram(vsPath, fsPath);
     if (shader) 
@@ -45,23 +47,29 @@ bool RenderedObject::LoadShader() {
     viewLoc = shader->GetUniformLocation("view");
     projectionLoc = shader->GetUniformLocation("projection");
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
-    return true;
 }
 
 bool RenderedObject::Render(){
-    Camera* camera = parent->GetContext()->GetMainCamera();
-    if(camera){
-        ShaderProgram::SetMartix4fUniform(viewLoc, camera->GetView());
-        ShaderProgram::SetMartix4fUniform(projectionLoc, camera->GetProjection());
-    }else
-        return false;
-    ShaderProgram::SetFloatUniform(shaderTimeLocation, parent->GetContext()->GetTime());
-    shader->Enable();
-    Texture::SetActiveTexture(0);
-    textureObj->Enable();
+	if (shouldRender) {
+		Camera* camera = parent->GetContext()->GetMainCamera();
+		if (camera) {
+			ShaderProgram::SetMartix4fUniform(viewLoc, camera->GetView());
+			ShaderProgram::SetMartix4fUniform(projectionLoc, camera->GetProjection());
+		}
+		else
+			return false;
+		ShaderProgram::SetFloatUniform(shaderTimeLocation, parent->GetContext()->GetTime());
+		shader->Enable();
+		Texture::SetActiveTexture(0);
+		textureObj->Enable();
 
-    VAO->Draw();
+		VAO->Draw();
+	}
     return true;
+}
+
+void RenderedObject::Rendered(bool rendered) {
+	shouldRender = rendered;
 }
 
 glm::mat4 RenderedObject::GetTransformation(){
@@ -70,4 +78,16 @@ glm::mat4 RenderedObject::GetTransformation(){
 void RenderedObject::SetTransformation(glm::mat4 newMatrix){
     model = newMatrix;
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
+}
+
+int RenderedObject::AddTexture(std::string texture) {
+	Texture* temp = new Texture(texture);
+	textures.push_back(temp);
+	return temp->GetID();
+}
+
+void RenderedObject::SetTexture(unsigned int id) {
+	for (auto texture : textures)
+		if (texture->GetID() == id)
+			textureObj = texture;
 }
