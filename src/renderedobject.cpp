@@ -29,8 +29,6 @@ int RenderedObject::RenderInit(std::vector<float> vertices,
 	textures.push_back(temp);
 	textureObj = textures[0];
 	LoadShader();
-    shader->Enable();
-    shader->AddInt("texture1",0);
 	return temp->GetID();
 }
 
@@ -41,16 +39,20 @@ void RenderedObject::LoadShader() {
         delete shader;
     shader = _shader;
     
+	shader->Enable();
     //Update Locations for new shader
     shaderTimeLocation = shader->GetUniformLocation("time");
+	
     modelLoc = shader->GetUniformLocation("model");
     viewLoc = shader->GetUniformLocation("view");
     projectionLoc = shader->GetUniformLocation("projection");
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
+	shader->AddInt("texture1",0);
 }
 
 bool RenderedObject::Render(){
 	if (shouldRender) {
+		shader->Enable();
 		Camera* camera = parent->GetContext()->GetMainCamera();
 		if (camera) {
 			ShaderProgram::SetMartix4fUniform(viewLoc, camera->GetView());
@@ -76,6 +78,7 @@ glm::mat4 RenderedObject::GetTransformation(){
     return model;
 }
 void RenderedObject::SetTransformation(glm::mat4 newMatrix){
+	shader->Enable();
     model = newMatrix;
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
 }
