@@ -31,10 +31,6 @@ find_package(PkgConfig)
 #	endif()
 #endif()
 
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 add_library(madd "")
 add_subdirectory(${madd_SOURCE_DIR}/src)
 add_subdirectory(${madd_SOURCE_DIR}/include)
