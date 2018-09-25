@@ -13,5 +13,8 @@ target_sources(madd
         "${DIR}/eventhandler.h"
         "${DIR}/keycodes.h"
         "${DIR}/errors.h"
+        "${DIR}/physics.h"
+        "${DIR}/collider.h"
+        "${DIR}/physicsobject.h"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include")

@@ -18,4 +18,5 @@ set(LIBRARY_INCLUDES
 		"${madd_SOURCE_DIR}/libraries/KHR"
 		"${madd_SOURCE_DIR}/libraries/stb"
 		"${madd_SOURCE_DIR}/libraries/glad"
+		"${madd_SOURCE_DIR}/libraries/bullet3/src"
 	PARENT_SCOPE)
