@@ -11,7 +11,8 @@ target_sources(madd
         "${DIR}/renderedobject.cpp"
         "${DIR}/renderer.cpp"
         "${DIR}/eventhandler.cpp"
-        #"${DIR}/physics.cpp"
+        "${DIR}/physics.cpp"
+        "${DIR}/physicsobject.cpp"
         #"${DIR}/collider.cpp"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include")

@@ -1,15 +1,17 @@
 #ifndef PHYSICSOBJECT_H
 #define PHYSICSOBJECT_H
 
-#include "gameobject.h"
-class PhysicsObject : public GameObject{
+#include <btBulletDynamicsCommon.h>
+#include "renderedobject.h"
+#include "collider.h"
+class PhysicsObject{
     public:
-        PhysicsObject();
+        PhysicsObject(RenderedObject* position, Collider* collisionShape);
         ~PhysicsObject();
-        virtual Madd* GetContext()=0;
-        virtual bool ReloadShaders()=0;
-        virtual bool Render()=0;
-        virtual bool Update()=0;
-}
+    private:
+        btRigidBody* rigidBody;
+        RenderedObject* position;
+
+};
 
 #endif //PHYSICSOBJECT_H

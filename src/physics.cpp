@@ -7,20 +7,15 @@ Physics::Physics():collisionConfig{new btDefaultCollisionConfiguration},
                    dynamicsWorld{new btDiscreteDynamicsWorld(dispatcher,
                                                              overlappingPairCache,
                                                              solver,
-                                                             collisionConfiguration)}{
+                                                             collisionConfig)}{
     dynamicsWorld->setGravity(btVector3(0,-10,0));
 }
 
 Physics::~Physics(){
     	//remove the rigidbodies from the dynamics world and delete them
-	for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	for (int i = dynamicsWorld->getNumCollisionObjects(); i > 0; i--)
 	{
 		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			delete body->getMotionState();
-		}
 		dynamicsWorld->removeCollisionObject(obj);
 		delete obj;
 	}
