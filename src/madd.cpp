@@ -1,5 +1,5 @@
 #include "madd.h"
-
+#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -47,7 +47,7 @@ void Madd::ReloadShader() {
         if(!obj->ReloadShaders())
             return;
 }
-#include <iostream>
+
 void Madd::ProcessInput(int key, int action){
     if (key == KEY_ESCAPE)
         Close();
