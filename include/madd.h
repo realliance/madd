@@ -35,7 +35,6 @@ private:
     Renderer* render;
     std::vector<GameObject*> objs;
     Camera* mainCamera;
-    EventHandler* event;
     void ReloadShader();
     void UpdateDeltaTime();
     std::chrono::duration<float> dTime;

@@ -14,9 +14,9 @@ Madd::Madd(int width, int height, const char *title):mainCamera(NULL),
                                                      timeScale(1.0f),
                                                      lastFrame(Clock::now()){
     render = new Renderer(this, width, height, title);
-    event = new EventHandler(this);
+    EventHandler::getInstance().Init(this);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
-    event->RegisterMultipleKeyCB(BIND(Madd::ProcessInput),keys);
+    EventHandler::getInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput),keys);
 }
 
 Madd::~Madd() { 
@@ -24,7 +24,6 @@ Madd::~Madd() {
         delete obj;
     }
     delete render;
-    delete event;
 }
 
 void Madd::AddObject(GameObject* obj){
@@ -32,7 +31,7 @@ void Madd::AddObject(GameObject* obj){
 }
 
 void Madd::Tick(){
-    event->Update();
+    EventHandler::getInstance().Update();
     render->Start();
     for(GameObject* obj : objs){
         obj->Update();
@@ -62,7 +61,6 @@ void Madd::UpdateDeltaTime(){
 
 Camera* Madd::GetMainCamera(){return mainCamera;}
 void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
-EventHandler* Madd::GetEventHandler(){return event;}
 int Madd::GetWidth(){return render->GetWidth();}
 int Madd::GetHeight(){return render->GetHeight();}
 GLFWwindow* Madd::GetWindow(){return render->GetWindow();}
