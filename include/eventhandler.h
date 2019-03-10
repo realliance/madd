@@ -13,7 +13,7 @@ typedef std::function<void(double,double)> cursorPosCB;
 #define BIND(x) std::bind(&x, this, std::placeholders::_1, std::placeholders::_2)
 class EventHandler{
     public:
-        void Init(Madd* context);
+        void Init();
         static EventHandler& getInstance();
         static void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
         static void CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
@@ -28,8 +28,7 @@ class EventHandler{
         EventHandler(const EventHandler&) = delete;
         EventHandler& operator=(const EventHandler&) = delete;
     private:
-		EventHandler();
-        Madd* context;
+        EventHandler() = default;
         std::unordered_map<int, std::vector<keyCallback>> keyboardCallbacks;
         std::vector<cursorPosCB> cursorCallbacks;
 };

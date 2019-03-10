@@ -6,16 +6,22 @@ class Madd;
 struct GLFWwindow;
 class Renderer{
     public:
-        Renderer(Madd* context, int width, int height, const char *title);
+        static void FramebufferSizeCallback(GLFWwindow * window, int width, int height);
+        static void ErrorCallback(int, const char * err_str);
+        void Init(int width, int height, const char *title);
+        static Renderer& getInstance();
         ~Renderer();
         GLFWwindow* GetWindow(){return window;}
         void Start();
         void Finish();
         int GetHeight();
         int GetWidth();
-        Madd* context;
+        
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
     private:
-        GLFWwindow *window;
+        Renderer() = default;
+        GLFWwindow* window;
 };
 
 #endif //RENDERER_H

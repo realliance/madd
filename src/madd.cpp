@@ -7,23 +7,25 @@
 #include "renderer.h"
 #include "camera.h"
 #include "eventhandler.h"
-Madd::Madd(int width, int height, const char *title):mainCamera(NULL),
-                                                    close(false),
-                                                     width(width),
-                                                     height(height),
-                                                     timeScale(1.0f),
-                                                     lastFrame(Clock::now()){
-    render = new Renderer(this, width, height, title);
-    EventHandler::getInstance().Init(this);
+
+void Madd::Init(int width, int height, const char *title) {
+	this->width = width;
+	this->height = height;
+	this->height = height;
+    Renderer::getInstance().Init(width, height, title);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
-    EventHandler::getInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput),keys);
+    EventHandler::getInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
 }
 
-Madd::~Madd() { 
+Madd& Madd::getInstance() {
+	static Madd instance;
+	return instance;
+}
+
+Madd::~Madd() {
     for(GameObject* obj : objs){
         delete obj;
     }
-    delete render;
 }
 
 void Madd::AddObject(GameObject* obj){
@@ -32,12 +34,12 @@ void Madd::AddObject(GameObject* obj){
 
 void Madd::Tick(){
     EventHandler::getInstance().Update();
-    render->Start();
+    Renderer::getInstance().Start();
     for(GameObject* obj : objs){
         obj->Update();
         obj->Render();
     }
-    render->Finish();
+    Renderer::getInstance().Finish();
     UpdateDeltaTime();
 }
 
@@ -60,9 +62,21 @@ void Madd::UpdateDeltaTime(){
 }
 
 Camera* Madd::GetMainCamera(){return mainCamera;}
+EventHandler* Madd::GetEventHandler() {
+    return &EventHandler::getInstance();
+}
 void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
-int Madd::GetWidth(){return render->GetWidth();}
-int Madd::GetHeight(){return render->GetHeight();}
-GLFWwindow* Madd::GetWindow(){return render->GetWindow();}
-float Madd::GetTime(){return glfwGetTime();}
+double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
+
+int Madd::GetWidth() {
+    return Renderer::getInstance().GetWidth();
+}
+
+int Madd::GetHeight() {
+    return Renderer::getInstance().GetHeight();
+}
+
+GLFWwindow* Madd::GetWindow() {
+    return Renderer::getInstance().GetWindow();
+}

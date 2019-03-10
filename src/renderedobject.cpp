@@ -53,14 +53,14 @@ void RenderedObject::LoadShader() {
 bool RenderedObject::Render(){
 	if (shouldRender) {
 		shader->Enable();
-		Camera* camera = parent->GetContext()->GetMainCamera();
+		Camera* camera = Madd::getInstance().GetMainCamera();
 		if (camera) {
 			ShaderProgram::SetMartix4fUniform(viewLoc, camera->GetView());
 			ShaderProgram::SetMartix4fUniform(projectionLoc, camera->GetProjection());
 		}
 		else
 			return false;
-		ShaderProgram::SetFloatUniform(shaderTimeLocation, parent->GetContext()->GetTime());
+		ShaderProgram::SetFloatUniform(shaderTimeLocation, Madd::getInstance().GetTime());
 		shader->Enable();
 		Texture::SetActiveTexture(0);
 		textureObj->Enable();

@@ -16,7 +16,8 @@ class EventHandler;
 struct GLFWwindow;
 class Madd {
 public:
-    Madd(int width, int height, const char *title);
+	void Init(int width, int height, const char *title);
+	static Madd& getInstance();
     ~Madd();
     void Tick();
     void AddObject(GameObject* obj);
@@ -25,24 +26,26 @@ public:
     void SetMainCamera(Camera* cameraObj);
     Camera* GetMainCamera();
     EventHandler* GetEventHandler();
-    float GetTime();
+    double GetTime();
     float GetDeltaTime();
     int GetWidth();
     int GetHeight();
     GLFWwindow* GetWindow();
     void ProcessInput(int key, int action);
+	Madd(const Madd&) = delete;
+	Madd& operator=(const Madd&) = delete;
 private:
-    Renderer* render;
+	Madd() = default;
     std::vector<GameObject*> objs;
-    Camera* mainCamera;
+    Camera* mainCamera = nullptr;
     void ReloadShader();
     void UpdateDeltaTime();
     std::chrono::duration<float> dTime;
-    bool close;
+    bool close = false;
     int width;
     int height;
-    float timeScale;
-    Time lastFrame;
+    float timeScale = 1.0f;
+    Time lastFrame = Clock::now();
 };
 
 #endif // MADD_H
