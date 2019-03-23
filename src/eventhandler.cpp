@@ -10,7 +10,7 @@ struct keyCallback {
 #include "errors.h"
 
 void EventHandler::KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
-    for(auto const i : getInstance().keyboardCallbacks[key]) {
+    for(auto const i : GetInstance().keyboardCallbacks[key]) {
         if(i.mods == mods || i.mods == 0) {
             i.cb(key, action);
         }
@@ -18,24 +18,24 @@ void EventHandler::KeyCallBack(GLFWwindow *window, int key, int scancode, int ac
 }
 
 void EventHandler::CursorPosCallback(GLFWwindow *window, double xpos, double ypos){
-    for(auto const i : getInstance().cursorCallbacks)
+    for(auto const i : GetInstance().cursorCallbacks)
         i(xpos,ypos);
 }
 
 void EventHandler::Init() {
-    glfwSetKeyCallback(Madd::getInstance().GetWindow(), KeyCallBack);
-    glfwSetCursorPosCallback(Madd::getInstance().GetWindow(), CursorPosCallback);
+    glfwSetKeyCallback(Madd::GetInstance().GetWindow(), KeyCallBack);
+    glfwSetCursorPosCallback(Madd::GetInstance().GetWindow(), CursorPosCallback);
 }
 
-EventHandler & EventHandler::getInstance() {
+EventHandler& EventHandler::GetInstance() {
     static EventHandler instance;
     return instance;
 }
 
 void EventHandler::Update(){
     glfwPollEvents();
-    if(glfwWindowShouldClose(Madd::getInstance().GetWindow()))
-        Madd::getInstance().Close();
+    if(glfwWindowShouldClose(Madd::GetInstance().GetWindow()))
+        Madd::GetInstance().Close();
 }
 
 void EventHandler::RegisterMultipleKeyCB(keyCB keyCBfunc, std::vector<unsigned int> keyCode, unsigned int keyMods){
@@ -55,21 +55,21 @@ void EventHandler::RegisterCursorPosCB(cursorPosCB cursorPosfunc){
 }
 
 bool EventHandler::GetKeyDown(unsigned int key){
-    if(glfwGetKey(Madd::getInstance().GetWindow(), key) == KEY_PRESS)
+    if(glfwGetKey(Madd::GetInstance().GetWindow(), key) == KEY_PRESS)
         return true;
     return false;
 }
 
 glm::vec2 EventHandler::GetCursorPos(){
     double xpos,ypos;
-    glfwGetCursorPos(Madd::getInstance().GetWindow(), &xpos, &ypos);
+    glfwGetCursorPos(Madd::GetInstance().GetWindow(), &xpos, &ypos);
     return glm::vec2(xpos,ypos);
 }
 
 void EventHandler::LockCursor(){
-    glfwSetInputMode(Madd::getInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(Madd::GetInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void EventHandler::UnLockCursor(){
-    glfwSetInputMode(Madd::getInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);   
+    glfwSetInputMode(Madd::GetInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);   
 }

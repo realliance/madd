@@ -16,8 +16,8 @@ class EventHandler;
 struct GLFWwindow;
 class Madd {
 public:
-	void Init(int width, int height, const char *title);
-	static Madd& getInstance();
+    void Init(int width, int height, const char *title);
+    static Madd& GetInstance();
     ~Madd();
     void Tick();
     void AddObject(GameObject* obj);
@@ -32,10 +32,10 @@ public:
     int GetHeight();
     GLFWwindow* GetWindow();
     void ProcessInput(int key, int action);
-	Madd(const Madd&) = delete;
-	Madd& operator=(const Madd&) = delete;
+    Madd(const Madd&) = delete;
+    Madd& operator=(const Madd&) = delete;
 private:
-	Madd() = default;
+    Madd() = default;
     std::vector<GameObject*> objs;
     Camera* mainCamera = nullptr;
     void ReloadShader();

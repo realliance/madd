@@ -23,11 +23,11 @@ Shader::Shader(std::string shaderFileName) {
 
     std::ifstream file;
     file.open("shaders/" + shaderFileName);
-	if (file.peek() == std::ifstream::traits_type::eof())
-		throw SHADER_FILE_NOT_FOUND;
+    if (file.peek() == std::ifstream::traits_type::eof())
+        throw SHADER_FILE_NOT_FOUND;
     std::string shaderSourceCode((std::istreambuf_iterator<char>(file)),
                                 std::istreambuf_iterator<char>());
-	source = shaderSourceCode.c_str();
+    source = shaderSourceCode.c_str();
     Init();
 }
 

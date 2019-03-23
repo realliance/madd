@@ -4,7 +4,7 @@
 class Madd;
 class Camera{
     public:
-		Camera();
+        Camera();
         virtual ~Camera();
         glm::mat4* GetView();
         glm::mat4* GetProjection();

@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 class FreeCam : public Camera {
     public:
-		FreeCam();
+        FreeCam();
         ~FreeCam();
         void ProcessInput();
         void ProcessCursorPos(double xpos, double ypos);

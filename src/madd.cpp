@@ -9,23 +9,24 @@
 #include "eventhandler.h"
 
 void Madd::Init(int width, int height, const char *title) {
-	this->width = width;
-	this->height = height;
-	this->height = height;
-    Renderer::getInstance().Init(width, height, title);
+    this->width = width;
+    this->height = height;
+    this->height = height;
+    Renderer::GetInstance().Init(width, height, title);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
-    EventHandler::getInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
+    EventHandler::GetInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
 }
 
-Madd& Madd::getInstance() {
-	static Madd instance;
-	return instance;
+Madd& Madd::GetInstance() {
+    static Madd instance;
+    return instance;
 }
 
 Madd::~Madd() {
     for(GameObject* obj : objs){
         delete obj;
     }
+    Renderer::GetInstance().DeInit();
 }
 
 void Madd::AddObject(GameObject* obj){
@@ -33,13 +34,13 @@ void Madd::AddObject(GameObject* obj){
 }
 
 void Madd::Tick(){
-    EventHandler::getInstance().Update();
-    Renderer::getInstance().Start();
+    EventHandler::GetInstance().Update();
+    Renderer::GetInstance().Start();
     for(GameObject* obj : objs){
         obj->Update();
         obj->Render();
     }
-    Renderer::getInstance().Finish();
+    Renderer::GetInstance().Finish();
     UpdateDeltaTime();
 }
 
@@ -63,20 +64,20 @@ void Madd::UpdateDeltaTime(){
 
 Camera* Madd::GetMainCamera(){return mainCamera;}
 EventHandler* Madd::GetEventHandler() {
-    return &EventHandler::getInstance();
+    return &EventHandler::GetInstance();
 }
 void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
 double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
 
 int Madd::GetWidth() {
-    return Renderer::getInstance().GetWidth();
+    return Renderer::GetInstance().GetWidth();
 }
 
 int Madd::GetHeight() {
-    return Renderer::getInstance().GetHeight();
+    return Renderer::GetInstance().GetHeight();
 }
 
 GLFWwindow* Madd::GetWindow() {
-    return Renderer::getInstance().GetWindow();
+    return Renderer::GetInstance().GetWindow();
 }

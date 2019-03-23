@@ -14,7 +14,7 @@ typedef std::function<void(double,double)> cursorPosCB;
 class EventHandler{
     public:
         void Init();
-        static EventHandler& getInstance();
+        static EventHandler& GetInstance();
         static void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
         static void CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
         void Update();

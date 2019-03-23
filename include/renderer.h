@@ -9,8 +9,8 @@ class Renderer{
         static void FramebufferSizeCallback(GLFWwindow * window, int width, int height);
         static void ErrorCallback(int, const char * err_str);
         void Init(int width, int height, const char *title);
-        static Renderer& getInstance();
-        ~Renderer();
+        void DeInit();
+        static Renderer& GetInstance();
         GLFWwindow* GetWindow(){return window;}
         void Start();
         void Finish();

@@ -13,23 +13,20 @@ class RenderedObject{
     public:
         RenderedObject(GameObject* parent);
         ~RenderedObject();
-        int RenderInit(std::vector<float> vertices,
-                        std::string vertexShader,
-                        std::string fragmentShader,
-                        std::string texture);
+        int RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader, std::string texture);
         void LoadShader();
         bool Render();
-		void Rendered(bool rendered);
+        void Rendered(bool rendered);
         glm::mat4 GetTransformation();
         void SetTransformation(glm::mat4 newMatrix);
-		int AddTexture(std::string texture);
-		void SetTexture(unsigned int id);
+        int AddTexture(std::string texture);
+        void SetTexture(unsigned int id);
     private:        
         std::string vsPath;
         std::string fsPath;
         VertexArray* VAO;
-		std::vector<Texture*> textures;
-		Texture* textureObj;
+        std::vector<Texture*> textures;
+        Texture* textureObj;
         GameObject* parent;
         ShaderProgram* shader;
 
@@ -39,7 +36,7 @@ class RenderedObject{
         unsigned int projectionLoc;
         glm::mat4 model;
 
-		bool shouldRender;
+        bool shouldRender;
 };
 
 #endif //RENDEREDOBJECT_H
