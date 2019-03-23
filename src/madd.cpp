@@ -14,6 +14,7 @@ void Madd::Init(int width, int height, const char *title) {
     this->height = height;
     Renderer::GetInstance().Init(width, height, title);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
+    EventHandler::GetInstance().Init();
     EventHandler::GetInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
 }
 
