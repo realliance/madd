@@ -2,23 +2,19 @@
 #include <vector>
 #include "eventhandler.h"
 #include "madd.h"
-FreeCam::FreeCam(Madd* context){
-    Init(context);
+
+FreeCam::FreeCam(){
+    firstCursor = true;
+    mouseLocked = false;
+    ToggleMouseLock();
+    EventHandler::GetInstance().RegisterKeyCB(BIND(FreeCam::ToggleMouseLock), KEY_TAB);
+    EventHandler::GetInstance().RegisterCursorPosCB(BIND(FreeCam::ProcessCursorPos));
+    pitch = 0.0f;
+    yaw = -90.0f;
 }
 
 FreeCam::~FreeCam(){
 
-}
-
-void FreeCam::Init(Madd* context){
-    Camera::Init(context);
-    firstCursor = true;
-    mouseLocked = false;
-    ToggleMouseLock();
-    context->GetEventHandler()->RegisterKeyCB(BIND(FreeCam::ToggleMouseLock),KEY_TAB);
-    context->GetEventHandler()->RegisterCursorPosCB(BIND(FreeCam::ProcessCursorPos));
-    pitch = 0.0f;
-    yaw = -90.0f;
 }
 
 void FreeCam::Update(){
@@ -43,7 +39,7 @@ void FreeCam::ProcessCursorPos(double xpos, double ypos){
 }
 
 void FreeCam::ProcessInput(){
-    EventHandler* e = context->GetEventHandler();
+    EventHandler* e = Madd::GetInstance().GetEventHandler();
     float speed = movementSpeed;
     glm::vec3 tempVec = glm::vec3(0.0f);
     if(e->GetKeyDown(KEY_W))
@@ -60,7 +56,7 @@ void FreeCam::ProcessInput(){
         tempVec -= cameraUp;
     if(tempVec != glm::vec3(0.0f)){
         tempVec = glm::normalize(tempVec) * speed;
-        Camera::MovePosition(tempVec*context->GetDeltaTime());
+        Camera::MovePosition(tempVec*Madd::GetInstance().GetDeltaTime());
     }
 }
 
@@ -68,9 +64,9 @@ void FreeCam::ToggleMouseLock(int key, int action){
     if(action == KEY_PRESS){
         firstCursor = true;
         if(mouseLocked)
-            context->GetEventHandler()->UnLockCursor();
+            Madd::GetInstance().GetEventHandler()->UnLockCursor();
         else
-            context->GetEventHandler()->LockCursor();
+            Madd::GetInstance().GetEventHandler()->LockCursor();
         mouseLocked = !mouseLocked;
     }
 }

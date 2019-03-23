@@ -4,10 +4,8 @@
 class Madd;
 class Camera{
     public:
-        Camera(){}
-        Camera(Madd* context);
+        Camera();
         virtual ~Camera();
-        virtual void Init(Madd* context);
         glm::mat4* GetView();
         glm::mat4* GetProjection();
         void UpdateProjection();
@@ -17,7 +15,6 @@ class Camera{
         void SetPitchAndYaw(float pitch, float yaw);
         void MovePosition(glm::vec3 movementVector);
     protected:
-        Madd* context;
         glm::vec3 cameraPos;
         glm::vec3 cameraFront;
         glm::vec3 cameraUp;

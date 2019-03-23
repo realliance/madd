@@ -3,27 +3,18 @@
 #include "camera.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
-//see renderer.cpp::GetHeight(),GetWidth() for more details
-int globalWidth;
-int globalHeight;
-
 #include "errors.h"
-//Please rewrite if you know a better way
-Renderer* rendererPointer=NULL;
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+
+void Renderer::FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
-    //This is a bad workaround probably should fix eventually.
-    globalWidth = width;
-    globalHeight = height;
-    rendererPointer->context->GetMainCamera()->UpdateProjection();
+    Madd::GetInstance().GetMainCamera()->UpdateProjection();
 }
 
-void ErrorCallback(int, const char* err_str)
-{
+void Renderer::ErrorCallback(int, const char* err_str) {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
 
-Renderer::Renderer(Madd* context, int width, int height, const char *title):context(context),window(nullptr){
+void Renderer::Init(int width, int height, const char * title) {
     glfwSetErrorCallback(ErrorCallback);
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -38,14 +29,16 @@ Renderer::Renderer(Madd* context, int width, int height, const char *title):cont
 
     glEnable(GL_DEPTH_TEST);
 
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    //delete me I dare you
-    globalHeight=height;globalWidth=width;
-    rendererPointer = this;
+    glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 }
 
-Renderer::~Renderer(){
+Renderer& Renderer::GetInstance() {
+
+    static Renderer r;
+    return r;
+}
+
+void Renderer::DeInit(){
     glfwTerminate();
 }
 
@@ -59,17 +52,13 @@ void Renderer::Finish(){
 }
 
 int Renderer::GetHeight(){
-    //I don't know why this doesn't work
-    //int height;
-    //glfwGetFramebufferSize(window, NULL, &height);
-    //return height;
-    return globalHeight;
+    int height;
+    glfwGetWindowSize(window, NULL, &height);
+    return height;
 }
 
 int Renderer::GetWidth(){
-    //I don't know why this doesn't work
-    //int width;
-    //glfwGetFramebufferSize(window, &width, NULL);
-    //return width;
-    return globalWidth;
+    int width;
+    glfwGetWindowSize(window, &width, NULL);
+    return width;
 }

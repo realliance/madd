@@ -7,24 +7,27 @@
 #include "renderer.h"
 #include "camera.h"
 #include "eventhandler.h"
-Madd::Madd(int width, int height, const char *title):mainCamera(NULL),
-                                                    close(false),
-                                                     width(width),
-                                                     height(height),
-                                                     timeScale(1.0f),
-                                                     lastFrame(Clock::now()){
-    render = new Renderer(this, width, height, title);
-    event = new EventHandler(this);
+
+void Madd::Init(int width, int height, const char *title) {
+    this->width = width;
+    this->height = height;
+    this->height = height;
+    Renderer::GetInstance().Init(width, height, title);
     std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
-    event->RegisterMultipleKeyCB(BIND(Madd::ProcessInput),keys);
+    EventHandler::GetInstance().Init();
+    EventHandler::GetInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
 }
 
-Madd::~Madd() { 
+Madd& Madd::GetInstance() {
+    static Madd instance;
+    return instance;
+}
+
+Madd::~Madd() {
     for(GameObject* obj : objs){
         delete obj;
     }
-    delete render;
-    delete event;
+    Renderer::GetInstance().DeInit();
 }
 
 void Madd::AddObject(GameObject* obj){
@@ -32,13 +35,13 @@ void Madd::AddObject(GameObject* obj){
 }
 
 void Madd::Tick(){
-    event->Update();
-    render->Start();
+    EventHandler::GetInstance().Update();
+    Renderer::GetInstance().Start();
     for(GameObject* obj : objs){
         obj->Update();
         obj->Render();
     }
-    render->Finish();
+    Renderer::GetInstance().Finish();
     UpdateDeltaTime();
 }
 
@@ -61,10 +64,21 @@ void Madd::UpdateDeltaTime(){
 }
 
 Camera* Madd::GetMainCamera(){return mainCamera;}
+EventHandler* Madd::GetEventHandler() {
+    return &EventHandler::GetInstance();
+}
 void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
-EventHandler* Madd::GetEventHandler(){return event;}
-int Madd::GetWidth(){return render->GetWidth();}
-int Madd::GetHeight(){return render->GetHeight();}
-GLFWwindow* Madd::GetWindow(){return render->GetWindow();}
-float Madd::GetTime(){return glfwGetTime();}
+double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
+
+int Madd::GetWidth() {
+    return Renderer::GetInstance().GetWidth();
+}
+
+int Madd::GetHeight() {
+    return Renderer::GetInstance().GetHeight();
+}
+
+GLFWwindow* Madd::GetWindow() {
+    return Renderer::GetInstance().GetWindow();
+}
