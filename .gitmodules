@@ -7,6 +7,3 @@
 [submodule "libraries/stb"]
 	path = libraries/stb
 	url = https://github.com/nothings/stb.git
-[submodule "libraries/bullet3"]
-	path = libraries/bullet3
-	url = https://github.com/bulletphysics/bullet3.git
