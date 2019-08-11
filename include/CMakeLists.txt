@@ -1,5 +1,4 @@
 add_subdirectory(assets)
-add_subdirectory(collidertypes)
 set(DIR ${CMAKE_CURRENT_LIST_DIR})
 target_sources(madd
     PRIVATE
@@ -15,6 +14,7 @@ target_sources(madd
         "${DIR}/keycodes.h"
         "${DIR}/errors.h"
         "${DIR}/collider.h"
+        "${DIR}/collision.h"
         "${DIR}/util.h"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include")

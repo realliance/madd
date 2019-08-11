@@ -1,5 +1,4 @@
 add_subdirectory(assets)
-add_subdirectory(collidertypes)
 set(DIR ${CMAKE_CURRENT_LIST_DIR})
 target_sources(madd
     PRIVATE
@@ -13,5 +12,6 @@ target_sources(madd
         "${DIR}/renderer.cpp"
         "${DIR}/eventhandler.cpp"
         "${DIR}/util.cpp"
+        "${DIR}/collider.cpp"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include")
