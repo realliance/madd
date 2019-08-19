@@ -6,7 +6,7 @@
 #include "gameobject.h"
 #include "texture.h"
 
-RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr),shouldRender(false){
+RenderedObject::RenderedObject(GameObject* parent):parent(parent),shader(nullptr),shouldRender(false),textureObj(nullptr){
 }
 
 RenderedObject::~RenderedObject(){
@@ -16,17 +16,13 @@ RenderedObject::~RenderedObject(){
         delete texture;
 }
 
-int RenderedObject::RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader, std::string texture){
+void RenderedObject::RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader){
     shouldRender = true;
     vsPath = vertexShader;
     fsPath = fragmentShader;
     model = glm::mat4(1.0f);
     VAO = new VertexArray(vertices);
-    Texture* temp = new Texture(texture);
-    textures.push_back(temp);
-    textureObj = textures[0];
     LoadShader();
-    return temp->GetID();
 }
 
 void RenderedObject::LoadShader() {
@@ -43,8 +39,11 @@ void RenderedObject::LoadShader() {
     modelLoc = shader->GetUniformLocation("model");
     viewLoc = shader->GetUniformLocation("view");
     projectionLoc = shader->GetUniformLocation("projection");
+    shadeLoc = shader->GetUniformLocation("shade");
+    textureLoc = shader->GetUniformLocation("textureEnabled");
+    shade = glm::vec4(1.f);
+    ShaderProgram::SetFloat4fUniform(shadeLoc, &shade);
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
-    shader->AddInt("texture1",0);
 }
 
 bool RenderedObject::Render(){
@@ -59,8 +58,13 @@ bool RenderedObject::Render(){
             return false;
         ShaderProgram::SetFloatUniform(shaderTimeLocation, Madd::GetInstance().GetTime());
         shader->Enable();
-        Texture::SetActiveTexture(0);
-        textureObj->Enable();
+        if(textureObj != nullptr){
+            shader->SetIntUniform(textureLoc,1);
+            Texture::SetActiveTexture(0);
+            textureObj->Enable();
+        }else{
+            shader->SetIntUniform(textureLoc,0);
+        }
 
         VAO->Draw();
     }
@@ -83,6 +87,7 @@ void RenderedObject::SetTransformation(glm::mat4 newMatrix){
 int RenderedObject::AddTexture(std::string texture) {
     Texture* temp = new Texture(texture);
     textures.push_back(temp);
+    textureObj = textures.back();
     return temp->GetID();
 }
 

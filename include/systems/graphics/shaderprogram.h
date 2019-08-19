@@ -13,7 +13,9 @@ public:
   void AddInt(std::string name, int value);
   unsigned int GetUniformLocation(std::string name);
   static void SetMartix4fUniform(unsigned int location, glm::mat4* data);
+  static void SetFloat4fUniform(unsigned int location, glm::vec4* data);
   static void SetFloatUniform(unsigned int location, float data);
+  static void SetIntUniform(unsigned int location, int data);
 private:
   unsigned int id=0;
 };

@@ -41,8 +41,16 @@ unsigned int ShaderProgram::GetUniformLocation(std::string name){
     return glGetUniformLocation(id, name.c_str());
 }
 
+void ShaderProgram::SetIntUniform(unsigned int location, int data){
+    glUniform1i(location, data);
+}
+
 void ShaderProgram::SetMartix4fUniform(unsigned int location, glm::mat4* data){
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(*data));
+}
+
+void ShaderProgram::SetFloat4fUniform(unsigned int location, glm::vec4* data){
+    glUniform4fv(location, 1, glm::value_ptr(*data));
 }
 
 void ShaderProgram::SetFloatUniform(unsigned int location, float data){

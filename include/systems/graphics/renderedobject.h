@@ -13,7 +13,7 @@ class RenderedObject{
     public:
         RenderedObject(GameObject* parent);
         ~RenderedObject();
-        int RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader, std::string texture);
+        void RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader);
         void LoadShader();
         bool Render();
         void Rendered(bool rendered);
@@ -32,9 +32,12 @@ class RenderedObject{
 
         unsigned int shaderTimeLocation;
         unsigned int modelLoc;
+        unsigned int shadeLoc;
         unsigned int viewLoc;
         unsigned int projectionLoc;
+        unsigned int textureLoc;
         glm::mat4 model;
+        glm::vec4 shade;
 
         bool shouldRender;
 };
