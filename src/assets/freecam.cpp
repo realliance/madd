@@ -43,9 +43,9 @@ void FreeCam::ProcessInput(){
     float speed = movementSpeed;
     glm::vec3 tempVec = glm::vec3(0.0f);
     if(e->GetKeyDown(KEY_W))
-        tempVec += cameraFront;
+        tempVec += cameraFront * glm::vec3(1.f,0.f,1.f);
     if(e->GetKeyDown(KEY_S))
-        tempVec -= cameraFront;
+        tempVec -= cameraFront * glm::vec3(1.f,0.f,1.f);
     if(e->GetKeyDown(KEY_A))
         tempVec -= glm::cross(cameraFront, cameraUp);
     if(e->GetKeyDown(KEY_D))
