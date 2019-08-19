@@ -3,8 +3,15 @@
 out vec4 FragColor;
 in vec2 TexCoord;
 
+uniform int textureEnabled;
 uniform sampler2D ourTexture;
+uniform vec4 shade;
+vec4 FragTexture;
 
 void main() {
-  FragColor = texture(ourTexture, TexCoord);
+  if(textureEnabled == 1){
+    FragColor = texture(ourTexture, TexCoord) * shade;
+  }else{
+    FragColor = shade;
+  }
 }
