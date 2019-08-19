@@ -22,6 +22,9 @@ void FreeCam::Update(){
 }
 
 void FreeCam::ProcessCursorPos(double xpos, double ypos){
+    if(!mouseLocked){
+        return;
+    }
     if(firstCursor){
         lastCursor = glm::vec2(xpos,ypos);
         firstCursor = false;
