@@ -19,6 +19,7 @@ class RenderedObject{
         void Rendered(bool rendered);
         glm::mat4 GetTransformation();
         void SetTransformation(glm::mat4 newMatrix);
+        void SetShade(glm::vec4 newShade);
         int AddTexture(std::string texture);
         void SetTexture(unsigned int id);
     private:        

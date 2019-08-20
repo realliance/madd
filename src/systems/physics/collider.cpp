@@ -5,23 +5,37 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "collider.h"
+#include <limits>
 
-Collider::Collider(std::vector<glm::vec3> collisionMesh):collisionMesh(collisionMesh){
+Collider::Collider(std::vector<glm::vec3> collisionMesh):collisionMesh(collisionMesh),originalMesh(collisionMesh){
   colliderCenter = std::accumulate(std::begin(collisionMesh),std::end(collisionMesh),glm::vec3{})/static_cast<float>(collisionMesh.size());
 }
 
-bool Collider::Collides(std::vector<glm::vec3>& collider, glm::vec3 pos, glm::mat4 model, glm::vec3 center, int maxIteration){
-  std::transform(collider.begin(), collider.end(), collider.begin(),
-    [&model](glm::vec3 v) -> glm::vec3 {
-      return glm::vec4( v, 1.0 ) * model; 
-  });
-  return collides(collider, collisionMesh, center, maxIteration);
+const std::vector<glm::vec3>& Collider::getCollisionMesh(){
+  return collisionMesh;
 }
 
-glm::vec3 Collider::support(std::vector<glm::vec3> points, glm::vec3 dir){
+glm::vec3 Collider::getCenter(){
+  return colliderCenter;
+}
+
+void Collider::updateModel(glm::mat4 model){
+  collisionMesh = originalMesh;
+  transform(begin(collisionMesh), end(collisionMesh), begin(collisionMesh),
+    [&model](glm::vec3 v) -> glm::vec3 {
+      return model * glm::vec4( v, 1.0 ); 
+  });
+  colliderCenter = std::accumulate(std::begin(collisionMesh),std::end(collisionMesh),glm::vec3{})/static_cast<float>(collisionMesh.size());
+}
+
+bool Collider::Collides(Collider& collider, int maxIteration){
+  return collides(collider, *this, maxIteration);
+}
+
+glm::vec3 Collider::support(glm::vec3 dir){
   glm::vec3 dotpoint;
-  float dotval;
-  for(const auto& v : points ){
+  float dotval = std::numeric_limits<float>::lowest();
+  for(const auto& v : collisionMesh){
     float dot = glm::dot(v,dir);
     if(dot > dotval){
       dotval = dot;
@@ -31,15 +45,48 @@ glm::vec3 Collider::support(std::vector<glm::vec3> points, glm::vec3 dir){
   return dotpoint;
 }
 
-bool Collider::collides(std::vector<glm::vec3>& p, std::vector<glm::vec3>& q, glm::vec3 pcenter, int maxIteration){
-  glm::vec3 pc = pcenter;
-  glm::vec3 qc = colliderCenter;
+inline void print(glm::vec3 v, std::string s){
+  std::cout << s << v.x << ", " << v.y << ", " << v.z << std::endl;
+}
+
+inline bool isZero(float n){
+  return n < 1e-36 && n > -1e-36;
+}
+
+inline bool equal(float n0, float n1){
+  return isZero(std::abs(n0-n1));
+}
+
+inline bool zeroVector(glm::vec3 v){
+  return isZero(v.x) && isZero(v.y) && isZero(v.z);
+}
+
+inline bool zeroAxis(glm::vec3 p1, glm::vec3 p2){
+  float d = (p1.x == 0 && p2.x == 0) ? -1 : p2.x / p1.x;
+  return d <= 0 && equal(p1.y, p2.y / d) && equal(p1.z, p2.z / d);
+}
+
+bool Collider::collides(Collider& p, Collider& q, int maxIteration){
+  glm::vec3 pc = p.getCenter();
+  glm::vec3 qc = q.getCenter();
+
   glm::vec3 V0 = qc - pc;
+  print(pc,"\npc: ");
+  print(qc,"qc: ");
+  print(V0,"V0: ");
+  if(zeroVector(V0)){
+    return true;
+  }
+
   glm::vec3 n = -1.f * V0; 
-  glm::vec3 V1 = support(q,n) - support(p, -n);
+  glm::vec3 V1 = q.support(n) - p.support(-n);
+
+  if(zeroAxis(V0,V1)){
+    return true;
+  }
   
   n = cross(V1,V0);
-  glm::vec3 V2 = support(q,n) - support(p, -n);
+  glm::vec3 V2 = q.support(n) - p.support(-n);
     
   n = cross(V1-V0,V2-V0);
   if(dot(n,V0) > 0){
@@ -47,9 +94,12 @@ bool Collider::collides(std::vector<glm::vec3>& p, std::vector<glm::vec3>& q, gl
     n = -n;
   }
 
+  print(V1,"V1: ");
+  print(V2,"V2: ");
+
   glm::vec3 V3;
   for(int i = 0 ; i < maxIteration; i++){
-    V3 = support(q,n) - support(p, -n);
+    V3 = q.support(n) - p.support(-n);
     if(dot(V3, n) <= 0){
       return false;
     }
@@ -72,8 +122,8 @@ bool Collider::collides(std::vector<glm::vec3>& p, std::vector<glm::vec3>& q, gl
       if(dot(n,V1) >= 0){
         return true;
       }
-      glm::vec3  V4 = support(q,n) - support(p, -n);
-      float boundaryTolerance = 0.000001f;
+      glm::vec3  V4 = q.support(n) - p.support(-n);
+      float boundaryTolerance = 1e-20;
       if ( -dot(V4, n) >= 0 || dot(V4-V3,n) <= boundaryTolerance){
         return false;
       }

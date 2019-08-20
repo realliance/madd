@@ -6,10 +6,14 @@
 class Collider{
     public:
         Collider(std::vector<glm::vec3> collisionMesh);
-        bool Collides(std::vector<glm::vec3>& collider, glm::vec3 pos, glm::mat4 model, glm::vec3 center, int maxIteration = 16);
+        bool Collides(Collider& collider, int maxIteration = 5);
+        const std::vector<glm::vec3>& getCollisionMesh();
+        glm::vec3 getCenter();
+        void updateModel(glm::mat4 newModel);
     private:
-        static glm::vec3 support(std::vector<glm::vec3> points, glm::vec3 dir);
-        bool collides(std::vector<glm::vec3>& p, std::vector<glm::vec3>& q, glm::vec3 pcenter, int maxIteration);
+        glm::vec3 support(glm::vec3 dir);
+        bool collides(Collider& p, Collider& q, int maxIteration);
+        std::vector<glm::vec3> originalMesh;
         std::vector<glm::vec3> collisionMesh;
         glm::vec3 colliderCenter;
 };

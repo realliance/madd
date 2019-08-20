@@ -78,10 +78,16 @@ void RenderedObject::Rendered(bool rendered) {
 glm::mat4 RenderedObject::GetTransformation(){
     return model;
 }
+
 void RenderedObject::SetTransformation(glm::mat4 newMatrix){
     shader->Enable();
     model = newMatrix;
     ShaderProgram::SetMartix4fUniform(modelLoc, &model);
+}
+
+void RenderedObject::SetShade(glm::vec4 newShade){
+    shade = newShade;
+    ShaderProgram::SetFloat4fUniform(shadeLoc, &shade);
 }
 
 int RenderedObject::AddTexture(std::string texture) {
