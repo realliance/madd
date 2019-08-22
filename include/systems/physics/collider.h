@@ -6,7 +6,7 @@
 class Collider{
     public:
         Collider(std::vector<glm::vec3> collisionMesh);
-        bool Collides(Collider& collider, int maxIteration = 5);
+        bool Collides(Collider& collider, int maxIteration = 15);
         const std::vector<glm::vec3>& getCollisionMesh();
         glm::vec3 getCenter();
         void updateModel(glm::mat4 newModel);

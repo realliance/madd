@@ -45,10 +45,6 @@ glm::vec3 Collider::support(glm::vec3 dir){
   return dotpoint;
 }
 
-inline void print(glm::vec3 v, std::string s){
-  std::cout << s << v.x << ", " << v.y << ", " << v.z << std::endl;
-}
-
 inline bool isZero(float n){
   return n < 1e-36 && n > -1e-36;
 }
@@ -71,9 +67,6 @@ bool Collider::collides(Collider& p, Collider& q, int maxIteration){
   glm::vec3 qc = q.getCenter();
 
   glm::vec3 V0 = qc - pc;
-  print(pc,"\npc: ");
-  print(qc,"qc: ");
-  print(V0,"V0: ");
   if(zeroVector(V0)){
     return true;
   }
@@ -94,8 +87,6 @@ bool Collider::collides(Collider& p, Collider& q, int maxIteration){
     n = -n;
   }
 
-  print(V1,"V1: ");
-  print(V2,"V2: ");
 
   glm::vec3 V3;
   for(int i = 0 ; i < maxIteration; i++){
