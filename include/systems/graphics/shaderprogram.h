@@ -4,20 +4,25 @@
 #include <glm/glm.hpp>
 #include "errors.h"
 
+#include "components/shadercomponent.h"
+
+struct Shader{
+  unsigned int id;
+  unsigned int shaderType;
+  unsigned int program;
+};
 class ShaderProgram {
 public:
-  ShaderProgram(std::string vsPath, std::string fsPath);
-  ~ShaderProgram();
-  unsigned int GetID() { return id; }
-  void Enable();
-  void AddInt(std::string name, int value);
-  unsigned int GetUniformLocation(std::string name);
+  static ShaderComponent Construct(std::string vsPath, std::string fsPath);
+  static void Deconstruct(ShaderComponent s);
+  static void Enable(ShaderComponent s);
+  static unsigned int GetUniformLocation(ShaderComponent s, std::string name);
   static void SetMartix4fUniform(unsigned int location, glm::mat4* data);
   static void SetFloat4fUniform(unsigned int location, glm::vec4* data);
   static void SetFloatUniform(unsigned int location, float data);
   static void SetIntUniform(unsigned int location, int data);
 private:
-  unsigned int id=0;
+  static uint constructShader(std::string shaderFileName);
 };
 
 #endif // SHADERPROGRAM_H

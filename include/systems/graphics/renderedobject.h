@@ -5,42 +5,20 @@
 #include <string>
 #include <glm/glm.hpp>
 
-class VertexArray;
-class ShaderProgram;
-class GameObject;
-class Texture;
+#include "components/renderedcomponent.h"
+
 class RenderedObject{
     public:
-        RenderedObject(GameObject* parent);
-        ~RenderedObject();
-        void RenderInit(std::vector<float> vertices, std::string vertexShader, std::string fragmentShader);
-        void LoadShader();
-        bool Render();
-        void Rendered(bool rendered);
-        glm::mat4 GetTransformation();
-        void SetTransformation(glm::mat4 newMatrix);
-        void SetShade(glm::vec4 newShade);
-        int AddTexture(std::string texture);
-        void SetTexture(unsigned int id);
-    private:        
-        std::string vsPath;
-        std::string fsPath;
-        VertexArray* VAO;
-        std::vector<Texture*> textures;
-        Texture* textureObj;
-        GameObject* parent;
-        ShaderProgram* shader;
-
-        unsigned int shaderTimeLocation;
-        unsigned int modelLoc;
-        unsigned int shadeLoc;
-        unsigned int viewLoc;
-        unsigned int projectionLoc;
-        unsigned int textureLoc;
-        glm::mat4 model;
-        glm::vec4 shade;
-
-        bool shouldRender;
+        static RenderedComponent Construct(std::vector<float> vertices, std::string vertexShaderPath, std::string fragmentShaderPath);
+        static void Deconstruct(RenderedComponent& r);
+        static void ReloadShader(RenderedComponent& r);
+        static bool Render(const RenderedComponent& r);
+        static void Rendered(RenderedComponent& r, bool rendered);
+        static glm::mat4 GetTransformation(const RenderedComponent& r);
+        static void SetTransformation(RenderedComponent& r, glm::mat4 newMatrix);
+        static void SetShade(RenderedComponent& r, glm::vec4 newShade);
+        static int AddTexture(RenderedComponent& r, std::string texture);
+        static void SetTexture(RenderedComponent& r, unsigned int id);
 };
 
 #endif //RENDEREDOBJECT_H

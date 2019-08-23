@@ -1,12 +1,13 @@
 #include <glad/glad.h>
 #include "vertexarray.h"
-VertexArray::VertexArray(std::vector<float> vertices) {   
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+VertexArrayComponent VertexArray::Construct(std::vector<float> vertices) {   
+    VertexArrayComponent v{};
+    glGenVertexArrays(1, &v.VAO);
+    glGenBuffers(1, &v.VBO);
 
-    glBindVertexArray(VAO); 
+    glBindVertexArray(v.VAO); 
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, v.VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),
                 vertices.data(), GL_STATIC_DRAW);
     
@@ -18,15 +19,16 @@ VertexArray::VertexArray(std::vector<float> vertices) {
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    verticesSize = vertices.size();
+    v.verticesSize = vertices.size();
+    return v;
 }
-VertexArray::~VertexArray() {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+void VertexArray::Deconstruct(VertexArrayComponent v) {
+    glDeleteVertexArrays(1, &v.VAO);
+    glDeleteBuffers(1, &v.VBO);
 }
 
-void VertexArray::Draw(){
-    glBindVertexArray(VAO); 
+void VertexArray::Draw(VertexArrayComponent v){
+    glBindVertexArray(v.VAO); 
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }

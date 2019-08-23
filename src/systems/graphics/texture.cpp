@@ -4,9 +4,10 @@
 #include "stb_image.h"
 #include "texture.h"
 
-Texture::Texture(std::string fileName){
-    glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
+TextureComponent Texture::Construct(std::string fileName){
+    TextureComponent t{};
+    glGenTextures(1, &t.id);
+    glBindTexture(GL_TEXTURE_2D, t.id);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -19,17 +20,19 @@ Texture::Texture(std::string fileName){
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
+        return t;
     }else{
         std::cout << "Failed to load texture" << std::endl;
+        throw(t);
     }
 }
 
-Texture::~Texture(){
-    glDeleteTextures(1, &id);
+void Texture::Deconstruct(TextureComponent t){
+    glDeleteTextures(1, &t.id);
 }
 
-void Texture::Enable(){
-    glBindTexture(GL_TEXTURE_2D, id);
+void Texture::Enable(TextureComponent t){
+    glBindTexture(GL_TEXTURE_2D, t.id);
 }
 
 void Texture::SetActiveTexture(int n){

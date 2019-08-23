@@ -1,44 +1,84 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
+#include <iostream>
+#include <fstream>
 #include "shaderprogram.h"
-#include "shader.h"
+#include "shadercomponent.h"
 
-ShaderProgram::ShaderProgram(std::string vsPath, std::string fsPath){
-    Shader* vs = new Shader(vsPath);
-    Shader* fs = new Shader(fsPath);
+ShaderComponent ShaderProgram::Construct(std::string vsPath, std::string fsPath){
+    uint vsID = constructShader(vsPath);
+    uint fsID = constructShader(fsPath);
 
-    id = glCreateProgram();
-    glAttachShader(id, vs->Link(id));
-    glAttachShader(id, fs->Link(id));
-    glLinkProgram(id);
+    ShaderComponent s{glCreateProgram()};
+    glAttachShader(s.id, vsID);
+    glAttachShader(s.id, fsID);
+    glLinkProgram(s.id);
 
     int success;
     char infoLog[512];
-    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    glGetProgramiv(s.id, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(id, 512, NULL, infoLog);
+        glGetProgramInfoLog(s.id, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
         throw LINKING_FAILED; 
     }
 
-    delete vs;
-    delete fs;
+    glDetachShader(s.id, vsID);
+    glDeleteShader(vsID);
+    glDetachShader(s.id, fsID);
+    glDeleteShader(fsID);
+    return s;
 }
 
-ShaderProgram::~ShaderProgram(){
-    glDeleteProgram(id);
+#define VERTEX_SHADER 'v'
+#define FRAGMENT_SHADER 'f'
+
+uint ShaderProgram::constructShader(std::string shaderFileName){
+    char type = shaderFileName.at(shaderFileName.find(".") + 1);
+
+    uint shaderType;
+    if (type == VERTEX_SHADER)
+        shaderType = GL_VERTEX_SHADER;
+    else if (type == FRAGMENT_SHADER)
+        shaderType = GL_FRAGMENT_SHADER;
+
+    std::ifstream file;
+    file.open("shaders/" + shaderFileName);
+    if (file.peek() == std::ifstream::traits_type::eof())
+        throw SHADER_FILE_NOT_FOUND;
+    std::string shaderSourceCode((std::istreambuf_iterator<char>(file)),
+                                std::istreambuf_iterator<char>());
+    uint id = glCreateShader(shaderType);
+    const char* source = shaderSourceCode.c_str();
+    glShaderSource(id, 1, &source, NULL);
+    glCompileShader(id);
+
+    int success;
+    char infoLog[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        glGetShaderInfoLog(id, 512, NULL, infoLog);
+        std::cout << "ERROR::" << (char)(VERTEX_SHADER-32) << "SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        throw COMPILATION_FAILED;
+    }
+    return id;
 }
 
-void ShaderProgram::Enable(){
-    glUseProgram(id);
+#undef VERTEX_SHADER
+#undef FRAGMENT_SHADER
+
+void ShaderProgram::Deconstruct(ShaderComponent s){
+    glDeleteProgram(s.id);
 }
 
-void ShaderProgram::AddInt(std::string name, int value){
-    glUniform1i(glGetUniformLocation(id, name.c_str()), 1);
+void ShaderProgram::Enable(ShaderComponent s){
+    glUseProgram(s.id);
 }
 
-unsigned int ShaderProgram::GetUniformLocation(std::string name){
-    return glGetUniformLocation(id, name.c_str());
+
+unsigned int ShaderProgram::GetUniformLocation(ShaderComponent s, std::string name){
+    return glGetUniformLocation(s.id, name.c_str());
 }
 
 void ShaderProgram::SetIntUniform(unsigned int location, int data){

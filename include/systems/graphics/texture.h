@@ -1,15 +1,14 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 #include <string.h>
+#include "texturecomponent.h"
+
 class Texture{
     public:
-        Texture(std::string fileName);
-        ~Texture();
-        unsigned int GetID(){return id;}
-        void Enable();
+        static TextureComponent Construct(std::string fileName);
+        static void Deconstruct(TextureComponent t);
+        static void Enable(TextureComponent t);
         static void SetActiveTexture(int n);
-    private:
-        unsigned int id;
 };
 
 #endif //TEXTURE_H

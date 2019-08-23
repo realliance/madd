@@ -3,7 +3,6 @@ target_sources(madd
     PRIVATE
       "${DIR}/renderedobject.h"
       "${DIR}/renderer.h"
-      "${DIR}/shader.h"
       "${DIR}/shaderprogram.h"
       "${DIR}/texture.h"
       "${DIR}/vertexarray.h"

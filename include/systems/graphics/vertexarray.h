@@ -1,16 +1,13 @@
 #ifndef VERTEXARRAY_H
 #define VERTEXARRAY_H
 #include <vector>
+#include "vertexarraycomponent.h"
 
 class VertexArray {
 public:
-    VertexArray(std::vector<float> vertices);
-    ~VertexArray();
-    void Draw();
-private:
-    unsigned int VAO;
-    unsigned int VBO;
-    int verticesSize;
+    static VertexArrayComponent Construct(std::vector<float> vertices);
+    static void Deconstruct(VertexArrayComponent v);
+    static void Draw(VertexArrayComponent v);
 };
 
 #endif // VERTEXARRAY_H
