@@ -8,11 +8,11 @@
 #include "texturecomponent.h"
 
 
-void RenderedObject::Deconstruct(RenderedComponent& r){
-    VertexArray::Deconstruct(r.VAO);
-    ShaderProgram::Deconstruct(r.shader);
+void RenderedObject::Destruct(RenderedComponent& r){
+    VertexArray::Destruct(r.VAO);
+    ShaderProgram::Destruct(r.shader);
     for(auto texture : r.textures)
-        Texture::Deconstruct(texture);
+        Texture::Destruct(texture);
     r = RenderedComponent{};
 }
 
@@ -33,7 +33,7 @@ void RenderedObject::ReloadShader(RenderedComponent &r){
     ShaderComponent _shader{};
     _shader = ShaderProgram::Construct(r.vsPath, r.fsPath);
     if (r.shader.id != 0) 
-        ShaderProgram::Deconstruct(r.shader);
+        ShaderProgram::Destruct(r.shader);
     r.shader = _shader;
     
     ShaderProgram::Enable(r.shader);
@@ -53,10 +53,10 @@ void RenderedObject::ReloadShader(RenderedComponent &r){
 bool RenderedObject::Render(const RenderedComponent& r){
     if (r.shouldRender) {
         ShaderProgram::Enable(r.shader);
-        Camera* camera = Madd::GetInstance().GetMainCamera();
+        CameraComponent* camera = Madd::GetInstance().GetMainCamera();
         if (camera) {
-            ShaderProgram::SetMartix4fUniform(r.viewLoc, camera->GetView());
-            ShaderProgram::SetMartix4fUniform(r.projectionLoc, camera->GetProjection());
+            ShaderProgram::SetMartix4fUniform(r.viewLoc, &camera->view);
+            ShaderProgram::SetMartix4fUniform(r.projectionLoc, &camera->projection);
         }
         else
             return false;

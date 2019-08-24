@@ -5,5 +5,11 @@ target_sources(madd
         "${DIR}/shadercomponent.h"
         "${DIR}/vertexarraycomponent.h"
         "${DIR}/renderedcomponent.h"
+        "${DIR}/cameracomponent.h"
+        "${DIR}/component.h"
+        "${DIR}/meshcollidercomponent.h"
+        "${DIR}/collidercomponent.h"
+        "${DIR}/keyboardeventcomponent.h"
+        "${DIR}/mouseeventcomponent.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

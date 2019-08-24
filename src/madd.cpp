@@ -6,16 +6,28 @@
 #include "gameobject.h"
 #include "renderer.h"
 #include "camera.h"
+#include "event/keyboardeventsystem.h"
+#include "event/mouseeventsystem.h"
 #include "eventhandler.h"
 
 void Madd::Init(int width, int height, const char *title) {
     this->width = width;
     this->height = height;
     this->height = height;
+    this->mainCamera = nullptr;
     Renderer::GetInstance().Init(width, height, title);
-    std::vector<unsigned int> keys = {KEY_ESCAPE,KEY_SPACE};
     EventHandler::GetInstance().Init();
-    EventHandler::GetInstance().RegisterMultipleKeyCB(BIND(Madd::ProcessInput), keys);
+
+    reloadShaderEvent = KeyboardEventComponent{};
+    reloadShaderEvent.callback = Madd::ProcessInput;
+    exitEvent = reloadShaderEvent;
+    exitEvent.code = KEY_ESCAPE;
+    reloadShaderEvent.code = KEY_SPACE;
+
+    MouseEventSystem::GetInstance().Init();
+    KeyboardEventSystem::GetInstance().Init();
+    KeyboardEventSystem::GetInstance().Register(&reloadShaderEvent);
+    KeyboardEventSystem::GetInstance().Register(&exitEvent);
 }
 
 Madd& Madd::GetInstance() {
@@ -51,11 +63,11 @@ void Madd::ReloadShader() {
             return;
 }
 
-void Madd::ProcessInput(int key, int action){
+void Madd::ProcessInput(Component* c, int key, int action){
     if (key == KEY_ESCAPE)
-        Close();
+        GetInstance().Close();
     if (key == KEY_SPACE && action == KEY_PRESS)
-        ReloadShader();
+        GetInstance().ReloadShader();
 }
 
 void Madd::UpdateDeltaTime(){
@@ -63,11 +75,14 @@ void Madd::UpdateDeltaTime(){
     lastFrame = Clock::now();
 }
 
-Camera* Madd::GetMainCamera(){return mainCamera;}
+CameraComponent* Madd::GetMainCamera(){
+    return mainCamera;
+}
+
 EventHandler* Madd::GetEventHandler() {
     return &EventHandler::GetInstance();
 }
-void Madd::SetMainCamera(Camera* cameraObj){mainCamera=cameraObj;}
+void Madd::SetMainCamera(CameraComponent* cameraObj){mainCamera=cameraObj;}
 double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
 

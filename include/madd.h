@@ -8,6 +8,9 @@ typedef std::chrono::high_resolution_clock Clock;
 /** Type Definition for chrono time_point shorthand */
 typedef Clock::time_point Time;
 
+#include "components/cameracomponent.h"
+#include "components/keyboardeventcomponent.h"
+#include "components/component.h"
 
 class GameObject;
 class Renderer;
@@ -23,21 +26,23 @@ public:
     void AddObject(GameObject* obj);
     bool StayOpen(){return !close;}
     void Close(){close = true;}
-    void SetMainCamera(Camera* cameraObj);
-    Camera* GetMainCamera();
+    void SetMainCamera(CameraComponent* cameraObj);
+    CameraComponent* GetMainCamera();
     EventHandler* GetEventHandler();
     double GetTime();
     float GetDeltaTime();
     int GetWidth();
     int GetHeight();
     GLFWwindow* GetWindow();
-    void ProcessInput(int key, int action);
+    static void ProcessInput(Component* c, int key, int action);
     Madd(const Madd&) = delete;
     Madd& operator=(const Madd&) = delete;
 private:
     Madd() = default;
     std::vector<GameObject*> objs;
-    Camera* mainCamera = nullptr;
+    CameraComponent* mainCamera;
+    KeyboardEventComponent reloadShaderEvent;
+    KeyboardEventComponent exitEvent;
     void ReloadShader();
     void UpdateDeltaTime();
     std::chrono::duration<float> dTime;

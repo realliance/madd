@@ -3,5 +3,7 @@ target_sources(madd
     PRIVATE
         "${DIR}/keycodes.h"
         "${DIR}/eventhandler.h"
+        "${DIR}/keyboardeventsystem.h"
+        "${DIR}/mouseeventsystem.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

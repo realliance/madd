@@ -27,7 +27,7 @@ TextureComponent Texture::Construct(std::string fileName){
     }
 }
 
-void Texture::Deconstruct(TextureComponent t){
+void Texture::Destruct(TextureComponent t){
     glDeleteTextures(1, &t.id);
 }
 

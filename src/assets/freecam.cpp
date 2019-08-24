@@ -3,73 +3,74 @@
 #include "eventhandler.h"
 #include "madd.h"
 
-FreeCam::FreeCam(){
-    firstCursor = true;
-    mouseLocked = false;
-    ToggleMouseLock();
-    EventHandler::GetInstance().RegisterKeyCB(BIND(FreeCam::ToggleMouseLock), KEY_TAB);
-    EventHandler::GetInstance().RegisterCursorPosCB(BIND(FreeCam::ProcessCursorPos));
-    pitch = 0.0f;
-    yaw = -90.0f;
+FreecamComponent FreeCam::Construct(){
+    FreecamComponent c = FreecamComponent{};
+    c.camera = Camera::Construct();
+    c.firstCursor = true;
+    c.mouseLocked = false;
+    ToggleMouseLock(c);
+    c.pitch = 0.0f;
+    c.yaw = -90.0f;
+    return c;
 }
 
-FreeCam::~FreeCam(){
+void FreeCam::Destruct(FreecamComponent& c){
 
 }
 
-void FreeCam::Update(){
-    ProcessInput();
+void FreeCam::Update(FreecamComponent& c){
+    ProcessInput(c);
 }
 
-void FreeCam::ProcessCursorPos(double xpos, double ypos){
-    if(!mouseLocked){
+void FreeCam::ProcessCursorPos(FreecamComponent& c, double xpos, double ypos){
+    if(!c.mouseLocked){
         return;
     }
-    if(firstCursor){
-        lastCursor = glm::vec2(xpos,ypos);
-        firstCursor = false;
+    if(c.firstCursor){
+        c.lastCursor = glm::vec2(xpos,ypos);
+        c.firstCursor = false;
     }
-    glm::vec2 offset = lastCursor - glm::vec2(xpos,ypos);
-    lastCursor = glm::vec2(xpos,ypos);
-    offset *= lookSpeed;
-    yaw -= offset.x;
-    pitch += offset.y;
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = - 89.0f;
-    SetPitchAndYaw(pitch,yaw);
+    glm::vec2 offset = c.lastCursor - glm::vec2(xpos,ypos);
+    c.lastCursor = glm::vec2(xpos,ypos);
+    offset *= c.lookSpeed;
+    c.yaw -= offset.x;
+    c.pitch += offset.y;
+    if(c.pitch > 89.0f)
+        c.pitch = 89.0f;
+    if(c.pitch < -89.0f)
+        c.pitch = - 89.0f;
+    Camera::SetPitchAndYaw(c.camera,c.pitch,c.yaw);
 }
 
-void FreeCam::ProcessInput(){
+void FreeCam::ProcessInput(FreecamComponent& c){
     EventHandler* e = Madd::GetInstance().GetEventHandler();
-    float speed = movementSpeed;
+    float speed = c.movementSpeed;
     glm::vec3 tempVec = glm::vec3(0.0f);
     if(e->GetKeyDown(KEY_W))
-        tempVec += cameraFront * glm::vec3(1.f,0.f,1.f);
+        tempVec += c.camera.front * glm::vec3(1.f,0.f,1.f);
     if(e->GetKeyDown(KEY_S))
-        tempVec -= cameraFront * glm::vec3(1.f,0.f,1.f);
+        tempVec -= c.camera.front * glm::vec3(1.f,0.f,1.f);
     if(e->GetKeyDown(KEY_A))
-        tempVec -= glm::cross(cameraFront, cameraUp);
+        tempVec -= glm::cross(c.camera.front, c.camera.up);
     if(e->GetKeyDown(KEY_D))
-        tempVec += glm::cross(cameraFront, cameraUp);
+        tempVec += glm::cross(c.camera.front, c.camera.up);
     if(e->GetKeyDown(KEY_LEFT_SHIFT))
-        tempVec += cameraUp;
+        tempVec += c.camera.up;
     if(e->GetKeyDown(KEY_LEFT_CONTROL))
-        tempVec -= cameraUp;
+        tempVec -= c.camera.up;
     if(tempVec != glm::vec3(0.0f)){
         tempVec = glm::normalize(tempVec) * speed;
-        Camera::MovePosition(tempVec*Madd::GetInstance().GetDeltaTime());
+        Camera::MovePosition(c.camera, tempVec*Madd::GetInstance().GetDeltaTime());
     }
 }
 
-void FreeCam::ToggleMouseLock(int key, int action){
+void FreeCam::ToggleMouseLock(FreecamComponent& c, int key, int action){
     if(action == KEY_PRESS){
-        firstCursor = true;
-        if(mouseLocked)
+        c.firstCursor = true;
+        if(c.mouseLocked)
             Madd::GetInstance().GetEventHandler()->UnLockCursor();
         else
             Madd::GetInstance().GetEventHandler()->LockCursor();
-        mouseLocked = !mouseLocked;
+        c.mouseLocked = !c.mouseLocked;
     }
 }

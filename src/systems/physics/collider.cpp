@@ -1,49 +1,9 @@
 #include <vector>
 #include <iostream>
-#include <numeric>
-#include <algorithm>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "collider.h"
 #include <limits>
-
-Collider::Collider(std::vector<glm::vec3> collisionMesh):collisionMesh(collisionMesh),originalMesh(collisionMesh){
-  colliderCenter = std::accumulate(std::begin(collisionMesh),std::end(collisionMesh),glm::vec3{})/static_cast<float>(collisionMesh.size());
-}
-
-const std::vector<glm::vec3>& Collider::getCollisionMesh(){
-  return collisionMesh;
-}
-
-glm::vec3 Collider::getCenter(){
-  return colliderCenter;
-}
-
-void Collider::updateModel(glm::mat4 model){
-  collisionMesh = originalMesh;
-  transform(begin(collisionMesh), end(collisionMesh), begin(collisionMesh),
-    [&model](glm::vec3 v) -> glm::vec3 {
-      return model * glm::vec4( v, 1.0 ); 
-  });
-  colliderCenter = std::accumulate(std::begin(collisionMesh),std::end(collisionMesh),glm::vec3{})/static_cast<float>(collisionMesh.size());
-}
-
-bool Collider::Collides(Collider& collider, int maxIteration){
-  return collides(collider, *this, maxIteration);
-}
-
-glm::vec3 Collider::support(glm::vec3 dir){
-  glm::vec3 dotpoint;
-  float dotval = std::numeric_limits<float>::lowest();
-  for(const auto& v : collisionMesh){
-    float dot = glm::dot(v,dir);
-    if(dot > dotval){
-      dotval = dot;
-      dotpoint = v;
-    }
-  }
-  return dotpoint;
-}
 
 inline bool isZero(float n){
   return n < 1e-36 && n > -1e-36;
@@ -62,9 +22,9 @@ inline bool zeroAxis(glm::vec3 p1, glm::vec3 p2){
   return d <= 0 && equal(p1.y, p2.y / d) && equal(p1.z, p2.z / d);
 }
 
-bool Collider::collides(Collider& p, Collider& q, int maxIteration){
-  glm::vec3 pc = p.getCenter();
-  glm::vec3 qc = q.getCenter();
+bool Collider::Collides(ColliderComponent& p, ColliderComponent& q, int maxIteration){
+  glm::vec3 pc = p.GetCenter();
+  glm::vec3 qc = q.GetCenter();
 
   glm::vec3 V0 = qc - pc;
   if(zeroVector(V0)){
@@ -72,14 +32,14 @@ bool Collider::collides(Collider& p, Collider& q, int maxIteration){
   }
 
   glm::vec3 n = -1.f * V0; 
-  glm::vec3 V1 = q.support(n) - p.support(-n);
+  glm::vec3 V1 = q.Support(n) - p.Support(-n);
 
   if(zeroAxis(V0,V1)){
     return true;
   }
   
   n = cross(V1,V0);
-  glm::vec3 V2 = q.support(n) - p.support(-n);
+  glm::vec3 V2 = q.Support(n) - p.Support(-n);
     
   n = cross(V1-V0,V2-V0);
   if(dot(n,V0) > 0){
@@ -90,7 +50,7 @@ bool Collider::collides(Collider& p, Collider& q, int maxIteration){
 
   glm::vec3 V3;
   for(int i = 0 ; i < maxIteration; i++){
-    V3 = q.support(n) - p.support(-n);
+    V3 = q.Support(n) - p.Support(-n);
     if(dot(V3, n) <= 0){
       return false;
     }
@@ -113,7 +73,7 @@ bool Collider::collides(Collider& p, Collider& q, int maxIteration){
       if(dot(n,V1) >= 0){
         return true;
       }
-      glm::vec3  V4 = q.support(n) - p.support(-n);
+      glm::vec3  V4 = q.Support(n) - p.Support(-n);
       float boundaryTolerance = 1e-20;
       if ( -dot(V4, n) >= 0 || dot(V4-V3,n) <= boundaryTolerance){
         return false;

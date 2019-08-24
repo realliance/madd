@@ -1,6 +1,7 @@
 #ifndef RENDEREDCOMPONENT_H
 #define RENDEREDCOMPONENT_H
 
+#include "components/component.h"
 #include "components/shadercomponent.h"
 #include "components/texturecomponent.h"
 #include "components/vertexarraycomponent.h"
@@ -9,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-struct RenderedComponent{
+struct RenderedComponent : public Component{
   std::string vsPath;
   std::string fsPath;
   VertexArrayComponent VAO;

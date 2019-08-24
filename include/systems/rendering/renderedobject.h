@@ -6,11 +6,13 @@
 #include <glm/glm.hpp>
 
 #include "components/renderedcomponent.h"
+#include "system.h"
 
 class RenderedObject{
     public:
+        RenderedObject() = delete;
         static RenderedComponent Construct(std::vector<float> vertices, std::string vertexShaderPath, std::string fragmentShaderPath);
-        static void Deconstruct(RenderedComponent& r);
+        static void Destruct(RenderedComponent& r);
         static void ReloadShader(RenderedComponent& r);
         static bool Render(const RenderedComponent& r);
         static void Rendered(RenderedComponent& r, bool rendered);

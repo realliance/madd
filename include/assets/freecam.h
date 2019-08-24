@@ -2,22 +2,16 @@
 #define FREECAM_H
 #include "camera.h"
 #include <glm/glm.hpp>
-class FreeCam : public Camera {
+#include "components/cameracomponent.h"
+#include "assets/freecamcomponent.h"
+class FreeCam {
     public:
-        FreeCam();
-        ~FreeCam();
-        void ProcessInput();
-        void ProcessCursorPos(double xpos, double ypos);
-        void Update();
-        void ToggleMouseLock(int key=0, int action=1);
-    private:
-        bool mouseLocked;
-        bool firstCursor;
-        glm::vec2 lastCursor;
-        float movementSpeed = 2.0f;
-        float lookSpeed = 0.05f;
-        float pitch;
-        float yaw;
+        static FreecamComponent Construct();
+        static void Destruct(FreecamComponent& c);
+        static void ProcessInput(FreecamComponent& c);
+        static void ProcessCursorPos(FreecamComponent& c, double xpos, double ypos);
+        static void Update(FreecamComponent& c);
+        static void ToggleMouseLock(FreecamComponent& c, int key=0, int action=1);
 };
 
 #endif //FREECAM_H

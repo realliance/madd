@@ -7,7 +7,7 @@
 
 void Renderer::FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
-    Madd::GetInstance().GetMainCamera()->UpdateProjection();
+    Camera::UpdateProjection(*Madd::GetInstance().GetMainCamera());
 }
 
 void Renderer::ErrorCallback(int, const char* err_str) {

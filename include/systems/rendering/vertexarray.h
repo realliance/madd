@@ -5,8 +5,9 @@
 
 class VertexArray {
 public:
+    VertexArray() = delete;
     static VertexArrayComponent Construct(std::vector<float> vertices);
-    static void Deconstruct(VertexArrayComponent v);
+    static void Destruct(VertexArrayComponent v);
     static void Draw(VertexArrayComponent v);
 };
 

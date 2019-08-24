@@ -5,22 +5,47 @@
 #include "shaderprogram.h"
 #include "shadercomponent.h"
 
+const char* GLErrorToString(GLenum err)
+{
+    switch (err)
+    {
+    case GL_NO_ERROR:                      return "GL_NO_ERROR";
+    case GL_INVALID_ENUM:                  return "GL_INVALID_ENUM";
+    case GL_INVALID_VALUE:                 return "GL_INVALID_VALUE";
+    case GL_INVALID_OPERATION:             return "GL_INVALID_OPERATION";
+    // case GL_STACK_OVERFLOW:                return "GL_STACK_OVERFLOW";
+    // case GL_STACK_UNDERFLOW:               return "GL_STACK_UNDERFLOW";
+    case GL_OUT_OF_MEMORY:                 return "GL_OUT_OF_MEMORY";
+    case 0x8031: /* not core */            return "GL_TABLE_TOO_LARGE_EXT";
+    case 0x8065: /* not core */            return "GL_TEXTURE_TOO_LARGE_EXT";
+    case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
+    default:
+        assert(!"Unhandled GL error code");
+        return NULL;
+    }
+}
+
 ShaderComponent ShaderProgram::Construct(std::string vsPath, std::string fsPath){
     uint vsID = constructShader(vsPath);
     uint fsID = constructShader(fsPath);
 
-    ShaderComponent s{glCreateProgram()};
+    ShaderComponent s;
+    s.id = glCreateProgram();
     glAttachShader(s.id, vsID);
     glAttachShader(s.id, fsID);
     glLinkProgram(s.id);
 
-    int success;
+    int success = 2;
     char infoLog[512];
     glGetProgramiv(s.id, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(s.id, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
         throw LINKING_FAILED; 
+    }
+    if(success == 2){
+        std::cout << "ERROR::UNKNOWN\n" << GLErrorToString(glGetError()) << std::endl;
+        throw UNKNOWN_OPENGL_ERROR;
     }
 
     glDetachShader(s.id, vsID);
@@ -68,7 +93,7 @@ uint ShaderProgram::constructShader(std::string shaderFileName){
 #undef VERTEX_SHADER
 #undef FRAGMENT_SHADER
 
-void ShaderProgram::Deconstruct(ShaderComponent s){
+void ShaderProgram::Destruct(ShaderComponent s){
     glDeleteProgram(s.id);
 }
 

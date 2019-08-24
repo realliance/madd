@@ -22,7 +22,7 @@ VertexArrayComponent VertexArray::Construct(std::vector<float> vertices) {
     v.verticesSize = vertices.size();
     return v;
 }
-void VertexArray::Deconstruct(VertexArrayComponent v) {
+void VertexArray::Destruct(VertexArrayComponent v) {
     glDeleteVertexArrays(1, &v.VAO);
     glDeleteBuffers(1, &v.VBO);
 }
