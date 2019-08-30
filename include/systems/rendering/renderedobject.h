@@ -1,5 +1,4 @@
-#ifndef RENDEREDOBJECT_H
-#define RENDEREDOBJECT_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -23,4 +22,3 @@ class RenderedObject{
         static void SetTexture(RenderedComponent& r, unsigned int id);
 };
 
-#endif //RENDEREDOBJECT_H

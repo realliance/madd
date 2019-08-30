@@ -1,5 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 #include <glad/glad.h>
 
 class Madd;
@@ -24,4 +23,3 @@ class Renderer{
         GLFWwindow* window;
 };
 
-#endif //RENDERER_H

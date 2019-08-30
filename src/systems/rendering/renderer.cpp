@@ -1,13 +1,13 @@
 #include "renderer.h"
 #include "madd.h"
-#include "camera.h"
+#include "camerasystem.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include "errors.h"
 
 void Renderer::FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
-    Camera::UpdateProjection(*Madd::GetInstance().GetMainCamera());
+    // CameraSystem::UpdateProjection(*Madd::GetInstance().GetMainCamera());
 }
 
 void Renderer::ErrorCallback(int, const char* err_str) {

@@ -1,9 +1,8 @@
 #include "renderedobject.h"
 #include "madd.h"
-#include "camera.h"
+#include "camerasystem.h"
 #include "vertexarray.h"
 #include "shaderprogram.h"
-#include "gameobject.h"
 #include "texture.h"
 #include "texturecomponent.h"
 

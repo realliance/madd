@@ -1,5 +1,4 @@
-#ifndef KEYBOARDEVENTCOMPONENT_H
-#define KEYBOARDEVENTCOMPONENT_H
+#pragma once
 
 #include "components/component.h"
 #include <functional>
@@ -11,5 +10,4 @@ struct KeyboardEventComponent : public Component{
   uint mods;
 };
 
-#endif // !KEYBOARDEVENTCOMPONENT_H
 

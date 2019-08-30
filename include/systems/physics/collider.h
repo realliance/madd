@@ -1,5 +1,4 @@
-#ifndef COLLIDER_H
-#define COLLIDER_H
+#pragma once
 #include <glm/glm.hpp>
 #include <vector>
 #include "components/collidercomponent.h"
@@ -10,4 +9,3 @@ class Collider{
     static bool Collides(ColliderComponent& q, ColliderComponent& p, int maxIteration = 15);
 };
 
-#endif //COLLIDER_H

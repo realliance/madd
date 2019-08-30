@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 #include <string.h>
 #include "texturecomponent.h"
 
@@ -12,4 +11,3 @@ class Texture{
         static void SetActiveTexture(int n);
 };
 
-#endif //TEXTURE_H

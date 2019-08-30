@@ -1,5 +1,4 @@
-#ifndef MOUSEEVENTCOMPONENT_H
-#define MOUSEEVENTCOMPONENT_H
+#pragma once
 
 #include "components/component.h"
 #include <functional>
@@ -9,5 +8,4 @@ struct MouseEventComponent : public Component{
   Component* c;
 };
 
-#endif // !MOUSEEVENTCOMPONENT_H
 

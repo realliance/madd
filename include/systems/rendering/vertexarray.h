@@ -1,5 +1,4 @@
-#ifndef VERTEXARRAY_H
-#define VERTEXARRAY_H
+#pragma once
 #include <vector>
 #include "vertexarraycomponent.h"
 
@@ -11,4 +10,3 @@ public:
     static void Draw(VertexArrayComponent v);
 };
 
-#endif // VERTEXARRAY_H

@@ -1,5 +1,4 @@
-#ifndef MESHCOLLIDERCOMPONENT_H
-#define MESHCOLLIDERCOMPONENT_H
+#pragma once
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -13,5 +12,4 @@ class MeshColliderComponent : public ColliderComponent{
     glm::vec3 Support(glm::vec3 dir);
 };
 
-#endif // !MESHCOLLIDERCOMPONENT_H
 

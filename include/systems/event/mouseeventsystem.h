@@ -1,5 +1,4 @@
-#ifndef MOUSEEVENTSYSTEM_H
-#define MOUSEEVENTSYSTEM_H
+#pragma once
 
 #include "system.h"
 #include "components/mouseeventcomponent.h"
@@ -7,22 +6,22 @@
 #include <vector>
 
 class GLFWwindow;
-class MouseEventSystem : public System<MouseEventComponent>{
+class MouseEventSystem : public System{
   public:
     static MouseEventSystem& GetInstance();
-    bool Init();
-    bool Deinit();
-    bool Register(MouseEventComponent* component);
-    bool Deregister(MouseEventComponent* component);
+    void Init();
+    void Deinit();
+    bool Register(Component* component);
+    bool Unregister(Component* component);
+    void LockCursor();
+    void UnlockCursor();
     void Update();
+    std::string Name(){ return "MouseEventSystem"; }
     MouseEventSystem(const MouseEventSystem&) = delete;
     MouseEventSystem& operator=(const MouseEventSystem&) = delete;
   private:
     MouseEventSystem() = default;
     static void CursorCallBack(GLFWwindow *window, double xpos, double ypos);
     std::vector<MouseEventComponent*> subscribers;
-    //TODO: Replace with component manager id
-    ComponentID currID;
 }; 
 
-#endif // !MOUSEEVENTSYSTEM_H

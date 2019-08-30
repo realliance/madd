@@ -2,14 +2,15 @@
 #include <GLFW/glfw3.h>
 #include "madd.h"
 
-bool MouseEventSystem::Init(){
+void MouseEventSystem::Init(){
   glfwSetCursorPosCallback(Madd::GetInstance().GetWindow(), CursorCallBack);
-  return true;
 }
 
-bool MouseEventSystem::Deinit(){
-  return true;
+void MouseEventSystem::Deinit(){
+  subscribers.clear();
+  glfwSetCursorPosCallback(Madd::GetInstance().GetWindow(), NULL);
 }
+
 
 void MouseEventSystem::CursorCallBack(GLFWwindow *window, double xpos, double ypos){
     for(auto const c : GetInstance().subscribers) {
@@ -22,13 +23,13 @@ MouseEventSystem& MouseEventSystem::GetInstance() {
     return instance;
 }
 
-bool MouseEventSystem::Register(MouseEventComponent* component){
-  component->cID = ++currID;
-  subscribers.push_back(component);
+bool MouseEventSystem::Register(Component* component){
+  component->cID = Madd::GetInstance().GetNewComponentID();
+  subscribers.push_back(dynamic_cast<MouseEventComponent*>(component));
   return true;
 }
 
-bool MouseEventSystem::Deregister(MouseEventComponent* component){
+bool MouseEventSystem::Unregister(Component* component){
   for(auto i = begin(subscribers); i != end(subscribers); i++){
     if((*i)->cID == component->cID){
       subscribers.erase(i);
@@ -38,4 +39,14 @@ bool MouseEventSystem::Deregister(MouseEventComponent* component){
   return false;
 }
 
-void MouseEventSystem::Update(){}
+void MouseEventSystem::Update(){
+  glfwPollEvents();
+}
+
+void MouseEventSystem::LockCursor(){
+    glfwSetInputMode(Madd::GetInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void MouseEventSystem::UnlockCursor(){
+    glfwSetInputMode(Madd::GetInstance().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);   
+}

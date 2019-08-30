@@ -1,5 +1,4 @@
-#ifndef KEYCODES_H
-#define KEYCODES_H
+#pragma once
 
 #ifndef _glfw3_h_
 
@@ -448,4 +447,3 @@
 #define JOYSTICK_16            GLFW_JOYSTICK_16            //15
 #define JOYSTICK_LAST          GLFW_JOYSTICK_LAST          //GLFW_JOYSTICK_16
 
-#endif //KEYCODES_H

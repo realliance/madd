@@ -1,5 +1,4 @@
-#ifndef RENDEREDCOMPONENT_H
-#define RENDEREDCOMPONENT_H
+#pragma once
 
 #include "components/component.h"
 #include "components/shadercomponent.h"
@@ -30,5 +29,4 @@ struct RenderedComponent : public Component{
   bool shouldRender;
 };
 
-#endif // !RENDEREDCOMPONENT_H
 

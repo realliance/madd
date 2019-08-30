@@ -1,4 +1,4 @@
-#ifndef UTIL_H
+#pragma once
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -11,4 +11,3 @@ class Util{
 };
 
 
-#endif // !UTIL_H

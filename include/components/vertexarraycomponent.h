@@ -1,5 +1,4 @@
-#ifndef VERTEXARRAYCOMPONENT_H
-#define VERTEXARRAYCOMPONENT_H
+#pragma once
 
 #include "components/component.h"
 #include <sys/types.h>
@@ -10,5 +9,4 @@ struct VertexArrayComponent : public Component{
   int verticesSize;
 };
 
-#endif // !VERTEXARRAYCOMPONENT_H
 

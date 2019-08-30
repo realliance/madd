@@ -1,8 +1,6 @@
-#ifndef ERRORS_H
-#define ERRORS_H
+#pragma once
 #define COMPILATION_FAILED 10
 #define LINKING_FAILED 20
 #define SHADER_FILE_NOT_FOUND 30
 #define GLFW_ERROR 40
 #define UNKNOWN_OPENGL_ERROR 50
-#endif //ERRORS_H

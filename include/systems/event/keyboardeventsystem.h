@@ -1,5 +1,4 @@
-#ifndef KEYBOARDEVENTSYSTEM_H
-#define KEYBOARDEVENTSYSTEM_H
+#pragma once
 
 #include "system.h"
 #include "components/keyboardeventcomponent.h"
@@ -7,22 +6,20 @@
 #include <vector>
 
 class GLFWwindow;
-class KeyboardEventSystem : public System<KeyboardEventComponent>{
+class KeyboardEventSystem : public System{
   public:
     static KeyboardEventSystem& GetInstance();
-    bool Init();
-    bool Deinit();
-    bool Register(KeyboardEventComponent* component);
-    bool Deregister(KeyboardEventComponent* component);
+    void Deinit();
+    void Init();
+    bool Register(Component* component);
+    bool Unregister(Component* component);
     void Update();
+    std::string Name(){ return "KeyboardEventSystem"; }
     KeyboardEventSystem(const KeyboardEventSystem&) = delete;
     KeyboardEventSystem& operator=(const KeyboardEventSystem&) = delete;
   private:
     KeyboardEventSystem() = default;
     static void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
     std::vector<KeyboardEventComponent*> subscribers;
-    //TODO: Replace with component manager id
-    ComponentID currID;
 }; 
 
-#endif // !KEYBOARDEVENTSYSTEM_H

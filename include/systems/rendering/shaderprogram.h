@@ -1,5 +1,4 @@
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
+#pragma once
 #include <iostream>
 #include <glm/glm.hpp>
 #include "errors.h"
@@ -26,4 +25,3 @@ class ShaderProgram {
     static uint constructShader(std::string shaderFileName);
 };
 
-#endif // SHADERPROGRAM_H
