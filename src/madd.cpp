@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "renderer.h"
+#include "rendersystem.h"
 #include "camerasystem.h"
 #include "event/keyboardeventsystem.h"
 #include "event/mouseeventsystem.h"
@@ -15,16 +15,12 @@ void Madd::Init(int width, int height, const char *title) {
     this->height = height;
     this->height = height;
     this->mainCamera = nullptr;
-    Renderer::GetInstance().Init(width, height, title);
-
     reloadShaderEvent = KeyboardEventComponent{};
     reloadShaderEvent.callback = Madd::ProcessInput;
     exitEvent = reloadShaderEvent;
     exitEvent.code = KEY_ESCAPE;
     reloadShaderEvent.code = KEY_SPACE;
 
-    MouseEventSystem::GetInstance().Init();
-    KeyboardEventSystem::GetInstance().Init();
     KeyboardEventSystem::GetInstance().Register(&reloadShaderEvent);
     KeyboardEventSystem::GetInstance().Register(&exitEvent);
 }
@@ -33,7 +29,6 @@ Madd::~Madd() {
     for(auto const& [name, sys] : systems){
         sys->Deinit();
     }
-    Renderer::GetInstance().DeInit();
 }
 
 Madd& Madd::GetInstance() {
@@ -95,13 +90,13 @@ double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
 
 int Madd::GetWidth() {
-    return Renderer::GetInstance().GetWidth();
+    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetWidth();
 }
 
 int Madd::GetHeight() {
-    return Renderer::GetInstance().GetHeight();
+    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetHeight();
 }
 
 GLFWwindow* Madd::GetWindow() {
-    return Renderer::GetInstance().GetWindow();
+    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetWindow();
 }

@@ -107,3 +107,4 @@ float Util::MaxRadius(std::vector<float>& vertices, int stride, glm::vec3 centro
 #undef x_v
 #undef y_v
 #undef z_v
+

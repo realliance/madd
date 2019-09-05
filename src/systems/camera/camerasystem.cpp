@@ -22,6 +22,10 @@ bool CameraSystem::Unregister(Component *component) {
   return false;
 }
 
+std::vector<CameraComponent*>& CameraSystem::GetCameras(){
+  return cameras;
+}
+
 void CameraSystem::Update() {
   for (CameraComponent *c : cameras) {
     updateComponent(*c);

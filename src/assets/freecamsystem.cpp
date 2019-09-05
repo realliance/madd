@@ -70,7 +70,7 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
   if(c.movVector == glm::vec3(0)){
     return;
   }
-  glm::vec3 tempVec;
+  glm::vec3 tempVec{};
 
   if(c.movVector.z > 0)
       tempVec += c.camera.front * glm::vec3(1.f,0.f,1.f);

@@ -5,5 +5,5 @@ target_sources(madd
   "${DIR}/texture.cpp"
   "${DIR}/vertexarray.cpp"
   "${DIR}/renderedobject.cpp"
-  "${DIR}/renderer.cpp"
+  "${DIR}/rendersystem.cpp"
 )

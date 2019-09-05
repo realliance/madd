@@ -12,6 +12,7 @@
 struct RenderedComponent : public Component{
   std::string vsPath;
   std::string fsPath;
+  std::vector<float> verticies;
   VertexArrayComponent VAO;
   std::vector<TextureComponent> textures;
   size_t textureN;
