@@ -4,10 +4,9 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "rendering/shaderprogram.h"
-#include "errors.h"
-#include "rendering/vertexarray.h"
-#include "rendering/texture.h"
+#include "rendering/shadersystem.h"
+#include "rendering/meshsystem.h"
+#include "rendering/texturesystem.h"
 
 void RenderSystem::FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -44,7 +43,7 @@ void RenderSystem::Deinit(){
     glfwSetFramebufferSizeCallback(window, nullptr);
     glfwDestroyWindow(window);
     glfwSetErrorCallback(nullptr);
-    glfwTerminate();
+    // glfwTerminate();
 }
 
 bool RenderSystem::Register(Component* component){
@@ -52,6 +51,8 @@ bool RenderSystem::Register(Component* component){
   objects.push_back(dynamic_cast<RenderedComponent*>(component));
   return true;
 }
+
+
 
 bool RenderSystem::Unregister(Component* component){
   for(auto i = begin(objects); i != end(objects); i++){
@@ -74,23 +75,22 @@ void RenderSystem::Update(){
   Finish();
 }
 
-void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
-  if (r.shouldRender) {
-    ShaderProgram::Enable(r.shader);
-    ShaderProgram::SetMartix4fUniform(r.viewLoc, &c.view);
-    ShaderProgram::SetMartix4fUniform(r.projectionLoc, &c.projection);
-    ShaderProgram::SetFloatUniform(r.shaderTimeLocation, Madd::GetInstance().GetTime());
-    ShaderProgram::Enable(r.shader);
-    if(r.textureN < r.textures.size()){
-      ShaderProgram::SetIntUniform(r.textureLoc,1);
-      Texture::SetActiveTexture(0);
-      Texture::Enable(r.textures[r.textureN]);
-    }else{
-      ShaderProgram::SetIntUniform(r.textureLoc,0);
-    }
 
-    VertexArray::Draw(r.VAO);
+void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
+  ShaderSystem::Enable(*r.shader);
+  ShaderSystem::SetFloat4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "shade"), &r.shade);
+  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "model"), &r.model);
+  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "view"), &c.view);
+  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "projection"), &c.projection);
+  ShaderSystem::SetFloatUniform(ShaderSystem::GetUniformLocation(*r.shader, "time"), Madd::GetInstance().GetTime());
+  if(r.texture){
+    ShaderSystem::SetIntUniform(ShaderSystem::GetUniformLocation(*r.shader, "textureEnabled"),1);
+    TextureSystem::Enable(r.texture);
+  }else{
+    ShaderSystem::SetIntUniform(ShaderSystem::GetUniformLocation(*r.shader, "textureEnabled"),0);
   }
+
+  MeshSystem::Draw(*r.mesh);
 }
 
 RenderSystem& RenderSystem::GetInstance() {

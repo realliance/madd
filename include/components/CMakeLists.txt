@@ -3,7 +3,7 @@ target_sources(madd
     PRIVATE
         "${DIR}/texturecomponent.h"
         "${DIR}/shadercomponent.h"
-        "${DIR}/vertexarraycomponent.h"
+        "${DIR}/meshcomponent.h"
         "${DIR}/renderedcomponent.h"
         "${DIR}/cameracomponent.h"
         "${DIR}/component.h"

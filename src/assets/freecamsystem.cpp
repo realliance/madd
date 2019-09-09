@@ -49,9 +49,8 @@ void FreeCamSystem::ProcessCursor(FreecamComponent& c){
     if(!c.mouseLocked){
         return;
     }
-    if(c.firstCursor){
+    if(c.lastCursor == glm::vec2{}){
         c.lastCursor = c.cursor;
-        c.firstCursor = false;
     }
     glm::vec2 offset = c.lastCursor - c.cursor;
     c.lastCursor = c.cursor;
@@ -86,12 +85,12 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
       tempVec -= c.camera.up;
 
   tempVec = glm::normalize(tempVec) * c.movementSpeed;
-  c.camera.pos += (c.camera, tempVec*Madd::GetInstance().GetDeltaTime());
+  c.camera.pos += tempVec*Madd::GetInstance().GetDeltaTime();
 }
 
 void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, int key, int action){
     if(action == KEY_PRESS){
-        c.firstCursor = true;
+        c.lastCursor = glm::vec2{};
         if(c.mouseLocked)
             MouseEventSystem::GetInstance().UnlockCursor();
         else

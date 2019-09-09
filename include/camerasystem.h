@@ -12,8 +12,9 @@ class CameraSystem : public System{
     bool Register(Component* component);
     bool Unregister(Component* component);
     void Update();
-    std::vector<CameraComponent*>& GetCameras();
+
     std::string Name() { return "CameraSystem"; }
+    std::vector<CameraComponent*>& GetCameras();
     static CameraComponent Construct();
     void Destruct(CameraComponent& c);
     void UpdateProjection(CameraComponent& c, int width, int height);

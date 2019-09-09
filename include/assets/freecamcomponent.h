@@ -8,8 +8,7 @@
 
 struct FreecamComponent : public Component{
   CameraComponent camera;
-  bool mouseLocked = false;
-  bool firstCursor = true;
+  bool mouseLocked;
   glm::vec2 lastCursor;
   float movementSpeed = 2.0f;
   float lookSpeed = 0.05f;
