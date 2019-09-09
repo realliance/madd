@@ -1,8 +1,8 @@
 #include <assets/freecamsystem.h>
 #include <vector>
 #include "madd.h"
-#include <event/mouseeventsystem.h>
-#include <event/keycodes.h>
+#include <mouseeventsystem.h>
+#include <keycodes.h>
 #include <components/component.h>
 
 

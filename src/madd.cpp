@@ -5,8 +5,8 @@
 
 #include "rendersystem.h"
 #include "camerasystem.h"
-#include "event/keyboardeventsystem.h"
-#include "event/mouseeventsystem.h"
+#include "keyboardeventsystem.h"
+#include "mouseeventsystem.h"
 #include "keycodes.h"
 
 void Madd::Init(int width, int height, const char *title) {

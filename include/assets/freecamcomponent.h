@@ -2,7 +2,7 @@
 
 #include "components/component.h"
 #include "components/cameracomponent.h"
-#include "event/keycodes.h"
+#include "keycodes.h"
 #include "components/keyboardeventcomponent.h"
 #include <glm/glm.hpp>
 

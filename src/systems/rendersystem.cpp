@@ -4,9 +4,9 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "rendering/shadersystem.h"
-#include "rendering/meshsystem.h"
-#include "rendering/texturesystem.h"
+#include "shadersystem.h"
+#include "meshsystem.h"
+#include "texturesystem.h"
 
 void RenderSystem::FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
