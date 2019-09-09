@@ -4,6 +4,7 @@
 #include <vector>
 #include "components/cameracomponent.h"
 #include "assets/freecamcomponent.h"
+#include "components/windowcomponent.h"
 class FreeCamSystem : public System {
   public:
     static FreecamComponent Construct();
@@ -13,7 +14,7 @@ class FreeCamSystem : public System {
     bool Unregister(Component* component);
     void Update();
     std::string Name() { return "FreeCamSystem"; }
-    static void ToggleMouseLock(FreecamComponent& c, int key=0, int action=1);
+    static void ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key=0, int action=1);
   private:
     std::vector<FreecamComponent*> freecams;
     static void ProcessMove(FreecamComponent& c);        

@@ -11,5 +11,6 @@ target_sources(madd
         "${DIR}/collidercomponent.h"
         "${DIR}/keyboardeventcomponent.h"
         "${DIR}/mouseeventcomponent.h"
+        "${DIR}/windowcomponent.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

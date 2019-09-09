@@ -9,16 +9,12 @@ struct CameraComponent : public Component{
   glm::vec3 lookAt;
   bool active;
   float fov;
+  float aspectratio;
 
   glm::vec3 front;
   glm::vec3 up;
   glm::mat4 view;
   glm::mat4 projection;
-  friend class CameraSystem;
-private:
-  glm::vec3 _pos;
-  glm::vec3 _lookAt;
-  float _fov;
 };
 
 

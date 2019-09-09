@@ -9,94 +9,79 @@
 #include "mouseeventsystem.h"
 #include "keycodes.h"
 
-void Madd::Init(int width, int height, const char *title) {
-    this->currID = 0;
-    this->width = width;
-    this->height = height;
-    this->height = height;
-    this->mainCamera = nullptr;
-    reloadShaderEvent = KeyboardEventComponent{};
-    reloadShaderEvent.callback = Madd::ProcessInput;
-    exitEvent = reloadShaderEvent;
-    exitEvent.code = KEY_ESCAPE;
-    reloadShaderEvent.code = KEY_SPACE;
-
-    KeyboardEventSystem::GetInstance().Register(&reloadShaderEvent);
-    KeyboardEventSystem::GetInstance().Register(&exitEvent);
+void Madd::Init() {
+  this->currID = 0;
+  reloadShaderEvent = KeyboardEventComponent{};
+  reloadShaderEvent.callback = Madd::ProcessInput;
+  exitEvent = reloadShaderEvent;
+  exitEvent.code = KEY_ESCAPE;
+  reloadShaderEvent.code = KEY_SPACE;
 }
 
-Madd::~Madd() {
-    for(auto const& [name, sys] : systems){
-        sys->Deinit();
-    }
+void Madd::Deinit() {
+  for(auto const& [name, sys] : systems){
+    sys->Deinit();
+  }
 }
 
 Madd& Madd::GetInstance() {
-    static Madd instance;
-    return instance;
+  static Madd instance;
+  return instance;
 }
 
 void Madd::Register(System* s){
-    if(systems.contains(s->Name())){
-        return;
-    }
-    s->Init();
-    systems[s->Name()] = s;
+  if(systems.contains(s->Name())){
+    return;
+  }
+  s->Init();
+  systems[s->Name()] = s;
 }
 
 System* Madd::GetSystem(std::string s){
-    if(systems.contains(s)){
-        return systems[s];
-    }
-    return nullptr;
+  if(systems.contains(s)){
+    return systems[s];
+  }
+  return nullptr;
 }
 
 size_t Madd::GetNewComponentID(){
-    return ++currID;
+  return ++currID;
+}
+
+void Madd::Run(){
+  KeyboardEventSystem::GetInstance().Register(&reloadShaderEvent);
+  KeyboardEventSystem::GetInstance().Register(&exitEvent);
+  while(StayOpen()){
+    Tick();
+  }
 }
 
 void Madd::Tick(){
-    for(auto const& [name, sys] : systems){
-        sys->Update();
-    }
-    UpdateDeltaTime();
+  for(auto const& [name, sys] : systems){
+      sys->Update();
+  }
+  UpdateDeltaTime();
 }
 
 void Madd::ReloadShader() {
-    // for(GameObject* obj : objs)
-    //     if(!obj->ReloadShaders())
-    //         return;
+  // for(GameObject* obj : objs)
+  //     if(!obj->ReloadShaders())
+  //         return;
 }
 
-void Madd::ProcessInput(Component* c, int key, int action){
-    if (key == KEY_ESCAPE)
-        GetInstance().Close();
-    if (key == KEY_SPACE && action == KEY_PRESS)
-        GetInstance().ReloadShader();
+void Madd::ProcessInput(Component* c, WindowComponent* window, int key, int action){
+  if (key == KEY_ESCAPE)
+    GetInstance().Close();
+  if (key == KEY_SPACE && action == KEY_PRESS)
+    GetInstance().ReloadShader();
 }
 
 void Madd::UpdateDeltaTime(){
-    dTime = Clock::now() - lastFrame;
-    lastFrame = Clock::now();
-}
-
-CameraComponent* Madd::GetMainCamera(){
-    return mainCamera;
+  dTime = Clock::now() - lastFrame;
+  lastFrame = Clock::now();
 }
 
 
-void Madd::SetMainCamera(CameraComponent* cameraObj){mainCamera=cameraObj;}
 double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
 
-int Madd::GetWidth() {
-    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetWidth();
-}
-
-int Madd::GetHeight() {
-    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetHeight();
-}
-
-GLFWwindow* Madd::GetWindow() {
-    return dynamic_cast<RenderSystem*>(GetSystem("RenderSystem"))->GetWindow();
-}

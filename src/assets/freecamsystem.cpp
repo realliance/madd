@@ -1,10 +1,9 @@
 #include <assets/freecamsystem.h>
 #include <vector>
 #include "madd.h"
-#include <mouseeventsystem.h>
+#include <windowsystem.h>
 #include <keycodes.h>
 #include <components/component.h>
-
 
 void FreeCamSystem::Init(){
 }
@@ -41,7 +40,7 @@ void FreeCamSystem::Update(){
 FreecamComponent FreeCamSystem::Construct(){
     FreecamComponent c = FreecamComponent{};
     c.camera = CameraSystem::Construct();
-    ToggleMouseLock(c);
+    // ToggleMouseLock(c);
     return c;
 }
 
@@ -88,13 +87,13 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
   c.camera.pos += tempVec*Madd::GetInstance().GetDeltaTime();
 }
 
-void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, int key, int action){
+void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key, int action){
     if(action == KEY_PRESS){
         c.lastCursor = glm::vec2{};
         if(c.mouseLocked)
-            MouseEventSystem::GetInstance().UnlockCursor();
+            WindowSystem::UnlockCursor(*window);
         else
-            MouseEventSystem::GetInstance().LockCursor();
+            WindowSystem::LockCursor(*window);
         c.mouseLocked = !c.mouseLocked;
     }
 }

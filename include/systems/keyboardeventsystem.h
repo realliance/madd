@@ -5,7 +5,6 @@
 #include "components/component.h"
 #include <vector>
 
-class GLFWwindow;
 class KeyboardEventSystem : public System{
   public:
     static KeyboardEventSystem& GetInstance();
@@ -17,9 +16,9 @@ class KeyboardEventSystem : public System{
     std::string Name(){ return "KeyboardEventSystem"; }
     KeyboardEventSystem(const KeyboardEventSystem&) = delete;
     KeyboardEventSystem& operator=(const KeyboardEventSystem&) = delete;
+    static void KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods);
   private:
     KeyboardEventSystem() = default;
-    static void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
     std::vector<KeyboardEventComponent*> subscribers;
 }; 
 

@@ -5,7 +5,6 @@
 #include "components/component.h"
 #include <vector>
 
-class GLFWwindow;
 class MouseEventSystem : public System{
   public:
     static MouseEventSystem& GetInstance();
@@ -19,9 +18,9 @@ class MouseEventSystem : public System{
     std::string Name(){ return "MouseEventSystem"; }
     MouseEventSystem(const MouseEventSystem&) = delete;
     MouseEventSystem& operator=(const MouseEventSystem&) = delete;
+    static void CursorCallBack(WindowComponent *window, double xpos, double ypos);
   private:
     MouseEventSystem() = default;
-    static void CursorCallBack(GLFWwindow *window, double xpos, double ypos);
     std::vector<MouseEventComponent*> subscribers;
 }; 
 

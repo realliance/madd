@@ -11,5 +11,6 @@ target_sources(madd
       "${DIR}/texturesystem.h"
       "${DIR}/meshsystem.h"
       "${DIR}/camerasystem.h"
+      "${DIR}/windowsystem.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

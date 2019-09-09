@@ -22,37 +22,18 @@ bool CameraSystem::Unregister(Component *component) {
   return false;
 }
 
-std::vector<CameraComponent*>& CameraSystem::GetCameras(){
-  return cameras;
-}
-
 void CameraSystem::Update() {
   for (CameraComponent *c : cameras) {
-    updateComponent(*c);
+    if(c->update){
+      updateComponent(*c);
+    }
   }
 }
 
 void CameraSystem::updateComponent(CameraComponent &c) {
-  if (c.fov != c._fov) {
-    c._fov = c.fov;
-    float ratio =
-        (float)Madd::GetInstance().GetWidth() / Madd::GetInstance().GetHeight();
-    c.projection = glm::perspective(glm::radians(c.fov), ratio, 0.1f, 100.0f);
-  }
-
-  bool dirty = false;
-  if (c.pos != c._pos) {
-    c._pos = c.pos;
-    dirty = true;
-  }
-  if (c.lookAt != c._lookAt) {
-    c._lookAt = c.lookAt;
-    c.front = glm::normalize(c.lookAt);
-    dirty = true;
-  }
-  if (dirty) {
-    c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);
-  }
+  c.projection = glm::perspective(glm::radians(c.fov), c.aspectratio, 0.1f, 100.0f);
+  c.front = glm::normalize(c.lookAt);
+  c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);
 }
 
 CameraComponent CameraSystem::Construct() {
@@ -63,20 +44,14 @@ CameraComponent CameraSystem::Construct() {
   c.fov = 45.f;
   c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);
   c.projection = glm::mat4(1.0f);
-  c.projection = glm::perspective(glm::radians(45.0f),
-                                  (float)Madd::GetInstance().GetWidth() /
-                                      Madd::GetInstance().GetHeight(),
-                                  0.1f, 100.0f);
   return c;
 }
 
 void CameraSystem::UpdateProjection(CameraComponent &c, int width, int height) {
-  for (CameraComponent *c : cameras) {
-    c->projection = glm::perspective(glm::radians(c->fov),
-                                     (float)Madd::GetInstance().GetWidth() /
-                                         Madd::GetInstance().GetHeight(),
-                                     0.1f, 100.0f);
-  }
+  c.projection = glm::perspective(glm::radians(c.fov),
+                                    (float)width /
+                                        height,
+                                    0.1f, 100.0f);
 }
 
 glm::vec3 CameraSystem::PitchAndYawVector(CameraComponent &c, float pitch,

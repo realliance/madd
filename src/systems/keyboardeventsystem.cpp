@@ -1,21 +1,19 @@
 #include "keyboardeventsystem.h"
-#include <GLFW/glfw3.h>
 #include "madd.h"
 
 void KeyboardEventSystem::Init(){
-  glfwSetKeyCallback(Madd::GetInstance().GetWindow(), KeyCallBack);
+  
 }
 
 void KeyboardEventSystem::Deinit(){
   subscribers.clear();
-  glfwSetKeyCallback(Madd::GetInstance().GetWindow(), NULL);
 }
 
 
-void KeyboardEventSystem::KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
+void KeyboardEventSystem::KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods){
     for(auto const c : GetInstance().subscribers) {
         if((c->mods == mods || c->mods == 0) && c->code == key) {
-            c->callback(c->c, key, action);
+            c->callback(c->c, window, key, action);
         }
     }
 }
@@ -42,5 +40,4 @@ bool KeyboardEventSystem::Unregister(Component* component){
 }
 
 void KeyboardEventSystem::Update(){
-  glfwPollEvents();
 }

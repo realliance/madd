@@ -1,8 +1,9 @@
 #pragma once
 
 #include "components/component.h"
+#include "components/windowcomponent.h"
 #include <functional>
-typedef std::function<void(Component*, double,double)> mouseCB;
+typedef std::function<void(Component*, WindowComponent*, double,double)> mouseCB;
 struct MouseEventComponent : public Component{
   mouseCB callback;
   Component* c;
