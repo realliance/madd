@@ -4,6 +4,7 @@
 #include <fstream>
 #include "shadersystem.h"
 #include "shadercomponent.h"
+#include "glfwsystem.h"
 #include "madd.h"
 
 void ShaderSystem::Init(){}
@@ -43,32 +44,35 @@ void ShaderSystem::Update(){
 }
 
 void ShaderSystem::destruct(ShaderComponent& s){
-  glDeleteProgram(s.id);
+  if(GlfwSystem::GetCurrentWindow() != NULL){
+    glDeleteProgram(program[s.cID]);
+    program.erase(s.cID);
+  }
 }
 
 void ShaderSystem::initialize(ShaderComponent& s){
     uint vsID = constructShader(s.vertexShaderPath);
     uint fsID = constructShader(s.fragmentShaderPath);
 
-    s.id = glCreateProgram();
-    glAttachShader(s.id, vsID);
-    glAttachShader(s.id, fsID);
-    glLinkProgram(s.id);
+    program[s.cID] = glCreateProgram();
+    glAttachShader(program[s.cID], vsID);
+    glAttachShader(program[s.cID], fsID);
+    glLinkProgram(program[s.cID]);
 
     int success = 2;
     char infoLog[512];
-    glGetProgramiv(s.id, GL_LINK_STATUS, &success);
+    glGetProgramiv(program[s.cID], GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(s.id, 512, NULL, infoLog);
+        glGetProgramInfoLog(program[s.cID], 512, NULL, infoLog);
         throw std::string("ERROR::SHADER::LINKING_FAILED\n") + infoLog;
     }
     if(success == 2){
         throw "UNKNOWN_OPENGL_ERROR";
     }
 
-    glDetachShader(s.id, vsID);
+    glDetachShader(program[s.cID], vsID);
     glDeleteShader(vsID);
-    glDetachShader(s.id, fsID);
+    glDetachShader(program[s.cID], fsID);
     glDeleteShader(fsID);
 }
 
@@ -113,12 +117,12 @@ uint ShaderSystem::constructShader(std::string shaderFileName){
 
 
 void ShaderSystem::Enable(ShaderComponent& s){
-    glUseProgram(s.id);
+    glUseProgram(program[s.cID]);
 }
 
 
 unsigned int ShaderSystem::GetUniformLocation(ShaderComponent& s, std::string name){
-    return glGetUniformLocation(s.id, name.c_str());
+    return glGetUniformLocation(program[s.cID], name.c_str());
 }
 
 void ShaderSystem::SetIntUniform(unsigned int location, int data){

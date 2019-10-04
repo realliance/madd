@@ -1,12 +1,11 @@
 #include "rendersystem.h"
 #include "madd.h"
 #include "camerasystem.h"
-#include <iostream>
 #include <glad/glad.h>
 #include "shadersystem.h"
 #include "meshsystem.h"
 #include "texturesystem.h"
-#include "windowsystem.h"
+#include "glfwsystem.h"
 
 void RenderSystem::Init() {
 }
@@ -33,9 +32,8 @@ bool RenderSystem::Unregister(Component* component){
 }
 
 void RenderSystem::Update(){
-  
-  WindowSystem* windowsys= dynamic_cast<WindowSystem*>(Madd::GetInstance().GetSystem("WindowSystem"));
-  for(WindowComponent* w : windowsys->GetWindows()){
+  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  for(WindowComponent* w : glfwsys->GetWindows()){
     Start(*w);
     for(CameraComponent* c : w->cameras){
       for (RenderedComponent *r : objects) {
@@ -44,25 +42,24 @@ void RenderSystem::Update(){
     }
     Finish(*w);
   }
-  
 }
 
 
 void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
-  ShaderSystem::Enable(*r.shader);
-  ShaderSystem::SetFloat4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "shade"), &r.shade);
-  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "model"), &r.model);
-  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "view"), &c.view);
-  ShaderSystem::SetMartix4fUniform(ShaderSystem::GetUniformLocation(*r.shader, "projection"), &c.projection);
-  ShaderSystem::SetFloatUniform(ShaderSystem::GetUniformLocation(*r.shader, "time"), Madd::GetInstance().GetTime());
+  ShaderSystem* shadersys= dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
+  shadersys->Enable(*r.shader);
+  shadersys->SetFloat4fUniform(shadersys->GetUniformLocation(*r.shader, "shade"), &r.shade);
+  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "model"), &r.model);
+  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "view"), &c.view);
+  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "projection"), &c.projection);
+  shadersys->SetFloatUniform(shadersys->GetUniformLocation(*r.shader, "time"), Madd::GetInstance().GetTime());
   if(r.texture){
-    ShaderSystem::SetIntUniform(ShaderSystem::GetUniformLocation(*r.shader, "textureEnabled"),1);
-    TextureSystem::Enable(r.texture);
+    shadersys->SetIntUniform(shadersys->GetUniformLocation(*r.shader, "textureEnabled"),1);
+    dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"))->Enable(r.texture);
   }else{
-    ShaderSystem::SetIntUniform(ShaderSystem::GetUniformLocation(*r.shader, "textureEnabled"),0);
+    shadersys->SetIntUniform(shadersys->GetUniformLocation(*r.shader, "textureEnabled"),0);
   }
-
-  MeshSystem::Draw(*r.mesh);
+  dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"))->Draw(*r.mesh);
 }
 
 RenderSystem& RenderSystem::GetInstance() {
@@ -73,11 +70,13 @@ RenderSystem& RenderSystem::GetInstance() {
 
 
 void RenderSystem::Start(WindowComponent& w){
-  WindowSystem::Enable(w);
+  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  glfwsys->Enable(w);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderSystem::Finish(WindowComponent& w){
-  WindowSystem::Finish(w);
+  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  glfwsys->Finish(w);
 }

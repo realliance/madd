@@ -26,6 +26,7 @@ void CameraSystem::Update() {
   for (CameraComponent *c : cameras) {
     if(c->update){
       updateComponent(*c);
+      c->update = false;
     }
   }
 }
@@ -40,6 +41,7 @@ CameraComponent CameraSystem::Construct() {
   CameraComponent c{};
   c.pos = glm::vec3(0.0f, 0.0f, 3.0f);
   c.front = glm::vec3(0.0f, 0.0f, -1.0f);
+  c.lookAt = c.front;
   c.up = glm::vec3(0.0f, 1.0f, 0.0f);
   c.fov = 45.f;
   c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);

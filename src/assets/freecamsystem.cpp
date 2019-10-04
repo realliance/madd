@@ -1,7 +1,7 @@
 #include <assets/freecamsystem.h>
 #include <vector>
 #include "madd.h"
-#include <windowsystem.h>
+#include <glfwsystem.h>
 #include <keycodes.h>
 #include <components/component.h>
 
@@ -34,13 +34,13 @@ void FreeCamSystem::Update(){
   for(auto const c : freecams){
     ProcessCursor(*c);
     ProcessMove(*c);
+    c->camera.update = true;
   }
 }
 
 FreecamComponent FreeCamSystem::Construct(){
     FreecamComponent c = FreecamComponent{};
     c.camera = CameraSystem::Construct();
-    // ToggleMouseLock(c);
     return c;
 }
 
@@ -88,12 +88,13 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
 }
 
 void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key, int action){
-    if(action == KEY_PRESS){
-        c.lastCursor = glm::vec2{};
-        if(c.mouseLocked)
-            WindowSystem::UnlockCursor(*window);
-        else
-            WindowSystem::LockCursor(*window);
-        c.mouseLocked = !c.mouseLocked;
-    }
+  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  if(action == KEY_PRESS){
+      c.lastCursor = glm::vec2{};
+      if(c.mouseLocked)
+          glfwsys->UnlockCursor(*window);
+      else
+          glfwsys->LockCursor(*window);
+      c.mouseLocked = !c.mouseLocked;
+  }
 }

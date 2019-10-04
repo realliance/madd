@@ -33,8 +33,8 @@ void TextureSystem::Update(){
 }
 
 void TextureSystem::loadTexture(TextureComponent& tex){
-    glGenTextures(1, &tex.id);
-    glBindTexture(GL_TEXTURE_2D, tex.id);
+    glGenTextures(1, &textureBuffer[tex.cID]);
+    glBindTexture(GL_TEXTURE_2D, textureBuffer[tex.cID]);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -54,9 +54,10 @@ void TextureSystem::loadTexture(TextureComponent& tex){
 }
 
 void TextureSystem::Destruct(TextureComponent* t){
-    glDeleteTextures(1, &t->id);
+    glDeleteTextures(1, &textureBuffer[t->cID]);
+    textureBuffer[t->cID];
 }
 
 void TextureSystem::Enable(TextureComponent* t){
-    glBindTexture(GL_TEXTURE_2D, t->id);
+    glBindTexture(GL_TEXTURE_2D, textureBuffer[t->cID]);
 }

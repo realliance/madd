@@ -9,5 +9,5 @@ target_sources(madd
     "${DIR}/collider.cpp"
     "${DIR}/keyboardeventsystem.cpp"
     "${DIR}/mouseeventsystem.cpp"
-    "${DIR}/windowsystem.cpp"
+    "${DIR}/glfwsystem.cpp"
 )

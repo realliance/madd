@@ -4,7 +4,9 @@
 #include "system.h"
 
 #include "components/shadercomponent.h"
+#include "components/component.h"
 #include <vector>
+#include <map>
 
 struct Shader{
   unsigned int id;
@@ -22,17 +24,17 @@ public:
 
   std::string Name() { return "ShaderSystem"; }
 
-  static void Enable(ShaderComponent& s);
-  static unsigned int GetUniformLocation(ShaderComponent& s, std::string name);
-  static void SetMartix4fUniform(unsigned int location, glm::mat4* data);
-  static void SetFloat4fUniform(unsigned int location, glm::vec4* data);
-  static void SetFloatUniform(unsigned int location, float data);
-  static void SetIntUniform(unsigned int location, int data);
+  void Enable(ShaderComponent& s);
+  unsigned int GetUniformLocation(ShaderComponent& s, std::string name);
+  void SetMartix4fUniform(unsigned int location, glm::mat4* data);
+  void SetFloat4fUniform(unsigned int location, glm::vec4* data);
+  void SetFloatUniform(unsigned int location, float data);
+  void SetIntUniform(unsigned int location, int data);
 private:
   void initialize(ShaderComponent& s);
   uint constructShader(std::string shaderFileName);
   void destruct(ShaderComponent& s);
   std::vector<ShaderComponent*> shaders;
-
+  std::map<ComponentID, uint> program;
 };
 

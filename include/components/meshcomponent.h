@@ -2,14 +2,12 @@
 
 #include <vector>
 #include "components/component.h"
+#include <glm/glm.hpp>
 #include <sys/types.h>
-class MeshSystem;
+
 struct MeshComponent : public Component{
-  std::vector<float> vertices;
-  friend class MeshSystem;
-private:
-  uint VAO;
-  uint VBO;
+  std::vector<glm::vec3> verts;
+  std::vector<glm::vec2> texcoords;
 };
 
 

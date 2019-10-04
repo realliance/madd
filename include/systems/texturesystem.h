@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 #include "components/texturecomponent.h"
+#include "components/component.h"
 #include "system.h"
 
 
@@ -15,12 +17,12 @@ class TextureSystem : public System{
     void Update();
 
     std::string Name() { return "TextureSystem"; }
-    static TextureComponent Construct(std::string fileName);
-    static void Destruct(TextureComponent* t);
-    static void Enable(TextureComponent* t);
-    static void SetActiveTexture(int n);
+    void Destruct(TextureComponent* t);
+    void Enable(TextureComponent* t);
+    void SetActiveTexture(int n);
   private:
     void loadTexture(TextureComponent& tex);
     std::vector<TextureComponent*> textures;
+    std::map<ComponentID, uint> textureBuffer;
 };
 

@@ -7,9 +7,6 @@
 #include "components/component.h"
 #include "components/cameracomponent.h"
 
-
-class GLFWwindow;
-class WindowSystem;
 class WindowComponent : public Component{
   public:
     std::string title;
@@ -17,8 +14,5 @@ class WindowComponent : public Component{
     uint height;
     std::vector<CameraComponent*> cameras;
     bool mouselocked;
-  friend class WindowSystem;
-  private:
-    GLFWwindow* window;
 };
 

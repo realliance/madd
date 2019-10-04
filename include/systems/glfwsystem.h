@@ -2,25 +2,28 @@
 
 #include "system.h"
 #include "components/windowcomponent.h"
+#include "components/component.h"
 #include <string>
 #include <vector>
+#include <map>
 
 class GLFWwindow;
-class WindowSystem : public System{
+class GlfwSystem : public System{
 public:
   void Init();
   void Deinit();;
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
-  std::string Name() { return "WindowSystem"; }
+  std::string Name() { return "GlfwSystem"; }
   std::vector<WindowComponent*>& GetWindows();
 
-  static void Enable(WindowComponent& w);
-  static void Finish(WindowComponent& w);
+  void Enable(WindowComponent& w);
+  void Finish(WindowComponent& w);
   float GetAspectRatio(WindowComponent& w);
-  static void LockCursor(WindowComponent& w);
-  static void UnlockCursor(WindowComponent& w);
+  void LockCursor(WindowComponent& w);
+  void UnlockCursor(WindowComponent& w);
+  static WindowComponent* GetCurrentWindow();
 private:
   static void keyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
   static void cursorCallBack(GLFWwindow *window, double xpos, double ypos);
@@ -30,5 +33,6 @@ private:
   void initialize(WindowComponent& w);
   void destruct(WindowComponent& w);
   std::vector<WindowComponent*> windows;
+  std::map<ComponentID, GLFWwindow*> glfwWindows;
   GLFWwindow* mainContext;
 };
