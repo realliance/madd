@@ -56,22 +56,23 @@ void MeshSystem::initialize(MeshComponent& m) {
   //Vertex Data  
   glGenBuffers(2, VBO[m.cID]);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[m.cID][0]);
-  glBufferData(GL_ARRAY_BUFFER, m.verts.size() * sizeof(float),
+  glBufferData(GL_ARRAY_BUFFER, m.verts.size() * sizeof(glm::vec3),
               m.verts.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
   glEnableVertexAttribArray(0);
 
   //Texture Data
   glBindBuffer(GL_ARRAY_BUFFER, VBO[m.cID][1]);
-  glBufferData(GL_ARRAY_BUFFER, m.texcoords.size() * sizeof(float),
+  glBufferData(GL_ARRAY_BUFFER, m.texcoords.size() * sizeof(glm::vec2),
               m.texcoords.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *)0);
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
+
 void MeshSystem::Draw(MeshComponent& m){
     glBindVertexArray(VAO[m.cID]);
     glDrawArrays(GL_TRIANGLES, 0, 36);
