@@ -7,7 +7,6 @@ class CameraSystem;
 struct CameraComponent : public Component{
   glm::vec3 pos;
   glm::vec3 lookAt;
-  bool active;
   float fov;
   float aspectratio;
 

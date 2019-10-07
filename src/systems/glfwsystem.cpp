@@ -7,6 +7,7 @@
 #include "camerasystem.h"
 #include "keyboardeventsystem.h"
 #include "mouseeventsystem.h"
+#include "meshsystem.h"
 
 
 void GlfwSystem::errorCallback(int, const char* err_str) {
@@ -14,8 +15,9 @@ void GlfwSystem::errorCallback(int, const char* err_str) {
 }
 
 void GlfwSystem::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
     WindowComponent* windowcomp = static_cast<WindowComponent*>(glfwGetWindowUserPointer(window));
+    glfwMakeContextCurrent(window);
+    glViewport(0, 0, width, height);
     for(CameraComponent* c : windowcomp->cameras){
       c->aspectratio = (float) width/height;
       CameraSystem::UpdateProjection(*c, width, height);
@@ -56,6 +58,7 @@ void GlfwSystem::Init() {
   glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  meshsystem = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
 }
 
 void GlfwSystem::Deinit(){
@@ -144,4 +147,20 @@ WindowComponent* GlfwSystem::GetCurrentWindow(){
     return static_cast<WindowComponent*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
   }
   return NULL;
+}
+
+uint GlfwSystem::GetCurrentContextVAO(MeshComponent* c){
+  if(!VAOs.contains({c->cID,GetCurrentWindow()->cID})){
+    VAOs[{c->cID,GetCurrentWindow()->cID}] = meshsystem->CreateVAO(c);
+  }
+  return VAOs[{c->cID,GetCurrentWindow()->cID}];
+}
+
+void GlfwSystem::DeleteComponentVAO(MeshComponent* c){
+  for(WindowComponent* w : windows){
+    if(VAOs.contains({c->cID,GetCurrentWindow()->cID})){
+      glDeleteVertexArrays(1, &VAOs[{c->cID,GetCurrentWindow()->cID}]);
+      VAOs.erase({c->cID,GetCurrentWindow()->cID});
+    }
+  }
 }

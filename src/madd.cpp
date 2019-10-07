@@ -29,11 +29,16 @@ Madd& Madd::GetInstance() {
   return instance;
 }
 
+void Madd::Register(std::vector<System*> sys){
+  for(System* s : sys){
+    Register(s);
+  }
+}
+
 void Madd::Register(System* s){
   if(systems.contains(s->Name())){
     return;
   }
-  s->Init();
   systems[s->Name()] = s;
 }
 
@@ -46,6 +51,12 @@ System* Madd::GetSystem(std::string s){
 
 size_t Madd::GetNewComponentID(){
   return ++currID;
+}
+
+void Madd::InitSystems(){
+  for(auto& [str, s] : systems){
+    s->Init();
+  }
 }
 
 void Madd::Run(){

@@ -20,7 +20,9 @@ public:
   static Madd& GetInstance();
   void Deinit();
   void Register(System* s);
+  void Register(std::vector<System*> sys);
   void Unregister(System* s);
+  void InitSystems();
   System* GetSystem(std::string s);
   ComponentID GetNewComponentID();
 

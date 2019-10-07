@@ -7,11 +7,14 @@
 #include <vector>
 #include <map>
 
+#include "components/meshcomponent.h"
+
+class MeshSystem;
 class GLFWwindow;
 class GlfwSystem : public System{
 public:
   void Init();
-  void Deinit();;
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
@@ -23,6 +26,8 @@ public:
   float GetAspectRatio(WindowComponent& w);
   void LockCursor(WindowComponent& w);
   void UnlockCursor(WindowComponent& w);
+  uint GetCurrentContextVAO(MeshComponent* c);
+  void DeleteComponentVAO(MeshComponent* c);
   static WindowComponent* GetCurrentWindow();
 private:
   static void keyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -34,5 +39,7 @@ private:
   void destruct(WindowComponent& w);
   std::vector<WindowComponent*> windows;
   std::map<ComponentID, GLFWwindow*> glfwWindows;
+  std::map<std::pair<ComponentID,ComponentID>,uint> VAOs;
   GLFWwindow* mainContext;
+  MeshSystem* meshsystem;
 };
