@@ -14,6 +14,7 @@ class FreeCamSystem : public System {
     bool Unregister(Component* component);
     void Update();
     std::string Name() { return "FreeCamSystem"; }
+    std::vector<std::string> Requires() {return {"CameraSystem"};};
     static void ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key=0, int action=1);
   private:
     std::vector<FreecamComponent*> freecams;

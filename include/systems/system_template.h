@@ -9,11 +9,12 @@
 
 class TemplateSystem : public System {
   void Init();
-  void Deinit();;
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
   std::string Name() { return "TemplateSystem"; }
+  std::vector<std::string> Requires() {return {};};
 private:
   std::vector<TemplateComponent*> objects;
 };

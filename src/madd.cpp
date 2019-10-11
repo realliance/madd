@@ -8,6 +8,8 @@
 #include "keyboardeventsystem.h"
 #include "mouseeventsystem.h"
 #include "keycodes.h"
+#include <stack>
+#include <set>
 
 void Madd::Init() {
   this->currID = 0;
@@ -54,8 +56,26 @@ size_t Madd::GetNewComponentID(){
 }
 
 void Madd::InitSystems(){
+  std::set<std::string> init;
+  std::stack<std::string> requireStack;
   for(auto& [str, s] : systems){
-    s->Init();
+    if(!init.contains(str)){
+      requireStack.push(str);
+      size_t stackSize = requireStack.size();
+      do{
+        for(auto const& require: systems[requireStack.top()]->Requires()){
+          if(!init.contains(require)){
+            requireStack.push(require);
+          }
+        }
+        if(stackSize == requireStack.size()){
+          systems[requireStack.top()]->Init();
+          init.insert(requireStack.top());
+          requireStack.pop();
+        }
+        stackSize = requireStack.size();
+      }while(!requireStack.empty());
+    }
   }
 }
 

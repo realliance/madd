@@ -14,6 +14,7 @@ class CameraSystem : public System{
     void Update();
 
     std::string Name() { return "CameraSystem"; }
+    std::vector<std::string> Requires() {return {};};
     static CameraComponent Construct();
     void Destruct(CameraComponent& c);
     static void UpdateProjection(CameraComponent& c, int width, int height);
