@@ -2,6 +2,7 @@
 
 #include "components/component.h"
 #include <string>
+#include <vector>
 
 class System{
   public:
@@ -11,5 +12,6 @@ class System{
     virtual bool Unregister(Component* component) = 0;
     virtual void Update() = 0;
     virtual std::string Name() = 0;
+    virtual std::vector<std::string> Requires() = 0;
 };
 

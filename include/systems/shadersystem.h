@@ -23,6 +23,7 @@ public:
   void Update();
 
   std::string Name() { return "ShaderSystem"; }
+  std::vector<std::string> Requires() {return {"GlfwSystem"};};
 
   void Enable(ShaderComponent& s);
   unsigned int GetUniformLocation(ShaderComponent& s, std::string name);

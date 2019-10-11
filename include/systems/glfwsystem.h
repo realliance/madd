@@ -19,6 +19,7 @@ public:
   bool Unregister(Component* component);
   void Update();
   std::string Name() { return "GlfwSystem"; }
+  std::vector<std::string> Requires() {return {};};
   std::vector<WindowComponent*>& GetWindows();
 
   void Enable(WindowComponent& w);

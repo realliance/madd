@@ -16,6 +16,7 @@ public:
   void Update();
   uint CreateVAO(Component* component);
   std::string Name() { return "MeshSystem"; }
+  std::vector<std::string> Requires() {return {"GlfwSystem"};};
   void Draw(MeshComponent& m);
 private:
   void initialize(MeshComponent& m);

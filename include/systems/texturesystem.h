@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <set>
 #include <map>
 #include "components/texturecomponent.h"
 #include "components/component.h"
@@ -17,12 +17,12 @@ class TextureSystem : public System{
     void Update();
 
     std::string Name() { return "TextureSystem"; }
-    void Destruct(TextureComponent* t);
+    std::vector<std::string> Requires() {return {"GlfwSystem"};};
+    void Destruct(ComponentID cID);
     void Enable(TextureComponent* t);
     void SetActiveTexture(int n);
   private:
     void loadTexture(TextureComponent& tex);
-    std::vector<TextureComponent*> textures;
     std::map<ComponentID, uint> textureBuffer;
 };
 
