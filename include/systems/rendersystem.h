@@ -6,6 +6,9 @@
 #include "components/windowcomponent.h"
 
 class Madd;
+class ShaderSystem;
+class MeshSystem;
+class TextureSystem;
 class RenderSystem : public System{
 public:
   static RenderSystem& GetInstance();
@@ -27,5 +30,8 @@ private:
   void updateComponent(RenderedComponent& r, CameraComponent& c);
   RenderSystem() = default;
   std::vector<RenderedComponent*> objects;
+  ShaderSystem* shadersys;
+  MeshSystem* meshsys;
+  TextureSystem* texturesys;
 };
 

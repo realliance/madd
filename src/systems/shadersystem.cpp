@@ -7,7 +7,9 @@
 #include "glfwsystem.h"
 #include "madd.h"
 
-void ShaderSystem::Init(){}
+void ShaderSystem::Init(){
+  activeProgram.ID = static_cast<uint>(-1);
+}
 
 void ShaderSystem::Deinit(){
     for(ShaderComponent* s : shaders){
@@ -45,7 +47,7 @@ void ShaderSystem::Update(){
 
 void ShaderSystem::destruct(ShaderComponent& s){
   if(GlfwSystem::GetCurrentWindow() != NULL){
-    glDeleteProgram(program[s.cID]);
+    glDeleteProgram(program[s.cID].ID);
     program.erase(s.cID);
   }
 }
@@ -54,26 +56,33 @@ void ShaderSystem::initialize(ShaderComponent& s){
     uint vsID = constructShader(s.vertexShaderPath);
     uint fsID = constructShader(s.fragmentShaderPath);
 
-    program[s.cID] = glCreateProgram();
-    glAttachShader(program[s.cID], vsID);
-    glAttachShader(program[s.cID], fsID);
-    glLinkProgram(program[s.cID]);
+    program[s.cID].ID = glCreateProgram();
+    glAttachShader(program[s.cID].ID, vsID);
+    glAttachShader(program[s.cID].ID, fsID);
+    glLinkProgram(program[s.cID].ID);
 
     int success = 2;
     char infoLog[512];
-    glGetProgramiv(program[s.cID], GL_LINK_STATUS, &success);
+    glGetProgramiv(program[s.cID].ID, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(program[s.cID], 512, NULL, infoLog);
+        glGetProgramInfoLog(program[s.cID].ID, 512, NULL, infoLog);
         throw std::string("ERROR::SHADER::LINKING_FAILED\n") + infoLog;
     }
     if(success == 2){
         throw "UNKNOWN_OPENGL_ERROR";
     }
 
-    glDetachShader(program[s.cID], vsID);
+    glDetachShader(program[s.cID].ID, vsID);
     glDeleteShader(vsID);
-    glDetachShader(program[s.cID], fsID);
+    glDetachShader(program[s.cID].ID, fsID);
     glDeleteShader(fsID);
+
+    program[s.cID].shade = GetUniformLocation(s, "shade");
+    program[s.cID].model = GetUniformLocation(s, "model");
+    program[s.cID].view = GetUniformLocation(s, "view");
+    program[s.cID].projection = GetUniformLocation(s, "projection");
+    program[s.cID].time = GetUniformLocation(s, "time");
+    program[s.cID].textureEnabled = GetUniformLocation(s, "textureEnabled");
 }
 
 #define VERTEX_SHADER 'v'
@@ -117,12 +126,15 @@ uint ShaderSystem::constructShader(std::string shaderFileName){
 
 
 void ShaderSystem::Enable(ShaderComponent& s){
-    glUseProgram(program[s.cID]);
+  if(s.cID != activeProgram.ID){
+    activeProgram = program[s.cID];
+    glUseProgram(activeProgram.ID);
+  }
 }
 
 
 unsigned int ShaderSystem::GetUniformLocation(ShaderComponent& s, std::string name){
-    return glGetUniformLocation(program[s.cID], name.c_str());
+    return glGetUniformLocation(program[s.cID].ID, name.c_str());
 }
 
 void ShaderSystem::SetIntUniform(unsigned int location, int data){
@@ -139,4 +151,28 @@ void ShaderSystem::SetFloat4fUniform(unsigned int location, glm::vec4* data){
 
 void ShaderSystem::SetFloatUniform(unsigned int location, float data){
     glUniform1f(location, data);
+}
+
+void ShaderSystem::SetShade(ShaderComponent& s, glm::vec4* shade){
+  SetFloat4fUniform(program[s.cID].shade, shade);
+}
+
+void ShaderSystem::SetModel(ShaderComponent& s, glm::mat4* model){
+  SetMartix4fUniform(program[s.cID].model, model);
+}
+
+void ShaderSystem::SetView(ShaderComponent& s, glm::mat4* view){
+  SetMartix4fUniform(program[s.cID].view, view);
+}
+
+void ShaderSystem::SetProjection(ShaderComponent& s, glm::mat4* projection){
+  SetMartix4fUniform(program[s.cID].projection, projection);
+}
+
+void ShaderSystem::SetTime(ShaderComponent& s, double time){
+  SetFloatUniform(program[s.cID].time, time);
+}
+
+void ShaderSystem::SetTextureEnabled(ShaderComponent& s, bool enabled){
+  SetIntUniform(program[s.cID].textureEnabled, enabled ? 1 : 0);
 }

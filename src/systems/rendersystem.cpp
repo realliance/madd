@@ -8,6 +8,10 @@
 #include "glfwsystem.h"
 
 void RenderSystem::Init() {
+  shadersys = dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
+  meshsys = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
+  texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
+
 }
 
 void RenderSystem::Deinit(){
@@ -45,21 +49,20 @@ void RenderSystem::Update(){
 }
 
 
-void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
-  ShaderSystem* shadersys= dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
+void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){ 
   shadersys->Enable(*r.shader);
-  shadersys->SetFloat4fUniform(shadersys->GetUniformLocation(*r.shader, "shade"), &r.shade);
-  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "model"), &r.model);
-  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "view"), &c.view);
-  shadersys->SetMartix4fUniform(shadersys->GetUniformLocation(*r.shader, "projection"), &c.projection);
-  shadersys->SetFloatUniform(shadersys->GetUniformLocation(*r.shader, "time"), Madd::GetInstance().GetTime());
+  shadersys->SetShade(*r.shader, &r.shade);
+  shadersys->SetModel(*r.shader, &r.model);
+  shadersys->SetView(*r.shader, &c.view);
+  shadersys->SetProjection(*r.shader, &c.projection);
+  shadersys->SetTime(*r.shader, Madd::GetInstance().GetTime());
   if(r.texture){
-    shadersys->SetIntUniform(shadersys->GetUniformLocation(*r.shader, "textureEnabled"),1);
-    dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"))->Enable(r.texture);
+    shadersys->SetTextureEnabled(*r.shader, true);
+    texturesys->Enable(r.texture);
   }else{
-    shadersys->SetIntUniform(shadersys->GetUniformLocation(*r.shader, "textureEnabled"),0);
+    shadersys->SetTextureEnabled(*r.shader,false);
   }
-  dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"))->Draw(*r.mesh);
+  meshsys->Draw(*r.mesh);
 }
 
 RenderSystem& RenderSystem::GetInstance() {

@@ -13,6 +13,17 @@ struct Shader{
   unsigned int shaderType;
   unsigned int program;
 };
+
+struct ProgramInfo{
+  uint ID;
+  uint shade;
+  uint model;
+  uint view;
+  uint projection;
+  uint time;
+  uint textureEnabled;
+};
+
 class ShaderSystem : public System{
 public:
 
@@ -31,11 +42,18 @@ public:
   void SetFloat4fUniform(unsigned int location, glm::vec4* data);
   void SetFloatUniform(unsigned int location, float data);
   void SetIntUniform(unsigned int location, int data);
+  void SetShade(ShaderComponent& s, glm::vec4* shade);
+  void SetModel(ShaderComponent& s, glm::mat4* model);
+  void SetView(ShaderComponent& s, glm::mat4* view);
+  void SetProjection(ShaderComponent& s, glm::mat4* projection);
+  void SetTime(ShaderComponent& s, double time);
+  void SetTextureEnabled(ShaderComponent& s, bool enabled);
 private:
   void initialize(ShaderComponent& s);
   uint constructShader(std::string shaderFileName);
   void destruct(ShaderComponent& s);
   std::vector<ShaderComponent*> shaders;
-  std::map<ComponentID, uint> program;
+  std::map<ComponentID, ProgramInfo> program;
+  ProgramInfo activeProgram;
 };
 
