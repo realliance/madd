@@ -129,6 +129,9 @@ void ShaderSystem::Enable(ShaderComponent& s){
   if(s.cID != activeProgram.ID){
     activeProgram = program[s.cID];
     glUseProgram(activeProgram.ID);
+    if(s.enableCulling){
+      glEnable(GL_CULL_FACE);
+    }
   }
 }
 
@@ -154,25 +157,25 @@ void ShaderSystem::SetFloatUniform(unsigned int location, float data){
 }
 
 void ShaderSystem::SetShade(ShaderComponent& s, glm::vec4* shade){
-  SetFloat4fUniform(program[s.cID].shade, shade);
+  SetFloat4fUniform(activeProgram.shade, shade);
 }
 
 void ShaderSystem::SetModel(ShaderComponent& s, glm::mat4* model){
-  SetMartix4fUniform(program[s.cID].model, model);
+  SetMartix4fUniform(activeProgram.model, model);
 }
 
 void ShaderSystem::SetView(ShaderComponent& s, glm::mat4* view){
-  SetMartix4fUniform(program[s.cID].view, view);
+  SetMartix4fUniform(activeProgram.view, view);
 }
 
 void ShaderSystem::SetProjection(ShaderComponent& s, glm::mat4* projection){
-  SetMartix4fUniform(program[s.cID].projection, projection);
+  SetMartix4fUniform(activeProgram.projection, projection);
 }
 
 void ShaderSystem::SetTime(ShaderComponent& s, double time){
-  SetFloatUniform(program[s.cID].time, time);
+  SetFloatUniform(activeProgram.time, time);
 }
 
 void ShaderSystem::SetTextureEnabled(ShaderComponent& s, bool enabled){
-  SetIntUniform(program[s.cID].textureEnabled, enabled ? 1 : 0);
+  SetIntUniform(activeProgram.textureEnabled, enabled ? 1 : 0);
 }

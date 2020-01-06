@@ -48,5 +48,8 @@ private:
   bool close = false;
   float timeScale = 1.0f;
   Time lastFrame = Clock::now();
+  size_t framecounter;
+  size_t lastframecount;
+  double lastFPS;
 };
 

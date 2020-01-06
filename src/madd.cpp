@@ -18,6 +18,9 @@ void Madd::Init() {
   exitEvent = reloadShaderEvent;
   exitEvent.code = KEY_ESCAPE;
   reloadShaderEvent.code = KEY_SPACE;
+  framecounter = 0;
+  lastframecount = 0;
+  lastFPS = glfwGetTime();
 }
 
 void Madd::Deinit() {
@@ -84,6 +87,12 @@ void Madd::Run(){
   KeyboardEventSystem::GetInstance().Register(&exitEvent);
   while(StayOpen()){
     Tick();
+    // if(framecounter & 120){
+    //   std::cout << (framecounter-lastframecount)/(GetTime()-lastFPS) << '\r';
+    //   lastframecount = framecounter;
+    //   lastFPS = GetTime();
+    // }
+    framecounter++;
   }
 }
 
