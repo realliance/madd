@@ -87,7 +87,7 @@ void Madd::Run(){
   KeyboardEventSystem::GetInstance().Register(&exitEvent);
   while(StayOpen()){
     Tick();
-    // if(framecounter & 120){
+    // if(framecounter & 20){
     //   std::cout << (framecounter-lastframecount)/(GetTime()-lastFPS) << '\r';
     //   lastframecount = framecounter;
     //   lastFPS = GetTime();

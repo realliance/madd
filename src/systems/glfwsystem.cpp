@@ -14,6 +14,14 @@ void GlfwSystem::errorCallback(int, const char* err_str) {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
 
+void APIENTRY GlfwSystem::glDebugOutput(uint source, uint type, uint id, uint severity, 
+                            int length, const char *message, const void *userParam){
+  printf( "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+          type, severity, message );
+  
+}
+
 void GlfwSystem::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
     WindowComponent* windowcomp = static_cast<WindowComponent*>(glfwGetWindowUserPointer(window));
     glfwMakeContextCurrent(window);
@@ -22,6 +30,10 @@ void GlfwSystem::framebufferSizeCallback(GLFWwindow *window, int width, int heig
       c->aspectratio = (float) width/height;
       CameraSystem::UpdateProjection(*c, width, height);
     }
+}
+
+void GlfwSystem::EnableDebuggingContext(){
+  debugcontext = true;
 }
 
 void GlfwSystem::keyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
@@ -44,13 +56,17 @@ void GlfwSystem::windowFocusCallback(GLFWwindow* window, int focused){
   }
 }
 
+bool GlfwSystem::debugcontext = false;
+
 void GlfwSystem::Init() {
   glfwSetErrorCallback(errorCallback);
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+  if(debugcontext == true){
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); 
+  }
   glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
   const char* title = "mainContext";
   mainContext = glfwCreateWindow(1,1,title,NULL,NULL);
@@ -58,8 +74,21 @@ void GlfwSystem::Init() {
   glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+  GLint flags; 
+  glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+  if (flags & GL_CONTEXT_FLAG_DEBUG_BIT){
+     glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+    glDebugMessageCallback(glDebugOutput, nullptr);
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    std::cout << "GL Debug Output Enabled" << std::endl;
+  }
+
   meshsystem = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
 }
+
+
 
 void GlfwSystem::Deinit(){
   for (WindowComponent *w : windows){
@@ -149,14 +178,14 @@ WindowComponent* GlfwSystem::GetCurrentWindow(){
   return NULL;
 }
 
-uint GlfwSystem::GetCurrentContextVAO(MeshComponent* c){
+uint GlfwSystem::GetCurrentContextVAO(Component* c, std::function<uint(Component*)> CreateVAO){
   if(!VAOs.contains({c->cID,GetCurrentWindow()->cID})){
-    VAOs[{c->cID,GetCurrentWindow()->cID}] = meshsystem->CreateVAO(c);
+    VAOs[{c->cID,GetCurrentWindow()->cID}] = CreateVAO(c);
   }
   return VAOs[{c->cID,GetCurrentWindow()->cID}];
 }
 
-void GlfwSystem::DeleteComponentVAO(MeshComponent* c){
+void GlfwSystem::DeleteComponentVAO(Component* c){
   for(WindowComponent* w : windows){
     if(VAOs.contains({c->cID,GetCurrentWindow()->cID})){
       glDeleteVertexArrays(1, &VAOs[{c->cID,GetCurrentWindow()->cID}]);

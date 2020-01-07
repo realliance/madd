@@ -12,5 +12,6 @@ target_sources(madd
       "${DIR}/meshsystem.h"
       "${DIR}/camerasystem.h"
       "${DIR}/glfwsystem.h"
+      "${DIR}/instancerendersystem.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

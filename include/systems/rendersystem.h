@@ -9,6 +9,8 @@ class Madd;
 class ShaderSystem;
 class MeshSystem;
 class TextureSystem;
+class InstanceRenderSystem;
+class GlfwSystem;
 class RenderSystem : public System{
 public:
   static RenderSystem& GetInstance();
@@ -23,6 +25,8 @@ public:
 
   void Start(WindowComponent& w);
   void Finish(WindowComponent& w);
+
+  int instanceSync;
   
   RenderSystem(const RenderSystem&) = delete;
   RenderSystem& operator=(const RenderSystem&) = delete;
@@ -33,5 +37,7 @@ private:
   ShaderSystem* shadersys;
   MeshSystem* meshsys;
   TextureSystem* texturesys;
+  GlfwSystem* glfwsys;
+  InstanceRenderSystem* instancerendersys;
 };
 

@@ -67,28 +67,29 @@ void MeshSystem::initialize(MeshComponent& m) {
 }
 
 uint MeshSystem::CreateVAO(Component* component){
-  MeshComponent& m = *dynamic_cast<MeshComponent *>(component);
   uint VAO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO); 
 
   //Vertex Data
-  glBindBuffer(GL_ARRAY_BUFFER, VBO[m.cID][0]);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
   glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[component->cID][0]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
 
 
   //Texture Data
-  glBindBuffer(GL_ARRAY_BUFFER, VBO[m.cID][1]);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *)0);
   glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[component->cID][1]);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *)0);
 
   glBindVertexArray(0);
   return VAO;
 }
 
 void MeshSystem::Draw(MeshComponent& m){
-    glBindVertexArray(glfw->GetCurrentContextVAO(&m));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
+  using namespace std::placeholders; 
+  glBindVertexArray(glfw->GetCurrentContextVAO(static_cast<Component*>(&m),
+    std::bind(&MeshSystem::CreateVAO, this, _1)));
+  glDrawArrays(GL_TRIANGLES, 0, m.verts.size());
+  glBindVertexArray(0);
 }

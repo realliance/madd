@@ -5,16 +5,20 @@
 #include "shadersystem.h"
 #include "meshsystem.h"
 #include "texturesystem.h"
+#include "instancerendersystem.h"
 #include "glfwsystem.h"
 
 void RenderSystem::Init() {
   shadersys = dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
   meshsys = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
   texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
-
+  instancerendersys = dynamic_cast<InstanceRenderSystem*>(Madd::GetInstance().GetSystem("InstanceRenderSystem"));
+  glfwsys = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  instanceSync = 0;
 }
 
 void RenderSystem::Deinit(){
+  objects.clear();
 }
 
 bool RenderSystem::Register(Component* component){
@@ -36,15 +40,23 @@ bool RenderSystem::Unregister(Component* component){
 }
 
 void RenderSystem::Update(){
-  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
   for(WindowComponent* w : glfwsys->GetWindows()){
-    Start(*w);
+    instanceSync = 1;
+    if(instancerendersys == nullptr || instancerendersys->instanceSync == 0){
+      Start(*w);
+    }
     for(CameraComponent* c : w->cameras){
       for (RenderedComponent *r : objects) {
         updateComponent(*r,*c);
       }
     }
-    Finish(*w);
+    if(instancerendersys == nullptr || instancerendersys->instanceSync == 1){
+      instanceSync = 0;
+      if(instancerendersys != nullptr){
+        instancerendersys->instanceSync = 0;
+      }
+      Finish(*w);
+    }
   }
 }
 
@@ -66,20 +78,17 @@ void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
 }
 
 RenderSystem& RenderSystem::GetInstance() {
-
     static RenderSystem r;
     return r;
 }
 
 
 void RenderSystem::Start(WindowComponent& w){
-  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
   glfwsys->Enable(w);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderSystem::Finish(WindowComponent& w){
-  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
   glfwsys->Finish(w);
 }

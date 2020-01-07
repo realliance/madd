@@ -10,4 +10,5 @@ target_sources(madd
     "${DIR}/keyboardeventsystem.cpp"
     "${DIR}/mouseeventsystem.cpp"
     "${DIR}/glfwsystem.cpp"
+    "${DIR}/instancerendersystem.cpp"
 )
