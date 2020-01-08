@@ -18,9 +18,6 @@ void RenderSystem::Init() {
 }
 
 RenderSystem::~RenderSystem(){
-  for(auto & rc : objects){
-    delete rc;
-  }
 }
 
 bool RenderSystem::Register(Component* component){

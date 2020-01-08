@@ -9,8 +9,9 @@ void FreeCamSystem::Init(){
 }
 
 void FreeCamSystem::Deinit(){
-  delete this;
-  freecams.clear();
+  for(auto freecam : freecams){
+    delete freecam;
+  }
 }
 
 bool FreeCamSystem::Register(Component* component){

@@ -21,7 +21,6 @@ InstanceRenderSystem::~InstanceRenderSystem(){
     for(auto &[meshcID, inst] : instanceData){
       for(auto & cID : inst.cIDs){
         destruct(objects[cID]);
-        delete objects[cID];
       }
     }
 }
@@ -30,17 +29,22 @@ bool InstanceRenderSystem::Register(Component* component){
   RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
   rc->cID = Madd::GetInstance().GetNewComponentID();
   objects[rc->cID] = dynamic_cast<RenderedComponent*>(component);
+  instanceDatum* inst;
   if(!instanceData.contains(rc->mesh->cID)){
     instanceData[rc->mesh->cID] = instanceDatum{};
-    glGenBuffers(2, instanceData[rc->mesh->cID].VBO);
-    instanceData[rc->mesh->cID].shader = rc->shader;
-    instanceData[rc->mesh->cID].mesh = rc->mesh;
+    inst = &instanceData[rc->mesh->cID];
+    glGenBuffers(2, inst->VBO);
+    inst->shader = rc->shader;
+    inst->mesh = rc->mesh;
+  }else{
+    inst = &instanceData[rc->mesh->cID];
   }
   shadersys->Enable(*(rc->shader));
   shadersys->SetTextureEnabled(*(rc->shader),false);
-  instanceData[rc->mesh->cID].models.push_back(rc->model);
-  instanceData[rc->mesh->cID].shades.push_back(rc->shade);
-  instanceData[rc->mesh->cID].cIDs.push_back(component->cID);
+  inst->models.push_back(rc->model);
+  inst->shades.push_back(rc->shade);
+  inst->cIDs.push_back(component->cID);
+  inst->rcs.push_back(rc);
   return true;
 }
 
@@ -95,6 +99,7 @@ bool InstanceRenderSystem::Unregister(Component* component){
       instanceData[rc->mesh->cID].models.erase(begin(instanceData[rc->mesh->cID].models)+i);
       instanceData[rc->mesh->cID].shades.erase(begin(instanceData[rc->mesh->cID].shades)+i);
       instanceData[rc->mesh->cID].cIDs.erase(begin(instanceData[rc->mesh->cID].cIDs)+i);
+      instanceData[rc->mesh->cID].rcs.erase(begin(instanceData[rc->mesh->cID].rcs)+i);
       destruct(rc);
       if(instanceData[rc->mesh->cID].models.empty()){
         instanceData.erase(rc->mesh->cID);
@@ -137,9 +142,9 @@ void InstanceRenderSystem::updateInstance(instanceDatum& inst, CameraComponent& 
   shadersys->SetView(*inst.shader, &c.view);
   shadersys->SetProjection(*inst.shader, &c.projection);
   shadersys->SetTime(*inst.shader, Madd::GetInstance().GetTime());
-  for(size_t i = 0; i < inst.models.size(); i++){
-    inst.models[i] = objects[inst.cIDs[i]]->model;
-    inst.shades[i] = objects[inst.cIDs[i]]->shade;
+  for(size_t i = 0; i < inst.cIDs.size(); i++){
+    inst.models[i] = inst.rcs[i]->model;
+    inst.shades[i] = inst.rcs[i]->shade;
   }
   glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, inst.models.size() * sizeof(glm::mat4),

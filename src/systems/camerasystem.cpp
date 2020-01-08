@@ -5,9 +5,6 @@
 void CameraSystem::Init() {}
 
 CameraSystem::~CameraSystem(){
-  for(auto & camera : cameras){
-    delete camera;
-  }
 }
 
 bool CameraSystem::Register(Component *component) {

@@ -15,6 +15,7 @@ struct instanceDatum {
   std::vector<glm::mat4> models;
   std::vector<glm::vec4> shades;
   std::vector<ComponentID> cIDs;
+  std::vector<RenderedComponent*> rcs;
   uint VBO[2]; //modelVBO, shadeVBO
   ShaderComponent* shader;
   MeshComponent* mesh;

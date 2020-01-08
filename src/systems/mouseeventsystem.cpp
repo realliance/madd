@@ -5,9 +5,6 @@ void MouseEventSystem::Init(){
 }
 
 MouseEventSystem::~MouseEventSystem(){
-  for(auto & subscriber : subscribers){
-    delete subscriber;
-  }
 }
 
 void MouseEventSystem::CursorCallBack(WindowComponent *window, double xpos, double ypos){

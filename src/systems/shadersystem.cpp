@@ -14,9 +14,7 @@ void ShaderSystem::Init(){
 ShaderSystem::~ShaderSystem(){
     for(ShaderComponent* s : shaders){
       destruct(*s);
-      delete s;
     }
-    delete this;
 }
 
 bool ShaderSystem::Register(Component* component){
@@ -39,12 +37,6 @@ bool ShaderSystem::Unregister(Component* component){
 }
 
 void ShaderSystem::Update(){
-  for(ShaderComponent* s : shaders){
-    if(s->update){
-      destruct(*s);
-      initialize(*s);
-    }
-  }
 }
 
 void ShaderSystem::destruct(ShaderComponent& s){

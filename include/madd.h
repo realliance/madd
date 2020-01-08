@@ -45,9 +45,9 @@ private:
   void ReloadShader();
   void UpdateDeltaTime();
   std::chrono::duration<float> dTime;
-  bool close = false;
-  float timeScale = 1.0f;
-  Time lastFrame = Clock::now();
+  bool close;
+  float timeScale;
+  Time lastFrame;
   size_t framecounter;
   size_t lastframecount;
   double lastFPS;

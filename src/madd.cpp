@@ -20,13 +20,17 @@ void Madd::Init() {
   reloadShaderEvent.code = KEY_SPACE;
   framecounter = 0;
   lastframecount = 0;
+  close = false;
+  timeScale = 1.0f;
   lastFPS = glfwGetTime();
+  lastFrame = Clock::now();
 }
 
 void Madd::Deinit() {
   for(auto const& [name, sys] : systems){
     delete sys;
   }
+  systems.clear();
 }
 
 Madd& Madd::GetInstance() {

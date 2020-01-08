@@ -10,7 +10,6 @@ void MeshSystem::Init(){
 MeshSystem::~MeshSystem(){
   for(MeshComponent* m : mesh){
     destruct(*m);
-    delete m;
   }
 }
 

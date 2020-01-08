@@ -60,7 +60,9 @@ bool GlfwSystem::debugcontext = false;
 
 void GlfwSystem::Init() {
   glfwSetErrorCallback(errorCallback);
-  glfwInit();
+  if(!glfwInit()){
+    std::cout << "GLFW failed to init" << std::endl;
+  }
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -93,7 +95,6 @@ void GlfwSystem::Init() {
 GlfwSystem::~GlfwSystem(){
   for (WindowComponent *w : windows){
     destruct(*w);
-    delete w;
   }
   glfwSetErrorCallback(nullptr);
   glfwTerminate();

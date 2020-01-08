@@ -5,9 +5,6 @@ void KeyboardEventSystem::Init(){
 }
 
 KeyboardEventSystem::~KeyboardEventSystem(){
-  for(auto & subscriber : subscribers){
-    delete subscriber;
-  }
 }
 
 void KeyboardEventSystem::KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods){
