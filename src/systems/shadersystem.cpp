@@ -11,9 +11,10 @@ void ShaderSystem::Init(){
   activeProgram.ID = static_cast<uint>(-1);
 }
 
-void ShaderSystem::Deinit(){
+ShaderSystem::~ShaderSystem(){
     for(ShaderComponent* s : shaders){
       destruct(*s);
+      delete s;
     }
     delete this;
 }
@@ -30,6 +31,7 @@ bool ShaderSystem::Unregister(Component* component){
     if ((*i)->cID == component->cID) {
       destruct(**i);
       shaders.erase(i);
+      program.erase(component->cID);
       return true;
     }
   }
@@ -48,7 +50,6 @@ void ShaderSystem::Update(){
 void ShaderSystem::destruct(ShaderComponent& s){
   if(GlfwSystem::GetCurrentWindow() != NULL){
     glDeleteProgram(program[s.cID].ID);
-    program.erase(s.cID);
   }
 }
 

@@ -8,7 +8,7 @@
 class CameraSystem : public System{
   public:
     void Init();
-    void Deinit();
+    ~CameraSystem();
     bool Register(Component* component);
     bool Unregister(Component* component);
     void Update();

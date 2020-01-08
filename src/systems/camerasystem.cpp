@@ -4,7 +4,11 @@
 
 void CameraSystem::Init() {}
 
-void CameraSystem::Deinit() { delete this; }
+CameraSystem::~CameraSystem(){
+  for(auto & camera : cameras){
+    delete camera;
+  }
+}
 
 bool CameraSystem::Register(Component *component) {
   component->cID = Madd::GetInstance().GetNewComponentID();

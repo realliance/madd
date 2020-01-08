@@ -39,7 +39,7 @@ private:
   Madd() = default;
   std::map<std::string,System*> systems;
   ComponentID currID;
-
+  
   KeyboardEventComponent reloadShaderEvent;
   KeyboardEventComponent exitEvent;
   void ReloadShader();

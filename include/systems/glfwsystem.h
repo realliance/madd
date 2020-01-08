@@ -16,7 +16,7 @@ class GLFWwindow;
 class GlfwSystem : public System{
 public:
   void Init();
-  void Deinit();
+  ~GlfwSystem();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();

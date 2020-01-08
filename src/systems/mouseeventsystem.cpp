@@ -4,20 +4,16 @@
 void MouseEventSystem::Init(){
 }
 
-void MouseEventSystem::Deinit(){
-  subscribers.clear();
+MouseEventSystem::~MouseEventSystem(){
+  for(auto & subscriber : subscribers){
+    delete subscriber;
+  }
 }
-
 
 void MouseEventSystem::CursorCallBack(WindowComponent *window, double xpos, double ypos){
-    for(auto const c : GetInstance().subscribers) {
+    for(auto const c : subscribers) {
       c->callback(c->c, window, xpos, ypos);
     }
-}
-
-MouseEventSystem& MouseEventSystem::GetInstance() {
-    static MouseEventSystem instance;
-    return instance;
 }
 
 bool MouseEventSystem::Register(Component* component){

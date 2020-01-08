@@ -17,8 +17,10 @@ void RenderSystem::Init() {
   instanceSync = 0;
 }
 
-void RenderSystem::Deinit(){
-  objects.clear();
+RenderSystem::~RenderSystem(){
+  for(auto & rc : objects){
+    delete rc;
+  }
 }
 
 bool RenderSystem::Register(Component* component){
@@ -76,12 +78,6 @@ void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
   }
   meshsys->Draw(*r.mesh);
 }
-
-RenderSystem& RenderSystem::GetInstance() {
-    static RenderSystem r;
-    return r;
-}
-
 
 void RenderSystem::Start(WindowComponent& w){
   glfwsys->Enable(w);

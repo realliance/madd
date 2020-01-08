@@ -11,7 +11,7 @@ class TextureSystem : public System{
   public:
 
     void Init();
-    void Deinit();
+    ~TextureSystem();
     bool Register(Component* component);
     bool Unregister(Component* component);
     void Update();

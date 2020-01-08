@@ -2,25 +2,20 @@
 #include "madd.h"
 
 void KeyboardEventSystem::Init(){
-  
 }
 
-void KeyboardEventSystem::Deinit(){
-  subscribers.clear();
+KeyboardEventSystem::~KeyboardEventSystem(){
+  for(auto & subscriber : subscribers){
+    delete subscriber;
+  }
 }
-
 
 void KeyboardEventSystem::KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods){
-    for(auto const c : GetInstance().subscribers) {
+    for(auto const c : subscribers) {
         if((c->mods == mods || c->mods == 0) && c->code == key) {
             c->callback(c->c, window, key, action);
         }
     }
-}
-
-KeyboardEventSystem& KeyboardEventSystem::GetInstance() {
-    static KeyboardEventSystem instance;
-    return instance;
 }
 
 bool KeyboardEventSystem::Register(Component* component){

@@ -17,10 +17,13 @@ void InstanceRenderSystem::Init() {
   instanceSync = 0;
 }
 
-void InstanceRenderSystem::Deinit(){
-  objects.clear();
-  instanceData.clear();
-
+InstanceRenderSystem::~InstanceRenderSystem(){
+    for(auto &[meshcID, inst] : instanceData){
+      for(auto & cID : inst.cIDs){
+        destruct(objects[cID]);
+        delete objects[cID];
+      }
+    }
 }
 
 bool InstanceRenderSystem::Register(Component* component){
@@ -92,6 +95,7 @@ bool InstanceRenderSystem::Unregister(Component* component){
       instanceData[rc->mesh->cID].models.erase(begin(instanceData[rc->mesh->cID].models)+i);
       instanceData[rc->mesh->cID].shades.erase(begin(instanceData[rc->mesh->cID].shades)+i);
       instanceData[rc->mesh->cID].cIDs.erase(begin(instanceData[rc->mesh->cID].cIDs)+i);
+      destruct(rc);
       if(instanceData[rc->mesh->cID].models.empty()){
         instanceData.erase(rc->mesh->cID);
       }
@@ -99,6 +103,12 @@ bool InstanceRenderSystem::Unregister(Component* component){
     }
   }
   return false;
+}
+
+void InstanceRenderSystem::destruct(RenderedComponent* rc){
+  if(GlfwSystem::GetCurrentWindow() != NULL){
+    glDeleteBuffers(2, instanceData[rc->mesh->cID].VBO);
+  }
 }
 
 void InstanceRenderSystem::Update(){
@@ -143,16 +153,11 @@ void InstanceRenderSystem::updateInstance(instanceDatum& inst, CameraComponent& 
 
   using namespace std::placeholders; 
   glBindVertexArray(glfwsys->GetCurrentContextVAO(static_cast<Component*>(inst.mesh),
-  std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));
+    std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));
+    
   glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.models.size());
   glBindVertexArray(0);
 }
-
-InstanceRenderSystem& InstanceRenderSystem::GetInstance() {
-    static InstanceRenderSystem r;
-    return r;
-}
-
 
 void InstanceRenderSystem::Start(WindowComponent& w){
   glfwsys->Enable(w);

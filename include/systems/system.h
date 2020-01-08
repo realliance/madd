@@ -7,7 +7,7 @@
 class System{
   public:
     virtual void Init() = 0;
-    virtual void Deinit() = 0;
+    virtual ~System(){}
     virtual bool Register(Component* component) = 0;
     virtual bool Unregister(Component* component) = 0;
     virtual void Update() = 0;

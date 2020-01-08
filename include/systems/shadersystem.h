@@ -28,7 +28,7 @@ class ShaderSystem : public System{
 public:
 
   void Init();
-  void Deinit();
+  ~ShaderSystem();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();

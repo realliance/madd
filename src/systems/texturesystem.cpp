@@ -7,8 +7,7 @@
 
 void TextureSystem::Init(){}
 
-void TextureSystem::Deinit(){
-    delete this;
+TextureSystem::~TextureSystem(){
 }
 
 bool TextureSystem::Register(Component* component){

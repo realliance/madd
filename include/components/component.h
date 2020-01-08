@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sys/types.h>
-typedef size_t ComponentID;
+typedef u_int64_t ComponentID;
 
 struct Component{
   virtual ~Component() = default;

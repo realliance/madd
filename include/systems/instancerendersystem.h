@@ -4,7 +4,7 @@
 #include "components/renderedcomponent.h"
 #include "components/cameracomponent.h"
 #include "components/windowcomponent.h"
-#include <map>
+#include <unordered_map>
 
 class Madd;
 class ShaderSystem;
@@ -24,8 +24,7 @@ class RenderSystem;
 class GlfwSystem;
 class InstanceRenderSystem : public System{
 public:
-  static InstanceRenderSystem& GetInstance();
-  void Deinit();
+  ~InstanceRenderSystem();
   void Init();
   bool Register(Component* component);
   bool Unregister(Component* component);
@@ -41,13 +40,11 @@ public:
 
   int instanceSync;
   
-  InstanceRenderSystem(const InstanceRenderSystem&) = delete;
-  InstanceRenderSystem& operator=(const InstanceRenderSystem&) = delete;
 private:
   void updateInstance(instanceDatum& inst, CameraComponent& c);
-  InstanceRenderSystem() = default;
-  std::map<ComponentID,RenderedComponent*> objects;
-  std::map<ComponentID, instanceDatum> instanceData;
+  void destruct(RenderedComponent* rc);
+  std::unordered_map<ComponentID,RenderedComponent*> objects;
+  std::unordered_map<ComponentID, instanceDatum> instanceData;
   
   ShaderSystem* shadersys;
   MeshSystem* meshsys;

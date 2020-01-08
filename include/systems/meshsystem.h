@@ -10,7 +10,7 @@
 class MeshSystem: public System {
 public:
   void Init();
-  void Deinit();
+  ~MeshSystem();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();

@@ -13,8 +13,7 @@ class InstanceRenderSystem;
 class GlfwSystem;
 class RenderSystem : public System{
 public:
-  static RenderSystem& GetInstance();
-  void Deinit();
+  ~RenderSystem();
   void Init();
   bool Register(Component* component);
   bool Unregister(Component* component);
@@ -28,11 +27,8 @@ public:
 
   int instanceSync;
   
-  RenderSystem(const RenderSystem&) = delete;
-  RenderSystem& operator=(const RenderSystem&) = delete;
 private:
   void updateComponent(RenderedComponent& r, CameraComponent& c);
-  RenderSystem() = default;
   std::vector<RenderedComponent*> objects;
   ShaderSystem* shadersys;
   MeshSystem* meshsys;

@@ -7,9 +7,8 @@
 
 class MouseEventSystem : public System{
   public:
-    static MouseEventSystem& GetInstance();
     void Init();
-    void Deinit();
+    ~MouseEventSystem();
     bool Register(Component* component);
     bool Unregister(Component* component);
     void LockCursor();
@@ -17,11 +16,8 @@ class MouseEventSystem : public System{
     void Update();
     std::string Name(){ return "MouseEventSystem"; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
-    MouseEventSystem(const MouseEventSystem&) = delete;
-    MouseEventSystem& operator=(const MouseEventSystem&) = delete;
-    static void CursorCallBack(WindowComponent *window, double xpos, double ypos);
+    void CursorCallBack(WindowComponent *window, double xpos, double ypos);
   private:
-    MouseEventSystem() = default;
     std::vector<MouseEventComponent*> subscribers;
 }; 
 

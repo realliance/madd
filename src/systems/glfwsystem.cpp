@@ -37,11 +37,11 @@ void GlfwSystem::EnableDebuggingContext(){
 }
 
 void GlfwSystem::keyCallBack(GLFWwindow *window, int key, int scancode, int action, int mods){
-  KeyboardEventSystem::KeyCallBack(static_cast<WindowComponent*>(glfwGetWindowUserPointer(window)), key, scancode, action, mods);
+  dynamic_cast<KeyboardEventSystem*>(Madd::GetInstance().GetSystem("KeyboardEventSystem"))->KeyCallBack(static_cast<WindowComponent*>(glfwGetWindowUserPointer(window)), key, scancode, action, mods);
 }
 
 void GlfwSystem::cursorCallBack(GLFWwindow *window, double xpos, double ypos){
-  MouseEventSystem::CursorCallBack(static_cast<WindowComponent*>(glfwGetWindowUserPointer(window)), xpos, ypos);
+  dynamic_cast<MouseEventSystem*>(Madd::GetInstance().GetSystem("MouseEventSystem"))->CursorCallBack(static_cast<WindowComponent*>(glfwGetWindowUserPointer(window)), xpos, ypos);
 }
 
 void GlfwSystem::windowFocusCallback(GLFWwindow* window, int focused){
@@ -90,9 +90,10 @@ void GlfwSystem::Init() {
 
 
 
-void GlfwSystem::Deinit(){
+GlfwSystem::~GlfwSystem(){
   for (WindowComponent *w : windows){
     destruct(*w);
+    delete w;
   }
   glfwSetErrorCallback(nullptr);
   glfwTerminate();

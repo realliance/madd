@@ -25,7 +25,7 @@ void Madd::Init() {
 
 void Madd::Deinit() {
   for(auto const& [name, sys] : systems){
-    sys->Deinit();
+    delete sys;
   }
 }
 
@@ -83,8 +83,9 @@ void Madd::InitSystems(){
 }
 
 void Madd::Run(){
-  KeyboardEventSystem::GetInstance().Register(&reloadShaderEvent);
-  KeyboardEventSystem::GetInstance().Register(&exitEvent);
+  if(systems.contains("KeyboardEventSystem")){
+    systems["KeyboardEventSystem"]->Register(&exitEvent);
+  }
   while(StayOpen()){
     Tick();
     if(framecounter & 20){

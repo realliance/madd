@@ -7,17 +7,19 @@ void MeshSystem::Init(){
   glfw = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
 }
 
-void MeshSystem::Deinit(){
-    for(MeshComponent* m : mesh){
-      destruct(*m);
-    }
-    delete this;
+MeshSystem::~MeshSystem(){
+  for(MeshComponent* m : mesh){
+    destruct(*m);
+    delete m;
+  }
 }
 
 bool MeshSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();
-  initialize(*dynamic_cast<MeshComponent *>(component));
-  mesh.push_back(dynamic_cast<MeshComponent *>(component));
+  MeshComponent* m = dynamic_cast<MeshComponent *>(component);
+  initialize(*m);
+  m->update = false;
+  mesh.push_back(m);
   return true;
 }
 
@@ -43,7 +45,9 @@ void MeshSystem::Update(){
 
 void MeshSystem::destruct(MeshComponent& m) {
   if(GlfwSystem::GetCurrentWindow() != NULL){
-    glfw->DeleteComponentVAO(&m);
+    if(glfw != nullptr){
+      glfw->DeleteComponentVAO(&m);
+    }
     glDeleteBuffers(1, &VBO[m.cID][0]);
     glDeleteBuffers(1, &VBO[m.cID][1]);
     VBO.erase(m.cID);
