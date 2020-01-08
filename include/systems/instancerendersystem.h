@@ -11,21 +11,10 @@ class ShaderSystem;
 class MeshSystem;
 class TextureSystem;
 
-struct modelandid {
-  modelandid(glm::mat4 model, ComponentID id):model(model),id(id){}
-  glm::mat4 model;
-  ComponentID id;
-};
-
-struct shadeandid {
-  shadeandid(glm::vec4 shade, ComponentID id):shade(shade),id(id){}
-  glm::vec4 shade;
-  ComponentID id;
-};
-
 struct instanceDatum {
-  std::vector<modelandid> models;
-  std::vector<shadeandid> shades;
+  std::vector<glm::mat4> models;
+  std::vector<glm::vec4> shades;
+  std::vector<ComponentID> cIDs;
   uint VBO[2]; //modelVBO, shadeVBO
   ShaderComponent* shader;
   MeshComponent* mesh;
