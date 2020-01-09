@@ -28,6 +28,7 @@ InstanceRenderSystem::~InstanceRenderSystem(){
 bool InstanceRenderSystem::Register(Component* component){
   RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
   rc->cID = Madd::GetInstance().GetNewComponentID();
+  rc->update = true;
   objects[rc->cID] = dynamic_cast<RenderedComponent*>(component);
   instanceDatum* inst;
   if(!instanceData.contains(rc->mesh->cID)){
@@ -45,6 +46,7 @@ bool InstanceRenderSystem::Register(Component* component){
   inst->shades.push_back(rc->shade);
   inst->cIDs.push_back(component->cID);
   inst->rcs.push_back(rc);
+  inst->update = true;
   return true;
 }
 
@@ -94,14 +96,16 @@ uint InstanceRenderSystem::CreateVAO(Component* component){
 bool InstanceRenderSystem::Unregister(Component* component){
   RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
   objects.erase(rc->cID);
-  for(size_t i = 0; i < instanceData[rc->mesh->cID].models.size(); i++){
-    if(instanceData[rc->mesh->cID].cIDs[i] == component->cID){
-      instanceData[rc->mesh->cID].models.erase(begin(instanceData[rc->mesh->cID].models)+i);
-      instanceData[rc->mesh->cID].shades.erase(begin(instanceData[rc->mesh->cID].shades)+i);
-      instanceData[rc->mesh->cID].cIDs.erase(begin(instanceData[rc->mesh->cID].cIDs)+i);
-      instanceData[rc->mesh->cID].rcs.erase(begin(instanceData[rc->mesh->cID].rcs)+i);
+  instanceDatum* inst = &instanceData[rc->mesh->cID];
+  for(size_t i = 0; i < inst->models.size(); i++){
+    if(inst->cIDs[i] == component->cID){
+      inst->models.erase(begin(inst->models)+i);
+      inst->shades.erase(begin(inst->shades)+i);
+      inst->cIDs.erase(begin(inst->cIDs)+i);
+      inst->rcs.erase(begin(inst->rcs)+i);
+      inst->update = true;
       destruct(rc);
-      if(instanceData[rc->mesh->cID].models.empty()){
+      if(inst->models.empty()){
         instanceData.erase(rc->mesh->cID);
       }
       return true;
@@ -124,7 +128,11 @@ void InstanceRenderSystem::Update(){
     }
     for(CameraComponent* c : w->cameras){
       for(auto &[meshcID, inst] : instanceData){
-        updateInstance(inst,*c);
+        if(inst.update){
+          inst.update = false;
+          updateInstance(inst);
+        }
+        draw(inst,*c);
       }
     }
     if(rendersys == nullptr || rendersys->instanceSync == 1){
@@ -137,15 +145,12 @@ void InstanceRenderSystem::Update(){
   }
 }
 
-void InstanceRenderSystem::updateInstance(instanceDatum& inst, CameraComponent& c){
-  shadersys->Enable(*inst.shader);
-  shadersys->SetView(*inst.shader, &c.view);
-  shadersys->SetProjection(*inst.shader, &c.projection);
-  shadersys->SetTime(*inst.shader, Madd::GetInstance().GetTime());
-  for(size_t i = 0; i < inst.cIDs.size(); i++){
-    inst.models[i] = inst.rcs[i]->model;
-    inst.shades[i] = inst.rcs[i]->shade;
-  }
+void InstanceRenderSystem::updateInstance(instanceDatum& inst){
+
+  // for(size_t i = 0; i < inst.cIDs.size(); i++){
+  //   inst.models[i] = inst.rcs[i]->model;
+  //   inst.shades[i] = inst.rcs[i]->shade;
+  // }
   glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, inst.models.size() * sizeof(glm::mat4),
     inst.models.data(), GL_STATIC_DRAW);
@@ -155,7 +160,13 @@ void InstanceRenderSystem::updateInstance(instanceDatum& inst, CameraComponent& 
     inst.shades.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 
+void InstanceRenderSystem::draw(instanceDatum& inst, CameraComponent& c){
+  shadersys->Enable(*inst.shader);
+  shadersys->SetView(*inst.shader, &c.view);
+  shadersys->SetProjection(*inst.shader, &c.projection);
+  shadersys->SetTime(*inst.shader, Madd::GetInstance().GetTime());
   using namespace std::placeholders; 
   glBindVertexArray(glfwsys->GetCurrentContextVAO(static_cast<Component*>(inst.mesh),
     std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));

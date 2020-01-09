@@ -19,6 +19,7 @@ struct instanceDatum {
   uint VBO[2]; //modelVBO, shadeVBO
   ShaderComponent* shader;
   MeshComponent* mesh;
+  bool update;
 };
 
 class RenderSystem;
@@ -42,7 +43,8 @@ public:
   int instanceSync;
   
 private:
-  void updateInstance(instanceDatum& inst, CameraComponent& c);
+  void updateInstance(instanceDatum& inst);
+  void draw(instanceDatum& inst, CameraComponent& c);
   void destruct(RenderedComponent* rc);
   std::unordered_map<ComponentID,RenderedComponent*> objects;
   std::unordered_map<ComponentID, instanceDatum> instanceData;

@@ -92,8 +92,8 @@ void Madd::Run(){
   }
   while(StayOpen()){
     Tick();
-    if(framecounter & 20){
-      std::cout << (framecounter-lastframecount)/(GetTime()-lastFPS) << '\r';
+    if(framecounter % 60 == 0){
+      std::cout << (framecounter-lastframecount)/(GetTime()-lastFPS) << '\r' << std::flush;
       lastframecount = framecounter;
       lastFPS = GetTime();
     }
