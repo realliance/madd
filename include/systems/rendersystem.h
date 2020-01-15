@@ -20,7 +20,7 @@ public:
   void Update();
 
   std::string Name(){ return "RenderSystem"; }
-  std::vector<std::string> Requires() {return {"GlfwSystem", "TextureSystem", "MeshSystem", "ShaderSystem"};};
+  std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem"};};
 
   void Start(WindowComponent& w);
   void Finish(WindowComponent& w);

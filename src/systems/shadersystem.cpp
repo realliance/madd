@@ -107,7 +107,7 @@ uint ShaderSystem::constructShader(std::string shaderFileName){
 
     if (!success) {
         glGetShaderInfoLog(id, 512, NULL, infoLog);
-        std::cout << "ERROR::" << (char)(VERTEX_SHADER-32) << "SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::" << static_cast<char>(type-32) << "SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
         throw "COMPILATION_FAILED";
     }
     return id;

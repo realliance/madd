@@ -62,28 +62,34 @@ size_t Madd::GetNewComponentID(){
   return ++currID;
 }
 
-void Madd::InitSystems(){
+bool Madd::InitSystems(){
   std::set<std::string> init;
-  std::stack<std::string> requireStack;
+  std::stack<std::pair<std::string,std::string>> requireStack;
   for(auto& [str, s] : systems){
     if(!init.contains(str)){
-      requireStack.push(str);
+      requireStack.push({str,s->Name()});
       size_t stackSize = requireStack.size();
       do{
-        for(auto const& require: systems[requireStack.top()]->Requires()){
+        if(!systems.contains(requireStack.top().first)){
+          std::cout << requireStack.top().first << " is required by " << requireStack.top().second << " but not included." << std::endl;
+          return false;
+        }
+        System* initsys = systems[requireStack.top().first];
+        for(auto const& require: initsys->Requires()){
           if(!init.contains(require)){
-            requireStack.push(require);
+            requireStack.push({require,initsys->Name()});
           }
         }
         if(stackSize == requireStack.size()){
-          systems[requireStack.top()]->Init();
-          init.insert(requireStack.top());
+          systems[requireStack.top().first]->Init();
+          init.insert(requireStack.top().first);
           requireStack.pop();
         }
         stackSize = requireStack.size();
       }while(!requireStack.empty());
     }
   }
+  return true;
 }
 
 void Madd::Run(){

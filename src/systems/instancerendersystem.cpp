@@ -27,32 +27,57 @@ InstanceRenderSystem::~InstanceRenderSystem(){
 
 bool InstanceRenderSystem::Register(Component* component){
   RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
+  if(!instanceConfigs.contains(rc->mesh->cID)){
+    return false;
+  }
   rc->cID = Madd::GetInstance().GetNewComponentID();
   rc->update = true;
   objects[rc->cID] = dynamic_cast<RenderedComponent*>(component);
-  instanceDatum* inst;
+  InstanceDatum* inst;
+
   if(!instanceData.contains(rc->mesh->cID)){
-    instanceData[rc->mesh->cID] = instanceDatum{};
+    instanceData[rc->mesh->cID] = InstanceDatum{};
     inst = &instanceData[rc->mesh->cID];
-    glGenBuffers(2, inst->VBO);
+    inst->config = instanceConfigs[rc->mesh->cID];;
+    int nbuffers = 1;
+    if(inst->config.instancedshade){
+      nbuffers++;
+    }else{
+      shadersys->Enable(*(rc->shader));
+      inst->shade = rc->shade;
+      shadersys->SetShade(*(rc->shader), &inst->shade);
+    }
+    glGenBuffers(nbuffers, inst->VBO);
     inst->shader = rc->shader;
     inst->mesh = rc->mesh;
+
   }else{
     inst = &instanceData[rc->mesh->cID];
   }
   shadersys->Enable(*(rc->shader));
   shadersys->SetTextureEnabled(*(rc->shader),false);
-  inst->models.push_back(rc->model);
-  inst->shades.push_back(rc->shade);
+  if(inst->config.simplemodel){
+    inst->simplemodels.push_back(glm::vec3(rc->model[3]));
+  }else{
+    inst->models.push_back(rc->model);
+  }
+  if(inst->config.instancedshade){
+    inst->shades.push_back(rc->shade);
+  }
   inst->cIDs.push_back(component->cID);
   inst->rcs.push_back(rc);
   inst->update = true;
   return true;
 }
 
+void InstanceRenderSystem::SetConfig(InstanceConfig config, MeshComponent* mesh){
+  instanceConfigs[mesh->cID] = config;
+}
+
 uint InstanceRenderSystem::CreateVAO(Component* component){
   MeshComponent* mesh = dynamic_cast<MeshComponent*>(component);
   uint VAO = meshsys->CreateVAO(mesh);
+  InstanceDatum* inst = &instanceData[mesh->cID];
   glBindVertexArray(VAO);
 
   /*
@@ -60,34 +85,44 @@ uint InstanceRenderSystem::CreateVAO(Component* component){
     it gets spread across 4 attribs. The last attrib has a wilder stride to
     account for the id at the end of the structs.
   */
+  if(inst->config.simplemodel){
+    //Model Data
+    glBindBuffer(GL_ARRAY_BUFFER, inst->VBO[0]);
 
-  size_t vec4size = sizeof(glm::vec4);
-  //Model Data
-  glBindBuffer(GL_ARRAY_BUFFER, instanceData[mesh->cID].VBO[0]);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), static_cast<void*>(0));
+    glVertexAttribDivisor(2,1);
+  }else{
+    size_t vec4size = sizeof(glm::vec4);
+    //Model Data
+    glBindBuffer(GL_ARRAY_BUFFER, inst->VBO[0]);
 
-  glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, vec4size*4, static_cast<void*>(0));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, vec4size*4, static_cast<void*>(0));
 
-  glEnableVertexAttribArray(3);
-  glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size));
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size));
 
-  glEnableVertexAttribArray(4);
-  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size*2));
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size*2));
 
-  glEnableVertexAttribArray(5);
-  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size*3));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, vec4size*4, reinterpret_cast<void*>(vec4size*3));
 
-  glVertexAttribDivisor(2,1);
-  glVertexAttribDivisor(3,1);
-  glVertexAttribDivisor(4,1);
-  glVertexAttribDivisor(5,1);
+    glVertexAttribDivisor(2,1);
+    glVertexAttribDivisor(3,1);
+    glVertexAttribDivisor(4,1);
+    glVertexAttribDivisor(5,1);
+  }
 
-  //Shade Data
-  glEnableVertexAttribArray(6);
-  glBindBuffer(GL_ARRAY_BUFFER, instanceData[mesh->cID].VBO[1]);
-  glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, vec4size, static_cast<void*>(0));
+  if(inst->config.instancedshade){
+    //Shade Data
+    glEnableVertexAttribArray(6);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceData[mesh->cID].VBO[1]);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), static_cast<void*>(0));
 
-  glVertexAttribDivisor(6,1);
+    glVertexAttribDivisor(6,1);
+  }
 
   glBindVertexArray(0);
   return VAO;
@@ -96,11 +131,17 @@ uint InstanceRenderSystem::CreateVAO(Component* component){
 bool InstanceRenderSystem::Unregister(Component* component){
   RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
   objects.erase(rc->cID);
-  instanceDatum* inst = &instanceData[rc->mesh->cID];
+  InstanceDatum* inst = &instanceData[rc->mesh->cID];
   for(size_t i = 0; i < inst->models.size(); i++){
     if(inst->cIDs[i] == component->cID){
-      inst->models.erase(begin(inst->models)+i);
-      inst->shades.erase(begin(inst->shades)+i);
+      if(inst->config.simplemodel){
+        inst->simplemodels.erase(begin(inst->simplemodels)+i);
+      }else{
+        inst->models.erase(begin(inst->models)+i);
+      }
+      if(inst->config.instancedshade){
+        inst->shades.erase(begin(inst->shades)+i);
+      }
       inst->cIDs.erase(begin(inst->cIDs)+i);
       inst->rcs.erase(begin(inst->rcs)+i);
       inst->update = true;
@@ -128,7 +169,7 @@ void InstanceRenderSystem::Update(){
     }
     for(CameraComponent* c : w->cameras){
       for(auto &[meshcID, inst] : instanceData){
-        if(inst.update){
+        if(inst.config.updatemodel || inst.update){
           inst.update = false;
           updateInstance(inst);
         }
@@ -145,24 +186,39 @@ void InstanceRenderSystem::Update(){
   }
 }
 
-void InstanceRenderSystem::updateInstance(instanceDatum& inst){
+void InstanceRenderSystem::updateInstance(InstanceDatum& inst){
+  if(inst.config.updatemodel && inst.update == false){
+    for(size_t i = 0; i < inst.cIDs.size(); i++){
+      if(inst.config.simplemodel){
+        inst.simplemodels[i] = glm::vec3(inst.rcs[i]->model[3]);
+      }else{
+        inst.models[i] = inst.rcs[i]->model;
+      }
+      if(inst.config.instancedshade){
+        inst.shades[i] = inst.rcs[i]->shade;
+      }
+    }
+  }
+  if(inst.config.simplemodel){
+    glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, inst.simplemodels.size() * sizeof(glm::vec3),
+      inst.simplemodels.data(), GL_STATIC_DRAW);
+  }else{
+    glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, inst.models.size() * sizeof(glm::mat4),
+      inst.models.data(), GL_STATIC_DRAW);
+  }
 
-  // for(size_t i = 0; i < inst.cIDs.size(); i++){
-  //   inst.models[i] = inst.rcs[i]->model;
-  //   inst.shades[i] = inst.rcs[i]->shade;
-  // }
-  glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[0]);
-  glBufferData(GL_ARRAY_BUFFER, inst.models.size() * sizeof(glm::mat4),
-    inst.models.data(), GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[1]);
-  glBufferData(GL_ARRAY_BUFFER, inst.shades.size() * sizeof(glm::vec4),
-    inst.shades.data(), GL_STATIC_DRAW);
+  if(inst.config.instancedshade){
+    glBindBuffer(GL_ARRAY_BUFFER,inst.VBO[1]);
+    glBufferData(GL_ARRAY_BUFFER, inst.shades.size() * sizeof(glm::vec4),
+      inst.shades.data(), GL_STATIC_DRAW);
+  }
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void InstanceRenderSystem::draw(instanceDatum& inst, CameraComponent& c){
+void InstanceRenderSystem::draw(InstanceDatum& inst, CameraComponent& c){
   shadersys->Enable(*inst.shader);
   shadersys->SetView(*inst.shader, &c.view);
   shadersys->SetProjection(*inst.shader, &c.projection);
@@ -170,8 +226,12 @@ void InstanceRenderSystem::draw(instanceDatum& inst, CameraComponent& c){
   using namespace std::placeholders; 
   glBindVertexArray(glfwsys->GetCurrentContextVAO(static_cast<Component*>(inst.mesh),
     std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));
-    
-  glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.models.size());
+  
+  if(inst.config.simplemodel){
+    glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.simplemodels.size());
+  }else{
+    glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.models.size());
+  }
   glBindVertexArray(0);
 }
 

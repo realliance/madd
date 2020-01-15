@@ -67,7 +67,7 @@ void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
   shadersys->SetView(*r.shader, &c.view);
   shadersys->SetProjection(*r.shader, &c.projection);
   shadersys->SetTime(*r.shader, Madd::GetInstance().GetTime());
-  if(r.texture){
+  if(r.texture && texturesys != nullptr){
     shadersys->SetTextureEnabled(*r.shader, true);
     texturesys->Enable(r.texture);
   }else{

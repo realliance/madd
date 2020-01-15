@@ -34,7 +34,7 @@ void CameraSystem::Update() {
 }
 
 void CameraSystem::updateComponent(CameraComponent &c) {
-  c.projection = glm::perspective(glm::radians(c.fov), c.aspectratio, 0.1f, 100.0f);
+  c.projection = glm::perspective(glm::radians(c.fov), c.aspectratio, c.near, c.far);
   c.front = glm::normalize(c.lookAt);
   c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);
 }
@@ -48,6 +48,8 @@ CameraComponent CameraSystem::Construct() {
   c.fov = 45.f;
   c.view = glm::lookAt(c.pos, c.pos + c.front, c.up);
   c.projection = glm::mat4(1.0f);
+  c.near = 0.1f;
+  c.far = 100.f;
   return c;
 }
 

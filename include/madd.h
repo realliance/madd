@@ -22,7 +22,7 @@ public:
   void Register(System* s);
   void Register(std::vector<System*> sys);
   void Unregister(System* s);
-  void InitSystems();
+  bool InitSystems();
   System* GetSystem(std::string s);
   ComponentID GetNewComponentID();
 

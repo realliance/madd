@@ -83,7 +83,6 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
       tempVec += c.camera.up;
   if(c.movVector.y < 0)
       tempVec -= c.camera.up;
-
   tempVec = glm::normalize(tempVec) * c.movementSpeed;
   c.camera.pos += tempVec*Madd::GetInstance().GetDeltaTime();
 }
