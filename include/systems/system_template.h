@@ -9,7 +9,7 @@
 
 class TemplateSystem : public System {
   void Init();
-  void Deinit();
+  ~TemplateSystem();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();

@@ -5,7 +5,7 @@ void TemplateSystem::Init() {
 
 }
 
-void TemplateSystem::Deinit(){
+TemplateSystem::~TemplateSystem(){
 
 }
 
