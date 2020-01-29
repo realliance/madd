@@ -13,7 +13,7 @@ class TextureSystem;
 
 struct InstanceDatum {
   uint VBO[2]; //modelVBO, shadeVBO
-  std::vector<ComponentID> cIDs;
+  InstancedRenderedComponent* irc;
 };
 
 class RenderSystem;
@@ -39,8 +39,7 @@ public:
 private:
   void updateInstance(InstanceDatum& inst);
   void draw(InstanceDatum& inst, CameraComponent& c);
-  void destruct(InstancedRenderedComponent* rc);
-  std::unordered_map<ComponentID,InstancedRenderedComponent*> objects;
+  void destruct(InstanceDatum& inst);
   std::unordered_map<ComponentID, InstanceDatum> instanceData;
   
   ShaderSystem* shadersys;

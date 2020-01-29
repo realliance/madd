@@ -15,14 +15,17 @@ struct InstancedRenderedComponent : public Component{
   mesh(mesh), texture(texture), shader(shader){}
   
   InstancedRenderedComponent(): mesh(nullptr), texture(nullptr),
-  shader(nullptr){}
+  shader(nullptr), instancedshade(false),positiononlymodels(false){}
+
+  bool instancedshade;
+  bool positiononlymodels;
 
   MeshComponent* mesh;
   TextureComponent* texture;
   ShaderComponent* shader;
   glm::vec4 shade;
   std::vector<glm::mat4> models;
-  std::vector<glm::vec3> simplemodels;
+  std::vector<glm::vec3> posmodels;
   std::vector<glm::vec4> shades;
 };
 
