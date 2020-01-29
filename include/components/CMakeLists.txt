@@ -5,6 +5,7 @@ target_sources(madd
         "${DIR}/shadercomponent.h"
         "${DIR}/meshcomponent.h"
         "${DIR}/renderedcomponent.h"
+        "${DIR}/instancedrenderedcomponent.h"
         "${DIR}/cameracomponent.h"
         "${DIR}/component.h"
         "${DIR}/meshcollidercomponent.h"

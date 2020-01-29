@@ -26,10 +26,7 @@ InstanceRenderSystem::~InstanceRenderSystem(){
 }
 
 bool InstanceRenderSystem::Register(Component* component){
-  RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
-  if(!instanceConfigs.contains(rc->mesh->cID)){
-    return false;
-  }
+  InstancedRenderedComponent* rc = dynamic_cast<InstancedRenderedComponent*>(component);
   rc->cID = Madd::GetInstance().GetNewComponentID();
   rc->update = true;
   objects[rc->cID] = dynamic_cast<RenderedComponent*>(component);
