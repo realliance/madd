@@ -82,18 +82,31 @@ bool MeshSystem::loadobj(MeshData* m){
       itexs.push_back({a,b});
     }
     if(linetoken == "f"){
-      char slash;
-      int x[3],y[3],z[3];
-      for(int i = 0; i < 3; i++){
-        if (!(iss >> x[i] >> slash >> y[i] >> slash >> z[i])) { return false; }
-        x[i]--; y[i]--; z[i]--; //objs use 1-indexed indices;
+      std::string fstr;
+      std::vector<int> vindex;
+      std::vector<int> tindex;
+      while((iss >> fstr)){
+        std::istringstream fstrstream(fstr);
+        char slash;
+        int v,t;
+        if(!(fstrstream >> v >> slash >> t)){ return false; }
+        vindex.push_back(v-1);
+        tindex.push_back(t-1);
       }
       m->vertices.insert(end(m->vertices),{
-        iverts[x[0]],iverts[x[1]],iverts[x[2]]
+        iverts[vindex[0]],iverts[vindex[1]],iverts[vindex[2]]
       });
       m->texcoords.insert(end(m->texcoords),{
-        itexs[y[0]],itexs[y[1]],itexs[y[2]]
+        itexs[tindex[0]],itexs[tindex[1]],itexs[tindex[2]]
       });
+      if(vindex.size() == 4){
+        m->vertices.insert(end(m->vertices),{
+          iverts[vindex[2]],iverts[vindex[3]],iverts[vindex[0]]
+        });
+        m->texcoords.insert(end(m->texcoords),{
+          itexs[tindex[2]],itexs[tindex[3]],itexs[tindex[0]]
+        });
+      }
     }
   }
   return true;

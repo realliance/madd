@@ -26,7 +26,7 @@ public:
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
   void Draw(MeshComponent& m);
 private:
-  bool loadobj(MeshData* m);
+  static bool loadobj(MeshData* m);
   bool initialize(MeshData* m);
   void destruct(MeshData* m);
   std::map<ComponentID,MeshData*> meshdata;
