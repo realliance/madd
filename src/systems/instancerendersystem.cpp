@@ -228,9 +228,9 @@ void InstanceRenderSystem::draw(InstanceDatum& inst, CameraComponent& c){
     std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));
   
   if(inst.config.simplemodel){
-    glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.simplemodels.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<MeshData*>(inst.mesh->data)->vertices.size(), inst.simplemodels.size());
   }else{
-    glDrawArraysInstanced(GL_TRIANGLES, 0, inst.mesh->verts.size(), inst.models.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<MeshData*>(inst.mesh->data)->vertices.size(), inst.models.size());
   }
   glBindVertexArray(0);
 }
