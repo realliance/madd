@@ -8,14 +8,16 @@ void MeshSystem::Init(){
 }
 
 MeshSystem::~MeshSystem(){
-  for(MeshComponent* m : mesh){
-    destruct(*m);
+  for(auto & [cid, mdata] : meshdata){
+    destruct(mdata);
   }
 }
 
 bool MeshSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();
   MeshComponent* m = dynamic_cast<MeshComponent *>(component);
+  meshdata[component->cID] = MeshData{};
+  
   initialize(*m);
   m->update = false;
   mesh.push_back(m);

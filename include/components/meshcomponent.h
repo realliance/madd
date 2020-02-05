@@ -6,8 +6,7 @@
 #include <sys/types.h>
 
 struct MeshComponent : public Component{
-  std::vector<glm::vec3> verts;
-  std::vector<glm::vec2> texcoords;
+  std::string modelPath;
 };
 
 

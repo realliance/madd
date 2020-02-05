@@ -19,10 +19,15 @@ public:
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
   void Draw(MeshComponent& m);
 private:
-  void initialize(MeshComponent& m);
-  void destruct(MeshComponent& m);
-  std::vector<MeshComponent*> mesh;
-  std::map<ComponentID,uint[2]> VBO;
+  struct MeshData {
+    uint VBO[2];
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> texcoords;
+    MeshComponent* mesh;
+  };
+  void initialize(MeshData& m);
+  void destruct(MeshData& m);
+  std::map<ComponentID,MeshData> meshdata;
   GlfwSystem* glfw;
 };
 
