@@ -82,8 +82,7 @@ uint InstanceRenderSystem::CreateVAO(Component* component){
 
   /*
     opengl only allows for 4 floats per vertex attrib so mat4 has 16 floats so
-    it gets spread across 4 attribs. The last attrib has a wilder stride to
-    account for the id at the end of the structs.
+    it gets spread across 4 attribs.
   */
   if(inst->config.simplemodel){
     //Model Data
@@ -228,9 +227,9 @@ void InstanceRenderSystem::draw(InstanceDatum& inst, CameraComponent& c){
     std::bind(&InstanceRenderSystem::CreateVAO, this, _1)));
   
   if(inst.config.simplemodel){
-    glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<MeshData*>(inst.mesh->data)->vertices.size(), inst.simplemodels.size());
+    meshsys->DrawInstanced(*inst.mesh, inst.simplemodels.size());
   }else{
-    glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<MeshData*>(inst.mesh->data)->vertices.size(), inst.models.size());
+    meshsys->DrawInstanced(*inst.mesh, inst.models.size());
   }
   glBindVertexArray(0);
 }
