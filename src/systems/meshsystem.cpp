@@ -23,7 +23,6 @@ bool MeshSystem::Register(Component* component){
   MeshComponent* m = dynamic_cast<MeshComponent *>(component);
   MeshData* mdata = new MeshData{};
   mdata->mesh = m;
-  m->data = mdata;
   meshdata[component->cID] = mdata;
   if(!initialize(meshdata[component->cID])){
     delete mdata;
@@ -150,5 +149,10 @@ void MeshSystem::Draw(MeshComponent& m){
   glBindVertexArray(glfw->GetCurrentContextVAO(static_cast<Component*>(&m),
     std::bind(&MeshSystem::CreateVAO, this, _1)));
   glDrawArrays(GL_TRIANGLES, 0, meshdata[m.cID]->vertices.size());
+  glBindVertexArray(0);
+}
+
+void MeshSystem::DrawInstanced(MeshComponent& m, uint count){
+  glDrawArraysInstanced(GL_TRIANGLES, 0, meshdata[m.cID]->vertices.size(), count);
   glBindVertexArray(0);
 }
