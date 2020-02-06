@@ -93,18 +93,12 @@ bool MeshSystem::loadobj(MeshData* m){
         vindex.push_back(v-1);
         tindex.push_back(t-1);
       }
-      m->vertices.insert(end(m->vertices),{
-        iverts[vindex[0]],iverts[vindex[1]],iverts[vindex[2]]
-      });
-      m->texcoords.insert(end(m->texcoords),{
-        itexs[tindex[0]],itexs[tindex[1]],itexs[tindex[2]]
-      });
-      if(vindex.size() == 4){
+      for(int i = 0; i < vindex.size()-2; i++){
         m->vertices.insert(end(m->vertices),{
-          iverts[vindex[2]],iverts[vindex[3]],iverts[vindex[0]]
+          iverts[vindex[0]],iverts[vindex[i+1]],iverts[vindex[i+2]]
         });
         m->texcoords.insert(end(m->texcoords),{
-          itexs[tindex[2]],itexs[tindex[3]],itexs[tindex[0]]
+          itexs[tindex[0]],itexs[tindex[i+1]],itexs[tindex[i+2]]
         });
       }
     }
