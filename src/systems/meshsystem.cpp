@@ -6,6 +6,7 @@
 #include <istream>
 #include <sstream>
 #include <set>
+#include <stdexcept>
 
 void MeshSystem::Init(){
   glfw = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
@@ -92,13 +93,17 @@ bool MeshSystem::loadobj(MeshData* m){
         vindex.push_back(v-1);
         tindex.push_back(t-1);
       }
-      for(int i = 0; i < vindex.size()-2; i++){
-        m->vertices.insert(end(m->vertices),{
-          iverts[vindex[0]],iverts[vindex[i+1]],iverts[vindex[i+2]]
-        });
-        m->texcoords.insert(end(m->texcoords),{
-          itexs[tindex[0]],itexs[tindex[i+1]],itexs[tindex[i+2]]
-        });
+      try{
+        for(int i = 0; i < vindex.size()-2; i++){
+          vertices.insert(end(vertices),{
+            iverts.at(vindex[0]),iverts.at(vindex[i+1]),iverts.at(vindex[i+2])
+          });
+          texcoords.insert(end(texcoords),{
+            itexs.at(tindex[0]),itexs.at(tindex[i+1]),itexs.at(tindex[i+2])
+          });
+        }
+      }catch(std::out_of_range){
+        return false;
       }
     }
   }
