@@ -7,14 +7,12 @@
 #include <glm/glm.hpp>
 
 struct FreecamComponent : public Component{
-  CameraComponent camera;
-  bool mouseLocked;
-  glm::vec2 lastCursor;
-  float movementSpeed = 2.0f;
-  float lookSpeed = 0.05f;
-  float pitch = 0.0f;
-  float yaw = -90.0f;
-  glm::vec3 movVector;
-  glm::vec2 cursor;
-};
+  FreecamComponent():
+    mouseLocked(true),
+    movementSpeed(2.0f),
+    lookSpeed(0.05f){}
 
+  bool mouseLocked;
+  float movementSpeed;
+  float lookSpeed;
+};

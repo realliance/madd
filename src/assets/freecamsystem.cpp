@@ -8,45 +8,33 @@
 void FreeCamSystem::Init(){
 }
 
-void FreeCamSystem::Deinit(){
-  for(auto freecam : freecams){
-    delete freecam;
-  }
+FreeCamSystem::~FreeCamSystem(){
 }
 
 bool FreeCamSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();
-  freecams.push_back(dynamic_cast<FreecamComponent*>(component));
-  Madd::GetInstance().GetSystem("CameraSystem")->Register(&dynamic_cast<FreecamComponent*>(component)->camera);
+  freecamdata[component->cID] = FreeCamData(dynamic_cast<FreecamComponent*>(component));
+  Madd::GetInstance().GetSystem("CameraSystem")->Register(&freecamdata[component->cID].camera);
   return true;
 }
 
 bool FreeCamSystem::Unregister(Component* component){
-  for(auto i = begin(freecams); i != end(freecams); i++){
-    if((*i)->cID == component->cID){
-      freecams.erase(i);
-      return true;
-    }
+  if(freecamdata.contains(component->cID)){
+    freecamdata.erase(component->cID);
+    return true;
   }
   return false;
 }
 
 void FreeCamSystem::Update(){
-  for(auto const c : freecams){
-    ProcessCursor(*c);
-    ProcessMove(*c);
-    c->camera.update = true;
+  for(auto & [cid, fcdata] : freecamdata){
+    processCursor(fcdata);
+    processMove(fcdata);
   }
 }
 
-FreecamComponent FreeCamSystem::Construct(){
-    FreecamComponent c = FreecamComponent{};
-    c.camera = CameraSystem::Construct();
-    return c;
-}
-
-void FreeCamSystem::ProcessCursor(FreecamComponent& c){
-    if(!c.mouseLocked){
+void FreeCamSystem::processCursor(FreeCamData& c){
+    if(!c.freecam->mouseLocked){
         return;
     }
     if(c.lastCursor == glm::vec2{}){
@@ -54,47 +42,59 @@ void FreeCamSystem::ProcessCursor(FreecamComponent& c){
     }
     glm::vec2 offset = c.lastCursor - c.cursor;
     c.lastCursor = c.cursor;
-    offset *= c.lookSpeed;
+    offset *= c.freecam->lookSpeed;
     c.yaw -= offset.x;
     c.pitch += offset.y;
     if(c.pitch > 89.0f)
         c.pitch = 89.0f;
     if(c.pitch < -89.0f)
         c.pitch = - 89.0f;
-    c.camera.lookAt = CameraSystem::PitchAndYawVector(c.camera,c.pitch,c.yaw);
-    
+    c.camera.lookAt = pitchAndYawVector(c.pitch,c.yaw);
 }
 
-void FreeCamSystem::ProcessMove(FreecamComponent& c){
+void FreeCamSystem::processMove(FreeCamData& c){
   if(c.movVector == glm::vec3(0)){
     return;
   }
   glm::vec3 tempVec{};
-
+  glm::vec3 front = glm::normalize(c.camera.lookAt);
+  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
   if(c.movVector.z > 0)
-      tempVec += c.camera.front * glm::vec3(1.f,0.f,1.f);
+      tempVec += front * glm::vec3(1.f,0.f,1.f);
   if(c.movVector.z < 0)
-      tempVec -= c.camera.front * glm::vec3(1.f,0.f,1.f);
+      tempVec -= front * glm::vec3(1.f,0.f,1.f);
   if(c.movVector.x < 0)
-      tempVec -= glm::cross(c.camera.front, c.camera.up);
+      tempVec -= glm::cross(front, up);
   if(c.movVector.x > 0)
-      tempVec += glm::cross(c.camera.front, c.camera.up);
+      tempVec += glm::cross(front, up);
   if(c.movVector.y > 0)
-      tempVec += c.camera.up;
+      tempVec += up;
   if(c.movVector.y < 0)
-      tempVec -= c.camera.up;
-  tempVec = glm::normalize(tempVec) * c.movementSpeed;
+      tempVec -= up;
+  tempVec = glm::normalize(tempVec) * c.freecam->movementSpeed;
   c.camera.pos += tempVec*Madd::GetInstance().GetDeltaTime();
 }
 
-void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key, int action){
-  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
-  if(action == KEY_PRESS){
-      c.lastCursor = glm::vec2{};
-      if(c.mouseLocked)
-          glfwsys->UnlockCursor(*window);
-      else
-          glfwsys->LockCursor(*window);
-      c.mouseLocked = !c.mouseLocked;
-  }
+// void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key, int action){
+//   GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+//   if(action == KEY_PRESS){
+//       c.lastCursor = glm::vec2{};
+//       if(c.mouseLocked)
+//           glfwsys->UnlockCursor(*window);
+//       else
+//           glfwsys->LockCursor(*window);
+//       c.mouseLocked = !c.mouseLocked;
+//   }
+// }
+
+glm::vec3 FreeCamSystem::pitchAndYawVector(float pitch, float yaw) {
+  glm::vec3 front;
+  front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+  front.y = sin(glm::radians(pitch));
+  front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+  return front;
+}
+
+CameraComponent* FreeCamSystem::Camera(FreecamComponent* freecam){
+  return &freecamdata[freecam->cID].camera;
 }

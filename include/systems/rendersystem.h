@@ -11,6 +11,7 @@ class MeshSystem;
 class TextureSystem;
 class InstanceRenderSystem;
 class GlfwSystem;
+class CameraSystem;
 class RenderSystem : public System{
 public:
   ~RenderSystem();
@@ -20,7 +21,7 @@ public:
   void Update();
 
   std::string Name(){ return "RenderSystem"; }
-  std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem"};};
+  std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem", "CameraSystem"};};
 
   void Start(WindowComponent& w);
   void Finish(WindowComponent& w);
@@ -34,6 +35,7 @@ private:
   MeshSystem* meshsys;
   TextureSystem* texturesys;
   GlfwSystem* glfwsys;
+  CameraSystem* camerasys;
   InstanceRenderSystem* instancerendersys;
 };
 

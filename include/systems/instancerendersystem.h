@@ -66,5 +66,6 @@ private:
   TextureSystem* texturesys;
   RenderSystem* rendersys;
   GlfwSystem* glfwsys;
+  CameraSystem* camerasys;
 };
 

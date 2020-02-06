@@ -14,6 +14,7 @@ void RenderSystem::Init() {
   texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
   instancerendersys = dynamic_cast<InstanceRenderSystem*>(Madd::GetInstance().GetSystem("InstanceRenderSystem"));
   glfwsys = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  camerasys = dynamic_cast<CameraSystem*>(Madd::GetInstance().GetSystem("CameraSystem"));
   instanceSync = 0;
 }
 
@@ -64,8 +65,8 @@ void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){
   shadersys->Enable(*r.shader);
   shadersys->SetShade(*r.shader, &r.shade);
   shadersys->SetModel(*r.shader, &r.model);
-  shadersys->SetView(*r.shader, &c.view);
-  shadersys->SetProjection(*r.shader, &c.projection);
+  shadersys->SetView(*r.shader, camerasys->View(&c));
+  shadersys->SetProjection(*r.shader, camerasys->Projection(&c));
   shadersys->SetTime(*r.shader, Madd::GetInstance().GetTime());
   if(r.texture && texturesys != nullptr){
     shadersys->SetTextureEnabled(*r.shader, true);

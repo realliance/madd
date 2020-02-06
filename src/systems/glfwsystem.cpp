@@ -28,7 +28,6 @@ void GlfwSystem::framebufferSizeCallback(GLFWwindow *window, int width, int heig
     glViewport(0, 0, width, height);
     for(CameraComponent* c : windowcomp->cameras){
       c->aspectratio = (float) width/height;
-      CameraSystem::UpdateProjection(*c, width, height);
     }
 }
 

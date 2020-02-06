@@ -14,6 +14,7 @@ void InstanceRenderSystem::Init() {
   texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
   rendersys = dynamic_cast<RenderSystem*>(Madd::GetInstance().GetSystem("RenderSystem"));
   glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  camerasys = dynamic_cast<CameraSystem*>(Madd::GetInstance().GetSystem("CameraSystem"));
   instanceSync = 0;
 }
 
@@ -219,8 +220,8 @@ void InstanceRenderSystem::updateInstance(InstanceDatum& inst){
 
 void InstanceRenderSystem::draw(InstanceDatum& inst, CameraComponent& c){
   shadersys->Enable(*inst.shader);
-  shadersys->SetView(*inst.shader, &c.view);
-  shadersys->SetProjection(*inst.shader, &c.projection);
+  shadersys->SetView(*inst.shader, camerasys->View(&c));
+  shadersys->SetProjection(*inst.shader, camerasys->Projection(&c));
   shadersys->SetTime(*inst.shader, Madd::GetInstance().GetTime());
   using namespace std::placeholders; 
   glBindVertexArray(glfwsys->GetCurrentContextVAO(static_cast<Component*>(inst.mesh),
