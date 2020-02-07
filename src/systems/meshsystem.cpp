@@ -95,10 +95,10 @@ bool MeshSystem::loadobj(MeshData* m){
       }
       try{
         for(int i = 0; i < vindex.size()-2; i++){
-          vertices.insert(end(vertices),{
+          m->vertices.insert(end(m->vertices),{
             iverts.at(vindex[0]),iverts.at(vindex[i+1]),iverts.at(vindex[i+2])
           });
-          texcoords.insert(end(texcoords),{
+          m->texcoords.insert(end(m->texcoords),{
             itexs.at(tindex[0]),itexs.at(tindex[i+1]),itexs.at(tindex[i+2])
           });
         }
