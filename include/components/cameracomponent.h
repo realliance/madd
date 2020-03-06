@@ -16,6 +16,8 @@ struct CameraComponent : public Component{
   glm::vec3 up;
   glm::mat4 view;
   glm::mat4 projection;
+  ComponentType Type(); 
+  private: static ComponentType cType;
 };
 
 

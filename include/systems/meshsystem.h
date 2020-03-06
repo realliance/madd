@@ -15,6 +15,7 @@ public:
   bool Unregister(Component* component);
   void Update(){}
   uint CreateVAO(Component* component);
+  std::vector<ComponentType> Types() { return {MeshComponent{}.Type()};}
   std::string Name() { return "MeshSystem"; }
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
   void Draw(MeshComponent& m);

@@ -26,13 +26,13 @@ InstanceRenderSystem::~InstanceRenderSystem(){
 }
 
 bool InstanceRenderSystem::Register(Component* component){
-  RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
+  InstanceRenderedComponent* rc = dynamic_cast<InstanceRenderedComponent*>(component);
   if(!instanceConfigs.contains(rc->mesh->cID)){
     return false;
   }
   rc->cID = Madd::GetInstance().GetNewComponentID();
   rc->update = true;
-  objects[rc->cID] = dynamic_cast<RenderedComponent*>(component);
+  objects[rc->cID] = dynamic_cast<InstanceRenderedComponent*>(component);
   InstanceDatum* inst;
 
   if(!instanceData.contains(rc->mesh->cID)){
@@ -128,7 +128,7 @@ uint InstanceRenderSystem::CreateVAO(Component* component){
 }
 
 bool InstanceRenderSystem::Unregister(Component* component){
-  RenderedComponent* rc = dynamic_cast<RenderedComponent*>(component);
+  InstanceRenderedComponent* rc = dynamic_cast<InstanceRenderedComponent*>(component);
   objects.erase(rc->cID);
   InstanceDatum* inst = &instanceData[rc->mesh->cID];
   for(size_t i = 0; i < inst->models.size(); i++){
@@ -154,7 +154,7 @@ bool InstanceRenderSystem::Unregister(Component* component){
   return false;
 }
 
-void InstanceRenderSystem::destruct(RenderedComponent* rc){
+void InstanceRenderSystem::destruct(InstanceRenderedComponent* rc){
   if(GlfwSystem::GetCurrentWindow() != NULL){
     glDeleteBuffers(2, instanceData[rc->mesh->cID].VBO);
   }

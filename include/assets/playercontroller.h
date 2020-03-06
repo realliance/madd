@@ -5,6 +5,5 @@ class PlayerController{
         PlayerController();
         ~PlayerController();
     private:
-        
 };
 

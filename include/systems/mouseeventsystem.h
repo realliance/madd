@@ -14,6 +14,7 @@ class MouseEventSystem : public System{
     void LockCursor();
     void UnlockCursor();
     void Update();
+    std::vector<ComponentType> Types() { return {MouseEventComponent{}.Type()};}
     std::string Name(){ return "MouseEventSystem"; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
     void CursorCallBack(WindowComponent *window, double xpos, double ypos);

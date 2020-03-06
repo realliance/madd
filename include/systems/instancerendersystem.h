@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system.h"
-#include "components/renderedcomponent.h"
+#include "components/instancerenderedcomponent.h"
 #include "components/cameracomponent.h"
 #include "components/windowcomponent.h"
 #include <unordered_map>
@@ -29,7 +29,7 @@ struct InstanceDatum {
   std::vector<glm::vec3> simplemodels;
   std::vector<glm::vec4> shades;
   std::vector<ComponentID> cIDs;
-  std::vector<RenderedComponent*> rcs;
+  std::vector<InstanceRenderedComponent*> rcs;
 };
 
 class RenderSystem;
@@ -43,6 +43,7 @@ public:
   void Update();
   void SetConfig(InstanceConfig config, MeshComponent* mesh);
 
+  std::vector<ComponentType> Types() { return {InstanceRenderedComponent{}.Type()};}
   std::string Name(){ return "InstanceRenderSystem"; }
   std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem"};};
 
@@ -52,15 +53,15 @@ public:
   uint CreateVAO(Component* component);
 
   int instanceSync;
-  
+
 private:
   void updateInstance(InstanceDatum& inst);
   void draw(InstanceDatum& inst, CameraComponent& c);
-  void destruct(RenderedComponent* rc);
-  std::unordered_map<ComponentID,RenderedComponent*> objects;
+  void destruct(InstanceRenderedComponent* rc);
+  std::unordered_map<ComponentID,InstanceRenderedComponent*> objects;
   std::unordered_map<ComponentID, InstanceDatum> instanceData;
   std::unordered_map<ComponentID, InstanceConfig> instanceConfigs;
-  
+
   ShaderSystem* shadersys;
   MeshSystem* meshsys;
   TextureSystem* texturesys;

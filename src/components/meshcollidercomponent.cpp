@@ -27,4 +27,3 @@ glm::vec3 MeshColliderComponent::Support(glm::vec3 dir){
   }
   return dotpoint;
 }
-

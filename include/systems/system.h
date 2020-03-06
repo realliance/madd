@@ -13,5 +13,6 @@ class System{
     virtual void Update() = 0;
     virtual std::string Name() = 0;
     virtual std::vector<std::string> Requires() = 0;
+    virtual std::vector<ComponentType> Types() = 0;
 };
 

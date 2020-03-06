@@ -17,7 +17,7 @@ void FreeCamSystem::Deinit(){
 bool FreeCamSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();
   freecams.push_back(dynamic_cast<FreecamComponent*>(component));
-  Madd::GetInstance().GetSystem("CameraSystem")->Register(&dynamic_cast<FreecamComponent*>(component)->camera);
+  Madd::GetInstance().RegisterComponent(&dynamic_cast<FreecamComponent*>(component)->camera);
   return true;
 }
 

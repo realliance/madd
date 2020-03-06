@@ -2,10 +2,11 @@
 
 #include <sys/types.h>
 typedef u_int64_t ComponentID;
+typedef u_int32_t ComponentType;
 
 struct Component{
   ComponentID cID;
   bool update;
-  private:   virtual void _(){};
+  virtual ComponentType Type() = 0;
 };
 

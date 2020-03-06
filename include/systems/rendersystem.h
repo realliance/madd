@@ -19,6 +19,7 @@ public:
   bool Unregister(Component* component);
   void Update();
 
+  std::vector<ComponentType> Types() { return {RenderedComponent{}.Type()};}
   std::string Name(){ return "RenderSystem"; }
   std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem"};};
 
@@ -26,7 +27,7 @@ public:
   void Finish(WindowComponent& w);
 
   int instanceSync;
-  
+
 private:
   void updateComponent(RenderedComponent& r, CameraComponent& c);
   std::vector<RenderedComponent*> objects;

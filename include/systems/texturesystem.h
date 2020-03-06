@@ -16,6 +16,7 @@ class TextureSystem : public System{
     bool Unregister(Component* component);
     void Update();
 
+    std::vector<ComponentType> Types() { return {TextureComponent{}.Type()};}
     std::string Name() { return "TextureSystem"; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
     void Destruct(ComponentID cID);

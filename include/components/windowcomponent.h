@@ -14,5 +14,7 @@ class WindowComponent : public Component{
     uint height;
     std::vector<CameraComponent*> cameras;
     bool mouselocked;
+    static ComponentType cType;
+    ComponentType Type();
 };
 

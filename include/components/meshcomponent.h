@@ -8,6 +8,8 @@
 
 struct MeshComponent : public Component{
   std::string modelPath;
+  ComponentType Type(); 
+  private: static ComponentType cType;
 };
 
 

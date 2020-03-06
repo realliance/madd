@@ -13,6 +13,7 @@ class CameraSystem : public System{
     bool Unregister(Component* component);
     void Update();
 
+    std::vector<ComponentType> Types() { return {CameraComponent{}.Type()};}
     std::string Name() { return "CameraSystem"; }
     std::vector<std::string> Requires() {return {};};
     static CameraComponent Construct();

@@ -33,6 +33,7 @@ public:
   bool Unregister(Component* component);
   void Update();
 
+  std::vector<ComponentType> Types() { return {ShaderComponent{}.Type()};}
   std::string Name() { return "ShaderSystem"; }
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
 

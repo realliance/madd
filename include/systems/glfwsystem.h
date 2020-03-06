@@ -20,6 +20,8 @@ public:
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
+
+  std::vector<ComponentType> Types() { return {WindowComponent{}.Type()};}
   std::string Name() { return "GlfwSystem"; }
   std::vector<std::string> Requires() {return {};};
   std::vector<WindowComponent*>& GetWindows();

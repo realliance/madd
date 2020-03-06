@@ -16,5 +16,7 @@ struct FreecamComponent : public Component{
   float yaw = -90.0f;
   glm::vec3 movVector;
   glm::vec2 cursor;
+  ComponentType Type(); 
+  private: static ComponentType cType;
 };
 

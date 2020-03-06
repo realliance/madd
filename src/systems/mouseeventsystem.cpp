@@ -31,5 +31,3 @@ bool MouseEventSystem::Unregister(Component* component){
 
 void MouseEventSystem::Update(){
 }
-
-

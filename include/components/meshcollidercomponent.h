@@ -11,6 +11,8 @@ class MeshColliderComponent : public ColliderComponent{
     MeshComponent* mesh;
     glm::vec3 GetCenter();
     glm::vec3 Support(glm::vec3 dir);
+    static ComponentType cType;
+    ComponentType Type();
 };
 
 

@@ -13,11 +13,6 @@
 
 void Madd::Init() {
   this->currID = 0;
-  reloadShaderEvent = KeyboardEventComponent{};
-  reloadShaderEvent.callback = Madd::ProcessInput;
-  exitEvent = reloadShaderEvent;
-  exitEvent.code = KEY_ESCAPE;
-  reloadShaderEvent.code = KEY_SPACE;
   framecounter = 0;
   lastframecount = 0;
   close = false;
@@ -45,10 +40,24 @@ void Madd::Register(std::vector<System*> sys){
 }
 
 void Madd::Register(System* s){
+  for(const ComponentType& cType: s->Types()){
+    if(systemTypes.contains(cType)){
+      throw "Type claimed by two systems.";
+    }
+    systemTypes[cType] = s;
+  }
   if(systems.contains(s->Name())){
-    return;
+    throw "Two Systems share the same name.";
   }
   systems[s->Name()] = s;
+}
+
+bool Madd::RegisterComponent(Component* c){
+  return systemTypes[c->Type()]->Register(c);
+}
+
+bool Madd::UnRegisterComponent(Component* c){
+  return systemTypes[c->Type()]->Unregister(c);
 }
 
 System* Madd::GetSystem(std::string s){
@@ -58,8 +67,14 @@ System* Madd::GetSystem(std::string s){
   return nullptr;
 }
 
-size_t Madd::GetNewComponentID(){
+ComponentID Madd::currID = 0;
+ComponentID Madd::GetNewComponentID(){
   return ++currID;
+}
+
+ComponentType Madd::currType = 0;
+ComponentType Madd::GetNewComponentType(){
+  return ++currType;
 }
 
 bool Madd::InitSystems(){
@@ -93,9 +108,6 @@ bool Madd::InitSystems(){
 }
 
 void Madd::Run(){
-  if(systems.contains("KeyboardEventSystem")){
-    systems["KeyboardEventSystem"]->Register(&exitEvent);
-  }
   while(StayOpen()){
     Tick();
     if(framecounter % 60 == 0){
@@ -114,19 +126,6 @@ void Madd::Tick(){
   UpdateDeltaTime();
 }
 
-void Madd::ReloadShader() {
-  // for(GameObject* obj : objs)
-  //     if(!obj->ReloadShaders())
-  //         return;
-}
-
-void Madd::ProcessInput(Component* c, WindowComponent* window, int key, int action){
-  if (key == KEY_ESCAPE)
-    GetInstance().Close();
-  if (key == KEY_SPACE && action == KEY_PRESS)
-    GetInstance().ReloadShader();
-}
-
 void Madd::UpdateDeltaTime(){
   dTime = Clock::now() - lastFrame;
   lastFrame = Clock::now();
@@ -135,4 +134,3 @@ void Madd::UpdateDeltaTime(){
 
 double Madd::GetTime(){return glfwGetTime();}
 float Madd::GetDeltaTime(){return dTime.count() * timeScale;}
-
