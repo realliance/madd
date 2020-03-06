@@ -5,14 +5,7 @@
 #include <keycodes.h>
 #include <components/component.h>
 
-void FreeCamSystem::Init(){
-}
-
-void FreeCamSystem::Deinit(){
-  for(auto freecam : freecams){
-    delete freecam;
-  }
-}
+SystemType FreeCamSystem::sType = Madd::GetNewSystemType();
 
 bool FreeCamSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();
@@ -87,8 +80,9 @@ void FreeCamSystem::ProcessMove(FreecamComponent& c){
   c.camera.pos += tempVec*Madd::GetInstance().GetDeltaTime();
 }
 
+#include <iostream>
 void FreeCamSystem::ToggleMouseLock(FreecamComponent& c, WindowComponent* window, int key, int action){
-  GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  GlfwSystem* glfwsys= Madd::GetInstance().GetSystem<GlfwSystem>();
   if(action == KEY_PRESS){
       c.lastCursor = glm::vec2{};
       if(c.mouseLocked)

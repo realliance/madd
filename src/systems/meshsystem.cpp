@@ -8,11 +8,13 @@
 #include <set>
 #include <stdexcept>
 
+SystemType MeshSystem::sType = Madd::GetNewSystemType();
+
 void MeshSystem::Init(){
-  glfw = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  glfw = Madd::GetInstance().GetSystem<GlfwSystem>();
 }
 
-MeshSystem::~MeshSystem(){
+void MeshSystem::Deinit(){
   for(auto & [cid, mdata] : meshdata){
     destruct(mdata);
     delete mdata;

@@ -20,12 +20,15 @@ public:
   void Register(System* s);
   void Register(std::vector<System*> sys);
   bool RegisterComponent(Component* c);
-  bool UnRegisterComponent(Component* c);
+  bool UnregisterComponent(Component* c);
   void Unregister(System* s);
   bool InitSystems();
   System* GetSystem(std::string s);
+  template <class S>
+  S* GetSystem();
   static ComponentID GetNewComponentID();
   static ComponentType GetNewComponentType();
+  static SystemType GetNewSystemType();
 
   void Run();
   void Tick();
@@ -38,9 +41,11 @@ public:
 private:
   Madd() = default;
   std::unordered_map<std::string,System*> systems;
-  std::unordered_map<ComponentType,System*> systemTypes;
-  static ComponentID currID;
-  static ComponentType currType;
+  std::unordered_map<ComponentType,System*> systemCTypes;
+  std::unordered_map<SystemType,System*> systemSTypes;
+  static ComponentID currentCID;
+  static ComponentType currentCType;
+  static SystemType currentSType;
 
   void UpdateDeltaTime();
   std::chrono::duration<float> dTime;
@@ -52,3 +57,7 @@ private:
   double lastFPS;
 };
 
+template <class S>
+S* Madd::GetSystem(){
+  return dynamic_cast<S*>(systemSTypes[S{}.Type()]);
+}

@@ -10,14 +10,15 @@
 class TextureSystem : public System{
   public:
 
-    void Init();
-    ~TextureSystem();
+    void Init(){}
+    void Deinit(){}
     bool Register(Component* component);
     bool Unregister(Component* component);
-    void Update();
+    void Update(){}
 
-    std::vector<ComponentType> Types() { return {TextureComponent{}.Type()};}
+    std::vector<ComponentType> ComponentTypes() { return {TextureComponent{}.Type()};}
     std::string Name() { return "TextureSystem"; }
+    SystemType Type() { return sType; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
     void Destruct(ComponentID cID);
     void Enable(TextureComponent* t);
@@ -25,5 +26,6 @@ class TextureSystem : public System{
   private:
     void loadTexture(TextureComponent& tex);
     std::map<ComponentID, uint> textureBuffer;
+    static SystemType sType;
 };
 

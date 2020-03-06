@@ -1,11 +1,7 @@
 #include "mouseeventsystem.h"
 #include "madd.h"
 
-void MouseEventSystem::Init(){
-}
-
-MouseEventSystem::~MouseEventSystem(){
-}
+SystemType MouseEventSystem::sType = Madd::GetNewSystemType();
 
 void MouseEventSystem::CursorCallBack(WindowComponent *window, double xpos, double ypos){
     for(auto const c : subscribers) {
@@ -27,7 +23,4 @@ bool MouseEventSystem::Unregister(Component* component){
     }
   }
   return false;
-}
-
-void MouseEventSystem::Update(){
 }

@@ -16,13 +16,14 @@ class GLFWwindow;
 class GlfwSystem : public System{
 public:
   void Init();
-  ~GlfwSystem();
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
 
-  std::vector<ComponentType> Types() { return {WindowComponent{}.Type()};}
+  std::vector<ComponentType> ComponentTypes() { return {WindowComponent{}.Type()};}
   std::string Name() { return "GlfwSystem"; }
+  SystemType Type() { return sType; }
   std::vector<std::string> Requires() {return {};};
   std::vector<WindowComponent*>& GetWindows();
 
@@ -51,4 +52,5 @@ private:
   std::map<std::pair<ComponentID,ComponentID>,uint> VAOs;
   GLFWwindow* mainContext;
   MeshSystem* meshsystem;
+  static SystemType sType;
 };

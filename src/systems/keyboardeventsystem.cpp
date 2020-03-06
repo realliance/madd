@@ -1,11 +1,7 @@
 #include "keyboardeventsystem.h"
 #include "madd.h"
 
-void KeyboardEventSystem::Init(){
-}
-
-KeyboardEventSystem::~KeyboardEventSystem(){
-}
+SystemType KeyboardEventSystem::sType = Madd::GetNewSystemType();
 
 void KeyboardEventSystem::KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods){
     for(auto const c : subscribers) {
@@ -29,7 +25,4 @@ bool KeyboardEventSystem::Unregister(Component* component){
     }
   }
   return false;
-}
-
-void KeyboardEventSystem::Update(){
 }

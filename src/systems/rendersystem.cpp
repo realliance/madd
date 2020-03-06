@@ -8,16 +8,15 @@
 #include "instancerendersystem.h"
 #include "glfwsystem.h"
 
-void RenderSystem::Init() {
-  shadersys = dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
-  meshsys = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
-  texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
-  instancerendersys = dynamic_cast<InstanceRenderSystem*>(Madd::GetInstance().GetSystem("InstanceRenderSystem"));
-  glfwsys = dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
-  instanceSync = 0;
-}
+SystemType RenderSystem::sType = Madd::GetNewSystemType();
 
-RenderSystem::~RenderSystem(){
+void RenderSystem::Init() {
+  shadersys = Madd::GetInstance().GetSystem<ShaderSystem>();
+  meshsys = Madd::GetInstance().GetSystem<MeshSystem>();
+  texturesys = Madd::GetInstance().GetSystem<TextureSystem>();
+  instancerendersys = Madd::GetInstance().GetSystem<InstanceRenderSystem>();
+  glfwsys = Madd::GetInstance().GetSystem<GlfwSystem>();
+  instanceSync = 0;
 }
 
 bool RenderSystem::Register(Component* component){
@@ -25,8 +24,6 @@ bool RenderSystem::Register(Component* component){
   objects.push_back(dynamic_cast<RenderedComponent*>(component));
   return true;
 }
-
-
 
 bool RenderSystem::Unregister(Component* component){
   for(auto i = begin(objects); i != end(objects); i++){
@@ -58,7 +55,6 @@ void RenderSystem::Update(){
     }
   }
 }
-
 
 void RenderSystem::updateComponent(RenderedComponent& r, CameraComponent& c){ 
   shadersys->Enable(*r.shader);

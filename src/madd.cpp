@@ -1,18 +1,10 @@
 #include "madd.h"
 #include <iostream>
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include "rendersystem.h"
-#include "camerasystem.h"
-#include "keyboardeventsystem.h"
-#include "mouseeventsystem.h"
-#include "keycodes.h"
 #include <stack>
 #include <set>
 
 void Madd::Init() {
-  this->currID = 0;
   framecounter = 0;
   lastframecount = 0;
   close = false;
@@ -23,6 +15,7 @@ void Madd::Init() {
 
 void Madd::Deinit() {
   for(auto const& [name, sys] : systems){
+    sys->Deinit();
     delete sys;
   }
   systems.clear();
@@ -39,25 +32,36 @@ void Madd::Register(std::vector<System*> sys){
   }
 }
 
+void Madd::Unregister(System* s){
+  s->Deinit();
+  delete s;
+  systems.erase(s->Name());
+  systemSTypes.erase(s->Type());
+  for(const ComponentType& cType: s->ComponentTypes()){
+    systemCTypes.erase(cType);
+  }
+}
+
 void Madd::Register(System* s){
-  for(const ComponentType& cType: s->Types()){
-    if(systemTypes.contains(cType)){
+  for(const ComponentType& cType: s->ComponentTypes()){
+    if(systemCTypes.contains(cType)){
       throw "Type claimed by two systems.";
     }
-    systemTypes[cType] = s;
+    systemCTypes[cType] = s;
   }
   if(systems.contains(s->Name())){
     throw "Two Systems share the same name.";
   }
   systems[s->Name()] = s;
+  systemSTypes[s->Type()] = s;
 }
 
 bool Madd::RegisterComponent(Component* c){
-  return systemTypes[c->Type()]->Register(c);
+  return systemCTypes[c->Type()]->Register(c);
 }
 
-bool Madd::UnRegisterComponent(Component* c){
-  return systemTypes[c->Type()]->Unregister(c);
+bool Madd::UnregisterComponent(Component* c){
+  return systemCTypes[c->Type()]->Unregister(c);
 }
 
 System* Madd::GetSystem(std::string s){
@@ -67,14 +71,18 @@ System* Madd::GetSystem(std::string s){
   return nullptr;
 }
 
-ComponentID Madd::currID = 0;
-ComponentID Madd::GetNewComponentID(){
-  return ++currID;
-}
+ComponentID Madd::currentCID = 0;
+ComponentType Madd::currentCType = 0;
+SystemType Madd::currentSType = 0;
 
-ComponentType Madd::currType = 0;
+ComponentID Madd::GetNewComponentID(){
+  return ++currentCID;
+}
 ComponentType Madd::GetNewComponentType(){
-  return ++currType;
+  return ++currentCType;
+}
+SystemType Madd::GetNewSystemType(){
+  return ++currentSType;
 }
 
 bool Madd::InitSystems(){

@@ -9,7 +9,6 @@
 #include "mouseeventsystem.h"
 #include "meshsystem.h"
 
-
 void GlfwSystem::errorCallback(int, const char* err_str) {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
@@ -46,7 +45,7 @@ void GlfwSystem::cursorCallBack(GLFWwindow *window, double xpos, double ypos){
 
 void GlfwSystem::windowFocusCallback(GLFWwindow* window, int focused){
   WindowComponent* windowcomp = static_cast<WindowComponent*>(glfwGetWindowUserPointer(window));
-   GlfwSystem* glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+   GlfwSystem* glfwsys= Madd::GetInstance().GetSystem<GlfwSystem>();
   if(windowcomp->mouselocked){
     if(focused){
       glfwsys->LockCursor(*windowcomp);
@@ -57,6 +56,7 @@ void GlfwSystem::windowFocusCallback(GLFWwindow* window, int focused){
 }
 
 bool GlfwSystem::debugcontext = false;
+SystemType GlfwSystem::sType = Madd::GetNewSystemType();
 
 void GlfwSystem::Init() {
   glfwSetErrorCallback(errorCallback);
@@ -87,12 +87,10 @@ void GlfwSystem::Init() {
     std::cout << "GL Debug Output Enabled" << std::endl;
   }
 
-  meshsystem = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
+  meshsystem = Madd::GetInstance().GetSystem<MeshSystem>();
 }
 
-
-
-GlfwSystem::~GlfwSystem(){
+void GlfwSystem::Deinit(){
   for (WindowComponent *w : windows){
     destruct(*w);
   }
@@ -132,8 +130,10 @@ void GlfwSystem::Update(){
 
 void GlfwSystem::initialize(WindowComponent& w){
   glfwWindows[w.cID] = glfwCreateWindow(w.width, w.height, w.title.c_str(), NULL, mainContext);
+  const char* err;
+  glfwGetError(&err);
   if(glfwWindows[w.cID] == NULL){
-    throw w;
+    throw "Wasn't able to create window glfwGetError: " + std::string(err);
   }
   glfwMakeContextCurrent(glfwWindows[w.cID]);
   glfwSetWindowUserPointer(glfwWindows[w.cID], &w);

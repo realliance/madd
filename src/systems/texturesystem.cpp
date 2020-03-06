@@ -5,10 +5,7 @@
 #include "texturesystem.h"
 #include "madd.h"
 
-void TextureSystem::Init(){}
-
-TextureSystem::~TextureSystem(){
-}
+SystemType TextureSystem::sType = Madd::GetNewSystemType();
 
 bool TextureSystem::Register(Component* component){
   ComponentID cID = Madd::GetInstance().GetNewComponentID();
@@ -24,9 +21,6 @@ bool TextureSystem::Unregister(Component* component){
     return true;
   }
   return false;
-}
-
-void TextureSystem::Update(){
 }
 
 void TextureSystem::loadTexture(TextureComponent& tex){

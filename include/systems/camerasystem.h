@@ -7,14 +7,15 @@
 
 class CameraSystem : public System{
   public:
-    void Init();
-    ~CameraSystem();
+    void Init(){}
+    void Deinit(){}
     bool Register(Component* component);
     bool Unregister(Component* component);
     void Update();
 
-    std::vector<ComponentType> Types() { return {CameraComponent{}.Type()};}
+    std::vector<ComponentType> ComponentTypes() { return {CameraComponent{}.Type()};}
     std::string Name() { return "CameraSystem"; }
+    SystemType Type() { return sType; }
     std::vector<std::string> Requires() {return {};};
     static CameraComponent Construct();
     void Destruct(CameraComponent& c);
@@ -23,4 +24,5 @@ class CameraSystem : public System{
   private:
     void updateComponent(CameraComponent& c);
     std::vector<CameraComponent*> cameras;
+    static SystemType sType;
 };

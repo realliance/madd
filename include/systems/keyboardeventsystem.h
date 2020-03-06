@@ -7,16 +7,18 @@
 
 class KeyboardEventSystem : public System{
   public:
-    ~KeyboardEventSystem();
-    void Init();
+    void Deinit(){}
+    void Init(){}
     bool Register(Component* component);
     bool Unregister(Component* component);
-    void Update();
-    std::vector<ComponentType> Types() { return {KeyboardEventComponent{}.Type()};}
+    void Update(){}
+    std::vector<ComponentType> ComponentTypes() { return {KeyboardEventComponent{}.Type()};}
     std::string Name(){ return "KeyboardEventSystem"; }
+    SystemType Type() { return sType; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
     void KeyCallBack(WindowComponent *window, int key, int scancode, int action, int mods);
   private:
     std::vector<KeyboardEventComponent*> subscribers;
+    static SystemType sType;
 }; 
 

@@ -7,18 +7,20 @@
 
 class MouseEventSystem : public System{
   public:
-    void Init();
-    ~MouseEventSystem();
+    void Init(){}
+    void Deinit(){}
     bool Register(Component* component);
     bool Unregister(Component* component);
     void LockCursor();
     void UnlockCursor();
-    void Update();
-    std::vector<ComponentType> Types() { return {MouseEventComponent{}.Type()};}
+    void Update(){}
+    std::vector<ComponentType> ComponentTypes() { return {MouseEventComponent{}.Type()};}
     std::string Name(){ return "MouseEventSystem"; }
+    SystemType Type() { return sType; }
     std::vector<std::string> Requires() {return {"GlfwSystem"};};
     void CursorCallBack(WindowComponent *window, double xpos, double ypos);
   private:
     std::vector<MouseEventComponent*> subscribers;
+    static SystemType sType;
 }; 
 

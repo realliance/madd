@@ -7,11 +7,13 @@
 #include "glfwsystem.h"
 #include "madd.h"
 
+SystemType ShaderSystem::sType = Madd::GetNewSystemType();
+
 void ShaderSystem::Init(){
   activeProgram.ID = static_cast<uint>(-1);
 }
 
-ShaderSystem::~ShaderSystem(){
+void ShaderSystem::Deinit(){
     for(ShaderComponent* s : shaders){
       destruct(*s);
     }
@@ -34,9 +36,6 @@ bool ShaderSystem::Unregister(Component* component){
     }
   }
   return false;
-}
-
-void ShaderSystem::Update(){
 }
 
 void ShaderSystem::destruct(ShaderComponent& s){
@@ -115,8 +114,6 @@ uint ShaderSystem::constructShader(std::string shaderFileName){
 
 #undef VERTEX_SHADER
 #undef FRAGMENT_SHADER
-
-
 
 void ShaderSystem::Enable(ShaderComponent& s){
   if(s.cID != activeProgram.ID){

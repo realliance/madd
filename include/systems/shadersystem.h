@@ -28,13 +28,14 @@ class ShaderSystem : public System{
 public:
 
   void Init();
-  ~ShaderSystem();
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
-  void Update();
+  void Update(){}
 
-  std::vector<ComponentType> Types() { return {ShaderComponent{}.Type()};}
+  std::vector<ComponentType> ComponentTypes() { return {ShaderComponent{}.Type()};}
   std::string Name() { return "ShaderSystem"; }
+  SystemType Type() { return sType; }
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
 
   void Enable(ShaderComponent& s);
@@ -56,5 +57,6 @@ private:
   std::vector<ShaderComponent*> shaders;
   std::map<ComponentID, ProgramInfo> program;
   ProgramInfo activeProgram;
+  static SystemType sType;
 };
 

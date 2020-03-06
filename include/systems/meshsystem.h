@@ -10,13 +10,14 @@
 class MeshSystem: public System {
 public:
   void Init();
-  ~MeshSystem();
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update(){}
   uint CreateVAO(Component* component);
-  std::vector<ComponentType> Types() { return {MeshComponent{}.Type()};}
+  std::vector<ComponentType> ComponentTypes() { return {MeshComponent{}.Type()};}
   std::string Name() { return "MeshSystem"; }
+  SystemType Type() { return sType; }
   std::vector<std::string> Requires() {return {"GlfwSystem"};};
   void Draw(MeshComponent& m);
   void DrawInstanced(MeshComponent& m, uint count);
@@ -32,5 +33,6 @@ private:
   void destruct(MeshData* m);
   std::map<ComponentID,MeshData*> meshdata;
   GlfwSystem* glfw;
+  static SystemType sType;
 };
 

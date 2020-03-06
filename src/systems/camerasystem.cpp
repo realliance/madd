@@ -2,10 +2,7 @@
 #include "madd.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-void CameraSystem::Init() {}
-
-CameraSystem::~CameraSystem(){
-}
+SystemType CameraSystem::sType = Madd::GetNewSystemType();
 
 bool CameraSystem::Register(Component *component) {
   component->cID = Madd::GetInstance().GetNewComponentID();

@@ -36,16 +36,17 @@ class RenderSystem;
 class GlfwSystem;
 class InstanceRenderSystem : public System{
 public:
-  ~InstanceRenderSystem();
   void Init();
+  void Deinit();
   bool Register(Component* component);
   bool Unregister(Component* component);
   void Update();
   void SetConfig(InstanceConfig config, MeshComponent* mesh);
 
-  std::vector<ComponentType> Types() { return {InstanceRenderedComponent{}.Type()};}
+  std::vector<ComponentType> ComponentTypes() { return {InstanceRenderedComponent{}.Type()};}
   std::string Name(){ return "InstanceRenderSystem"; }
   std::vector<std::string> Requires() {return {"GlfwSystem", "MeshSystem", "ShaderSystem"};};
+  SystemType Type() { return sType; }
 
   void Start(WindowComponent& w);
   void Finish(WindowComponent& w);
@@ -67,5 +68,6 @@ private:
   TextureSystem* texturesys;
   RenderSystem* rendersys;
   GlfwSystem* glfwsys;
+  static SystemType sType;
 };
 

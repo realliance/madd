@@ -8,16 +8,18 @@
 #include "glfwsystem.h"
 #include "rendersystem.h"
 
+SystemType InstanceRenderSystem::sType = Madd::GetNewSystemType();
+
 void InstanceRenderSystem::Init() {
-  shadersys = dynamic_cast<ShaderSystem*>(Madd::GetInstance().GetSystem("ShaderSystem"));
-  meshsys = dynamic_cast<MeshSystem*>(Madd::GetInstance().GetSystem("MeshSystem"));
-  texturesys = dynamic_cast<TextureSystem*>(Madd::GetInstance().GetSystem("TextureSystem"));
-  rendersys = dynamic_cast<RenderSystem*>(Madd::GetInstance().GetSystem("RenderSystem"));
-  glfwsys= dynamic_cast<GlfwSystem*>(Madd::GetInstance().GetSystem("GlfwSystem"));
+  shadersys = Madd::GetInstance().GetSystem<ShaderSystem>();
+  meshsys = Madd::GetInstance().GetSystem<MeshSystem>();
+  texturesys = Madd::GetInstance().GetSystem<TextureSystem>();
+  rendersys = Madd::GetInstance().GetSystem<RenderSystem>();
+  glfwsys= Madd::GetInstance().GetSystem<GlfwSystem>();
   instanceSync = 0;
 }
 
-InstanceRenderSystem::~InstanceRenderSystem(){
+void InstanceRenderSystem::Deinit(){
     for(auto &[meshcID, inst] : instanceData){
       for(auto & cID : inst.cIDs){
         destruct(objects[cID]);
