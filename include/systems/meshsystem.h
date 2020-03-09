@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "components/component.h"
+#include "component.h"
 #include "components/meshcomponent.h"
 #include "systems/glfwsystem.h"
 #include "system.h"

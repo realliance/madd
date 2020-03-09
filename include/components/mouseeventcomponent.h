@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "component.h"
 #include "components/windowcomponent.h"
 #include <functional>
 

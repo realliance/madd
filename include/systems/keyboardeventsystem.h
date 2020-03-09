@@ -2,7 +2,7 @@
 
 #include "system.h"
 #include "components/keyboardeventcomponent.h"
-#include "components/component.h"
+#include "component.h"
 #include <vector>
 
 class KeyboardEventSystem : public System{

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "components/component.h"
+#include "component.h"
 #include "components/cameracomponent.h"
-#include "keycodes.h"
+#include "assets/keycodes.h"
 #include "components/keyboardeventcomponent.h"
 #include <glm/glm.hpp>
 

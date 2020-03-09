@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "component.h"
 #include "components/shadercomponent.h"
 #include "components/texturecomponent.h"
 #include "components/meshcomponent.h"

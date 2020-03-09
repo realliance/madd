@@ -38,6 +38,7 @@ bool MeshSystem::Register(Component* component){
 bool MeshSystem::Unregister(Component* component){
   if(meshdata.contains(component->cID)){
       destruct(meshdata[component->cID]);
+      delete meshdata[component->cID]; 
       meshdata.erase(component->cID);
       return true;
   }

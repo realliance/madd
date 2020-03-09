@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "components/component.h"
+#include "component.h"
 #include "components/cameracomponent.h"
 
 class WindowComponent : public Component{

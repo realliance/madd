@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "component.h"
 #include <sys/types.h>
 #include <string>
 

@@ -1,4 +1,4 @@
-#include "assets/freecamcomponent.h"
+#include "freecamcomponent.h"
 #include "madd.h"
 
 ComponentType FreecamComponent::cType = Madd::GetNewComponentType();

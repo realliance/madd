@@ -2,7 +2,7 @@
 
 #include "system.h"
 #include "components/windowcomponent.h"
-#include "components/component.h"
+#include "component.h"
 #include <string>
 #include <vector>
 #include <map>

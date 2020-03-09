@@ -8,7 +8,7 @@ using Clock = std::chrono::high_resolution_clock;
 /** Type Definition for chrono time_point shorthand */
 using Time = Clock::time_point;
 
-#include "components/component.h"
+#include "component.h"
 #include "system.h"
 
 struct WindowComponent;

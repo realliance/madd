@@ -2,7 +2,7 @@
 
 #include "system.h"
 #include "components/mouseeventcomponent.h"
-#include "components/component.h"
+#include "component.h"
 #include <vector>
 
 class MouseEventSystem : public System{

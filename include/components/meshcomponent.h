@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "components/component.h"
+#include "component.h"
 #include <glm/glm.hpp>
 #include <sys/types.h>
 #include <string>

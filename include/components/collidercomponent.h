@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "component.h"
 #include <glm/glm.hpp>
 
 class ColliderComponent : public Component{

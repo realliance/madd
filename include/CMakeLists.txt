@@ -6,5 +6,7 @@ target_sources(madd
     PRIVATE
         "${DIR}/madd.h"
         "${DIR}/util.h"
+        "${DIR}/system.h"
+        "${DIR}/component.h"
 )
 target_include_directories(madd PRIVATE "${madd_SOURCE_DIR}/include")

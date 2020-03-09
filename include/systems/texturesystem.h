@@ -3,7 +3,7 @@
 #include <set>
 #include <map>
 #include "components/texturecomponent.h"
-#include "components/component.h"
+#include "component.h"
 #include "system.h"
 
 

@@ -6,12 +6,12 @@ target_sources(madd
         "${DIR}/meshcomponent.h"
         "${DIR}/renderedcomponent.h"
         "${DIR}/cameracomponent.h"
-        "${DIR}/component.h"
         "${DIR}/meshcollidercomponent.h"
         #${DIR}/collidercomponent.h"
         "${DIR}/keyboardeventcomponent.h"
         "${DIR}/mouseeventcomponent.h"
         "${DIR}/windowcomponent.h"
         "${DIR}/instancerenderedcomponent.h"
+        "${DIR}/freecamcomponent.h"
 )
 target_include_directories(madd PRIVATE "${DIR}")

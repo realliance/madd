@@ -1,9 +1,9 @@
-#include <assets/freecamsystem.h>
+#include <systems/freecamsystem.h>
 #include <vector>
 #include "madd.h"
-#include <glfwsystem.h>
-#include <keycodes.h>
-#include <components/component.h>
+#include <systems/glfwsystem.h>
+#include <assets/keycodes.h>
+#include <component.h>
 
 SystemType FreeCamSystem::sType = Madd::GetNewSystemType();
 

@@ -4,7 +4,7 @@
 #include "system.h"
 
 #include "components/shadercomponent.h"
-#include "components/component.h"
+#include "component.h"
 #include <vector>
 #include <map>
 

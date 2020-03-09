@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "components/cameracomponent.h"
-#include "assets/freecamcomponent.h"
+#include "components/freecamcomponent.h"
 #include "components/windowcomponent.h"
 class FreeCamSystem : public System {
   public:
