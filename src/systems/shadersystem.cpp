@@ -39,7 +39,7 @@ bool ShaderSystem::Unregister(Component* component){
 }
 
 void ShaderSystem::destruct(ShaderComponent& s){
-  if(GlfwSystem::GetCurrentWindow() != NULL){
+  if(Madd::GetInstance().IsInit<GlfwSystem>() == INITIALIZED){
     glDeleteProgram(program[s.cID].ID);
   }
 }

@@ -15,8 +15,7 @@ void Madd::Init() {
 
 void Madd::Deinit() {
   for(auto const& [name, sys] : systems){
-    sys->Deinit();
-    delete sys;
+    destruct(sys);
   }
   systems.clear();
 }
@@ -29,17 +28,23 @@ Madd& Madd::GetInstance() {
 void Madd::Register(std::vector<System*> sys){
   for(System* s : sys){
     Register(s);
+    systemStates[s->Type()] = SystemState::UNINITIALIZED;
   }
 }
 
 void Madd::Unregister(System* s){
-  s->Deinit();
-  delete s;
   systems.erase(s->Name());
-  systemSTypes.erase(s->Type());
   for(const ComponentType& cType: s->ComponentTypes()){
     systemCTypes.erase(cType);
   }
+  destruct(s);
+}
+
+void Madd::destruct(System* s){
+  s->Deinit();
+  systemSTypes.erase(s->Type());
+  systemStates.erase(s->Type());
+  delete s;
 }
 
 void Madd::Register(System* s){
@@ -105,6 +110,7 @@ bool Madd::InitSystems(){
         }
         if(stackSize == requireStack.size()){
           systems[requireStack.top().first]->Init();
+          systemStates[systems[requireStack.top().first]->Type()] = SystemState::INITIALIZED;
           init.insert(requireStack.top().first);
           requireStack.pop();
         }

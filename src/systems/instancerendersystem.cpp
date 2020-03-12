@@ -157,7 +157,7 @@ bool InstanceRenderSystem::Unregister(Component* component){
 }
 
 void InstanceRenderSystem::destruct(InstanceRenderedComponent* rc){
-  if(GlfwSystem::GetCurrentWindow() != NULL){
+  if(Madd::GetInstance().IsInit<GlfwSystem>() == INITIALIZED){
     glDeleteBuffers(2, instanceData[rc->mesh->cID].VBO);
   }
 }

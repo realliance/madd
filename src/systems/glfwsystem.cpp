@@ -91,10 +91,6 @@ void GlfwSystem::Init() {
 }
 
 void GlfwSystem::Deinit(){
-  for (WindowComponent *w : windows){
-    destruct(*w);
-  }
-  glfwSetErrorCallback(nullptr);
   glfwTerminate();
 }
 

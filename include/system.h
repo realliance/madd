@@ -5,6 +5,7 @@
 #include <vector>
 
 typedef u_int32_t SystemType;
+enum SystemState{INITIALIZED,UNINITIALIZED,NONEXISTENT};
 
 class System{
   public:

@@ -26,6 +26,8 @@ public:
   System* GetSystem(std::string s);
   template <class S>
   S* GetSystem();
+  template <class S>
+  SystemState IsInit();
   static ComponentID GetNewComponentID();
   static ComponentType GetNewComponentType();
   static SystemType GetNewSystemType();
@@ -43,11 +45,13 @@ private:
   std::unordered_map<std::string,System*> systems;
   std::unordered_map<ComponentType,System*> systemCTypes;
   std::unordered_map<SystemType,System*> systemSTypes;
+  std::unordered_map<SystemType,SystemState> systemStates;
   static ComponentID currentCID;
   static ComponentType currentCType;
   static SystemType currentSType;
 
   void UpdateDeltaTime();
+  void destruct(System*);
   std::chrono::duration<float> dTime;
   bool close;
   float timeScale;
@@ -58,6 +62,19 @@ private:
 };
 
 template <class S>
-S* Madd::GetSystem(){
-  return dynamic_cast<S*>(systemSTypes[S{}.Type()]);
+S* Madd::GetSystem(){  
+  SystemType sType = S{}.Type();
+  if(systemSTypes.contains(sType)){
+    return dynamic_cast<S*>(systemSTypes[S{}.Type()]);
+  }
+  return nullptr;
+}
+
+template <class S>
+SystemState Madd::IsInit(){
+  SystemType sType = S{}.Type();
+  if(systemSTypes.contains(sType)){
+    return systemStates[sType];
+  }
+  return SystemState::NONEXISTENT;
 }

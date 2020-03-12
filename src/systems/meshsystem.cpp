@@ -15,9 +15,11 @@ void MeshSystem::Init(){
 }
 
 void MeshSystem::Deinit(){
-  for(auto & [cid, mdata] : meshdata){
-    destruct(mdata);
-    delete mdata;
+  if(Madd::GetInstance().IsInit<GlfwSystem>() == INITIALIZED){
+    for(auto & [cid, mdata] : meshdata){
+      destruct(mdata);
+      delete mdata;
+    }
   }
 }
 
@@ -46,7 +48,7 @@ bool MeshSystem::Unregister(Component* component){
 }
 
 void MeshSystem::destruct(MeshData* mdata) {
-  if(GlfwSystem::GetCurrentWindow() != NULL){
+  if(Madd::GetInstance().IsInit<GlfwSystem>() == INITIALIZED){
     if(glfw != nullptr){
       glfw->DeleteComponentVAO(static_cast<Component*>(mdata->mesh));
     }
