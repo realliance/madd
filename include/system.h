@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <sys/types.h>
 typedef u_int32_t SystemType;
 enum SystemState{INITIALIZED,UNINITIALIZED,NONEXISTENT};
 

@@ -10,5 +10,6 @@ target_sources(madd
   "${DIR}/keyboardeventcomponent.cpp"
   "${DIR}/mouseeventcomponent.cpp"
   "${DIR}/windowcomponent.cpp"
+  "${DIR}/freecamcomponent.cpp"
   "${DIR}/instancerenderedcomponent.cpp"
 )

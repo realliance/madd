@@ -5,6 +5,7 @@
 #include <assets/keycodes.h>
 #include <component.h>
 
+SystemType FreeCamSystem::sType = Madd::GetNewSystemType();
 
 bool FreeCamSystem::Register(Component* component){
   component->cID = Madd::GetInstance().GetNewComponentID();

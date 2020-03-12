@@ -11,4 +11,5 @@ target_sources(madd
     "${DIR}/mouseeventsystem.cpp"
     "${DIR}/glfwsystem.cpp"
     "${DIR}/instancerendersystem.cpp"
+    "${DIR}/freecamsystem.cpp"
 )

@@ -8,5 +8,14 @@ struct Component{
   ComponentID cID;
   bool update;
   virtual ComponentType Type() = 0;
+  Component() = default;
+  Component(const Component& c) {
+    if(this != &c){
+      cID = 0;
+    }
+  }
+  Component& operator=(const Component& c){
+    return *this;
+  }
 };
 
