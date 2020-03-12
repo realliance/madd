@@ -4,4 +4,4 @@
 #include <vector>
 #include "component.h"
 typedef u_int64_t EntityID;
-typedef std::vector<Component> Entity;
+typedef std::vector<Component*> Entity;

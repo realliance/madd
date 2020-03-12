@@ -61,7 +61,7 @@ public:
 
   //Entities
   EntityID CreateEntity(Entity* entity);
-  bool DeleteEntity(EntityID);
+  bool DeleteEntity(EntityID eid);
 
 private:
   //Singleton (May remove?)
@@ -79,16 +79,20 @@ private:
 
   //Entity and System Storage
   std::unordered_map<SystemType,SystemInfo*> systems;
-
+  std::unordered_map<EntityID, Entity*> entities;
 
   //System Info (might convert to a struct if more information is needed)
   System* getSystem(SystemType sType);
   std::unordered_map<ComponentType,SystemInfo*> systemCTypes;
   std::unordered_map<std::string,SystemType> systemNames;
 
+  //Component creation and deletion (Deprecated)
+  bool registerComponent(Component* c);
+  bool unregisterComponent(Component* c);
+
   //Entity and Type counters
+  EntityID currentEID;
   static ComponentID currentCID;
-  static EntityID currentEID;
   static ComponentType currentCType;
   static SystemType currentSType;
 
