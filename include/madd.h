@@ -60,15 +60,12 @@ public:
   float GetDeltaTime();
 
   //Entities
-  EntityID CreateEntity(Entity* entity);
+  EntityID CreateEntity(Entity entity);
   bool DeleteEntity(EntityID eid);
 
 private:
   //Singleton (May remove?)
   Madd() = default;
-
-  //Destruction
-  void destruct(System*);
 
   //Execution
   bool stayOpen();
@@ -79,7 +76,7 @@ private:
 
   //Entity and System Storage
   std::unordered_map<SystemType,SystemInfo*> systems;
-  std::unordered_map<EntityID, Entity*> entities;
+  std::unordered_map<EntityID, Entity> entities;
 
   //System Info (might convert to a struct if more information is needed)
   System* getSystem(SystemType sType);

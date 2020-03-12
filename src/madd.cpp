@@ -19,7 +19,12 @@ void Madd::Init() {
 
 void Madd::Deinit() {
   for(auto const& [name, sys] : systems){
-    destruct(sys->ptr);
+    sys->state = UNINITIALIZED;
+    sys->ptr->Deinit();
+  }
+  for(auto const& [name, sysinfo] : systems){
+    delete sysinfo->ptr;
+    delete systems[sysinfo->type];
   }
   systems.clear();
 }
@@ -73,11 +78,7 @@ void Madd::LoadSystems(std::vector<System*> sys){
 }
 
 void Madd::UnLoadSystem(System* s){
-  systemNames.erase(s->Name());
-  for(const ComponentType& cType: s->ComponentTypes()){
-    systemCTypes.erase(cType);
-  }
-  destruct(s);
+  throw "Not implemented";
 }
 
 void Madd::InitSystems(){
@@ -135,10 +136,10 @@ float Madd::GetDeltaTime(){
   return dTime.count() * timeScale;
 }
 
-EntityID Madd::CreateEntity(Entity* entity){
+EntityID Madd::CreateEntity(Entity entity){
   EntityID eid = ++currentEID;
   entities[eid] = entity;
-  for(auto & component : *entity ){
+  for(auto & component : entity ){
     if(!registerComponent(component)){
       return 0;
     }
@@ -150,20 +151,14 @@ bool Madd::DeleteEntity(EntityID eid){
   if(!entities.contains(eid)){
     return false;
   }
-  for(auto & component : *entities[eid] ){
+  for(auto & component : entities[eid] ){
     if(!unregisterComponent(component)){
       throw "Error occured unregistering Component: " + std::to_string(component->cID)
        + " while deleting entity: " + std::to_string(eid);
     }
   }
+  entities.erase(eid);
   return true;
-}
-
-void Madd::destruct(System* s){
-  s->Deinit();
-  delete systems[s->Type()];
-  systems.erase(s->Type());
-  delete s;
 }
 
 bool Madd::stayOpen(){
