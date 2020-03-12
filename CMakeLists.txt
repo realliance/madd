@@ -1,28 +1,22 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_CXX_STANDARD 20)
 project(madd)
+include(FetchContent)
 
 find_package(PkgConfig)
 
 add_library(madd "")
-add_subdirectory(${madd_SOURCE_DIR}/src)
-add_subdirectory(${madd_SOURCE_DIR}/include)
 add_subdirectory(${madd_SOURCE_DIR}/libraries)
+add_subdirectory(${madd_SOURCE_DIR}/include)
+add_subdirectory(${madd_SOURCE_DIR}/src)
 
-if (MSVC)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT madd)
-	set_target_properties(madd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
-	target_link_libraries(madd glfw)
-else()
-	if((CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-		add_compile_options(-Wall -Wextra -Wmost )
-	else()
-		add_compile_options(-Wall -Wextra )	
-	endif()
-	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror -pedantic -g -static-libgcc -static-libstdc++ -ggdb")
-	target_link_libraries(madd glfw ${CMAKE_DL_LIBS})
-endif()
+target_link_libraries(madd 
+	PUBLIC 
+		glad 
+		glfw 
+	PRIVATE 
+		${CMAKE_DL_LIBS}
+)
 
-target_include_directories(madd PRIVATE ${LIBRARY_INCLUDES})
 target_include_directories(madd INTERFACE "${madd_SOURCE_DIR}/include")
 target_include_directories(madd INTERFACE "${madd_SOURCE_DIR}/include/systems")
