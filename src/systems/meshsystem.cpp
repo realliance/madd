@@ -24,7 +24,6 @@ void MeshSystem::Deinit(){
 }
 
 bool MeshSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   MeshComponent* m = dynamic_cast<MeshComponent *>(component);
   MeshData* mdata = new MeshData{};
   mdata->mesh = m;

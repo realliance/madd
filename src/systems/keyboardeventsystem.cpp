@@ -12,7 +12,6 @@ void KeyboardEventSystem::KeyCallBack(WindowComponent *window, int key, int scan
 }
 
 bool KeyboardEventSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   subscribers.push_back(dynamic_cast<KeyboardEventComponent*>(component));
   return true;
 }

@@ -8,7 +8,9 @@ struct Component{
   ComponentID cID;
   bool update;
   virtual ComponentType Type() = 0;
-  Component() = default;
+  Component(){
+    cID = 0;
+  };
   Component(const Component& c) {
     if(this != &c){
       cID = 0;

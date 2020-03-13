@@ -32,7 +32,6 @@ bool InstanceRenderSystem::Register(Component* component){
   if(!instanceConfigs.contains(rc->mesh->cID)){
     return false;
   }
-  rc->cID = Madd::GetInstance().GetNewComponentID();
   rc->update = true;
   objects[rc->cID] = dynamic_cast<InstanceRenderedComponent*>(component);
   InstanceDatum* inst;

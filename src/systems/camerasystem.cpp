@@ -5,7 +5,6 @@
 SystemType CameraSystem::sType = Madd::GetNewSystemType();
 
 bool CameraSystem::Register(Component *component) {
-  component->cID = Madd::GetInstance().GetNewComponentID();
   cameras.push_back(dynamic_cast<CameraComponent *>(component));
   dynamic_cast<CameraComponent *>(component)->update = true;
   return true;

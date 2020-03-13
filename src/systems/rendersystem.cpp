@@ -20,7 +20,6 @@ void RenderSystem::Init() {
 }
 
 bool RenderSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   objects.push_back(dynamic_cast<RenderedComponent*>(component));
   return true;
 }

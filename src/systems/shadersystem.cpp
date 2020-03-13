@@ -20,7 +20,6 @@ void ShaderSystem::Deinit(){
 }
 
 bool ShaderSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   initialize(*dynamic_cast<ShaderComponent *>(component));
   shaders.push_back(dynamic_cast<ShaderComponent *>(component));
   return true;

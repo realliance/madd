@@ -95,7 +95,6 @@ void GlfwSystem::Deinit(){
 }
 
 bool GlfwSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   initialize(*dynamic_cast<WindowComponent*>(component));
   windows.push_back(dynamic_cast<WindowComponent*>(component));
   return true;

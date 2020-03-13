@@ -10,7 +10,6 @@ void MouseEventSystem::CursorCallBack(WindowComponent *window, double xpos, doub
 }
 
 bool MouseEventSystem::Register(Component* component){
-  component->cID = Madd::GetInstance().GetNewComponentID();
   subscribers.push_back(dynamic_cast<MouseEventComponent*>(component));
   return true;
 }

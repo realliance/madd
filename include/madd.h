@@ -21,6 +21,11 @@ struct SystemInfo{
   SystemState state;
 };
 
+struct ComponentInfo{
+  Component* ptr;
+  int references;
+};
+
 class Madd {
 public:
   //Singleton (May remove?)
@@ -32,7 +37,7 @@ public:
 
   //Component creation and deletion (Deprecated)
   bool RegisterComponent(Component* c);
-  bool UnregisterComponent(Component* c);
+  void UnregisterComponent(Component* c);
 
   //System creation and deletion
   void LoadSystem(System* s);
@@ -46,8 +51,7 @@ public:
   template <class S>
   SystemState IsInit();
 
-  //Entity and Type Functions
-  static ComponentID GetNewComponentID();
+  //Functions
   static ComponentType GetNewComponentType();
   static SystemType GetNewSystemType();
 
@@ -77,19 +81,20 @@ private:
   //Entity and System Storage
   std::unordered_map<SystemType,SystemInfo*> systems;
   std::unordered_map<EntityID, Entity> entities;
+  std::unordered_map<ComponentID, ComponentInfo> components;
 
   //System Info (might convert to a struct if more information is needed)
   System* getSystem(SystemType sType);
-  std::unordered_map<ComponentType,SystemInfo*> systemCTypes;
+  std::unordered_map<ComponentType,std::vector<SystemInfo*>> systemCTypes;
   std::unordered_map<std::string,SystemType> systemNames;
 
   //Component creation and deletion (Deprecated)
   bool registerComponent(Component* c);
-  bool unregisterComponent(Component* c);
+  void unregisterComponent(Component* c);
 
   //Entity and Type counters
   EntityID currentEID;
-  static ComponentID currentCID;
+  ComponentID currentCID;
   static ComponentType currentCType;
   static SystemType currentSType;
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include <stack>
+#include <algorithm>
 #include <set>
 
 void Madd::Init() {
@@ -38,26 +39,58 @@ bool Madd::RegisterComponent(Component* c){
   return registerComponent(c);
 }
 
-bool Madd::UnregisterComponent(Component* c){
-  return unregisterComponent(c);
+void Madd::UnregisterComponent(Component* c){
+  unregisterComponent(c);
 }
 
 bool Madd::registerComponent(Component* c){
-  return systemCTypes[c->Type()]->ptr->Register(c);
+  if(components.contains(c->cID)){
+    components[c->cID].references++;
+    return true;
+  }
+  c->cID = ++currentCID;
+  int i;
+  bool success = true;
+  for(i=0; i < systemCTypes[c->Type()].size(); i++){
+    if(!systemCTypes[c->Type()][i]->ptr->Register(c)){
+      success = false;
+      break;
+    }
+  }
+  if(success){
+    components[c->cID] = {.ptr = c, .references=1};
+    return true;
+  }
+  success = true;
+  for(i--; i >= 0; i--){
+    if(!systemCTypes[c->Type()][i]->ptr->Unregister(c)){
+      success = false;
+      break;
+    }
+  }
+  if(!success){
+    throw "Component failed to register and during cleanup, component failed to unregister";
+  }
+  return false;
 }
 
-bool Madd::unregisterComponent(Component* c){
-  return systemCTypes[c->Type()]->ptr->Unregister(c);
+void Madd::unregisterComponent(Component* c){
+  components[c->cID].references--;
+  if(components[c->cID].references > 0){
+    return;
+  }
+  for(int i=0; i < systemCTypes[c->Type()].size(); i++){
+    if(!systemCTypes[c->Type()][i]->ptr->Unregister(c)){
+      throw "Failed to unregister Component: " + std::to_string(c->cID);
+    }
+  }
+  components.erase(c->cID);
+  return;
 }
 
 void Madd::LoadSystem(System* s){
   if(systemNames.contains(s->Name())){
     throw "Two Systems share the same name.";
-  }
-  for(const ComponentType& cType: s->ComponentTypes()){
-    if(systemCTypes.contains(cType)){
-      throw "Type claimed by two systems.";
-    }
   }
   systems[s->Type()] = new SystemInfo{
     .ptr = s,
@@ -66,7 +99,7 @@ void Madd::LoadSystem(System* s){
     .state = UNINITIALIZED
   };
   for(const ComponentType& cType: s->ComponentTypes()){
-    systemCTypes[cType] = systems[s->Type()];
+    systemCTypes[cType].push_back(systems[s->Type()]);
   }
   systemNames[s->Name()] = s->Type();
 }
@@ -102,9 +135,6 @@ void Madd::initSystem(SystemInfo* sysInfo){
   sysInfo->state = INITIALIZED;
 }
 
-ComponentID Madd::GetNewComponentID(){
-  return ++currentCID;
-}
 ComponentType Madd::GetNewComponentType(){
   return ++currentCType;
 }
@@ -139,12 +169,27 @@ float Madd::GetDeltaTime(){
 EntityID Madd::CreateEntity(Entity entity){
   EntityID eid = ++currentEID;
   entities[eid] = entity;
-  for(auto & component : entity ){
-    if(!registerComponent(component)){
-      return 0;
+  bool success = true;
+  int i;
+  for(i = 0; i < entity.size(); i++){
+    if(!registerComponent(entity[i])){
+      success = false;
+      break;
     }
   }
-  return eid;
+  if(success){
+    return eid;
+  }
+  for(; i >= 0; i--){
+    try{
+      unregisterComponent(entity[i]);
+    }catch(std::string s){
+      throw "Error occured unregistering Component: " + std::to_string(entity[i]->cID)
+       + " while creating new entity: " + std::to_string(eid);
+    }
+  }
+  entities.erase(eid);
+  return 0;
 }
 
 bool Madd::DeleteEntity(EntityID eid){
@@ -152,7 +197,9 @@ bool Madd::DeleteEntity(EntityID eid){
     return false;
   }
   for(auto & component : entities[eid] ){
-    if(!unregisterComponent(component)){
+    try{
+      unregisterComponent(component);
+    }catch(std::string s){
       throw "Error occured unregistering Component: " + std::to_string(component->cID)
        + " while deleting entity: " + std::to_string(eid);
     }
@@ -179,7 +226,6 @@ System* Madd::getSystem(SystemType sType){
   return nullptr;
 }
 
-ComponentID Madd::currentCID = 0;
 ComponentType Madd::currentCType = 0;
 SystemType Madd::currentSType = 0;
 

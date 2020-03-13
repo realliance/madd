@@ -8,8 +8,6 @@
 SystemType TextureSystem::sType = Madd::GetNewSystemType();
 
 bool TextureSystem::Register(Component* component){
-  ComponentID cID = Madd::GetInstance().GetNewComponentID();
-  component->cID = cID;
   loadTexture(*dynamic_cast<TextureComponent *>(component));
   return true;
 }
